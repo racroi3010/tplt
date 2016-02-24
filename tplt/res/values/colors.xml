@@ -5,4 +5,5 @@
 	<color name="GRAY_TITLE">#dee0e4</color>
 	<color name="GRAY_ICON">#565e67</color>
 	<color name="GRAY_UNDER_BAR">#9ca7ac</color>
+	<color name="GRAY_HINT">#5d5a5a</color>
 </resources>
