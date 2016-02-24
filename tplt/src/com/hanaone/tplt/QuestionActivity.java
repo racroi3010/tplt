@@ -33,7 +33,7 @@ public class QuestionActivity extends Activity implements OnPreparedListener, Me
 		
 		String path = Environment.getExternalStorageDirectory().getPath() +"/35.mp3";
 		try {
-			//mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+			mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 			mPlayer.setDataSource(path);
 			mPlayer.prepareAsync();
 			mPlayer.setOnPreparedListener(this);
