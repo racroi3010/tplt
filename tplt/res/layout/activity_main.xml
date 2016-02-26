@@ -19,81 +19,12 @@
             android:layout_centerInParent="true"
             />
     </RelativeLayout>
-    <LinearLayout 
+    <ListView 
+        android:id="@+id/list_exam"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"      
+        android:layout_height="match_parent"        
         >
-        <LinearLayout 
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="50dp"
-            android:background="@color/GRAY_TITLE"
-            >
-            <TextView 
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="TOPIK - 41회"
-	            android:textSize="15sp"
-	            android:textStyle="bold"
-                />
-        </LinearLayout>
-        <RelativeLayout 
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            >
-            <RelativeLayout 
-                android:layout_width="100dp"
-                android:layout_height="100dp"     
-                android:background="#4f9cfa"     
-                android:layout_alignParentLeft="true"      
-                >
-	            <ImageView 
-	                android:layout_width="match_parent"
-	                android:layout_height="match_parent"
-	                android:scaleType="fitXY"
-	                android:src="@drawable/new_lesson"
-	                android:layout_centerInParent="true"
-	                /> 
-	            <TextView 
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:text="TOPIK\nII"
-	                android:textColor="@color/GRAY_ICON"
-	                android:textStyle="bold"
-	                android:gravity="center"
-	                android:layout_centerInParent="true"
-	                />               
-            </RelativeLayout>
-			<ProgressBar 
-			    android:layout_width="150dp"
-			    android:layout_height="5dp"
-			    android:progress="50"
-			    android:max="100"
-			    android:layout_centerInParent="true"
-			    style="@android:style/Widget.ProgressBar.Horizontal"
-			    android:progressDrawable="@drawable/progressbar"
-			    />
-			<LinearLayout
-			    android:layout_width="wrap_content"
-			    android:layout_height="wrap_content"
-			    android:layout_alignParentRight="true"
-			    android:gravity="center" 
-			    >
-			    <TextView 
-			        android:layout_width="wrap_content"
-			        android:layout_height="wrap_content"
-			        android:text="Point\n50/100"
-			        android:textColor="@color/GRAY_ICON"
-			        />
-			</LinearLayout>
-			<ImageView 
-			    android:layout_width="match_parent"
-			    android:layout_height="1dp"
-			    android:background="@color/GRAY_UNDER_BAR"
-			    />
-        </RelativeLayout>
-    </LinearLayout>
+        
+    </ListView>
 
 </LinearLayout>

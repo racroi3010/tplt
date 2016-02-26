@@ -1,7 +1,9 @@
 package com.hanaone.tplt;
 
 import java.io.IOException;
+import java.util.Arrays;
 
+import com.hanaone.gg.DriveHelper;
 import com.hanaone.media.AudioControllerView;
 import com.hanaone.media.AudioControllerView.MediaPlayerControl;
 
@@ -21,6 +23,8 @@ public class QuestionActivity extends Activity implements OnPreparedListener, Me
 	private AudioControllerView mControllerView;
 	private Context mContext;
 	private MediaPlayer mPlayer;
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -51,7 +55,9 @@ public class QuestionActivity extends Activity implements OnPreparedListener, Me
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
 		
+
 	}
 	
 	
