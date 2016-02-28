@@ -2,20 +2,11 @@ package com.hanaone.tplt.db;
 
 import java.util.List;
 
-import com.hanaone.tplt.db.dataset.Section;
-
 public class ExamDataSet {
-	private int id;
 	private int number;
 	private String date;
 	private List<LevelDataSet> levels;
 	
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
 	public int getNumber() {
 		return number;
 	}

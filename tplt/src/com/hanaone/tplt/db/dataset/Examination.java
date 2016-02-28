@@ -3,9 +3,9 @@ package com.hanaone.tplt.db.dataset;
 import android.provider.BaseColumns;
 
 public class Examination {
-	private int id;
 	private int number;
 	private String date;
+	
 	public int getNumber() {
 		return number;
 	}

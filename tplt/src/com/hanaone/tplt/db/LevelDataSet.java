@@ -7,7 +7,10 @@ public class LevelDataSet {
 	private int number;
 	private String label;
 	private List<SectionDataSet> sections;
-	private AudioDataSet audio;
+	private boolean active;
+	private String url;
+	private FileDataSet audio;	
+	private FileDataSet pdf;
 	public int getId() {
 		return id;
 	}
@@ -32,11 +35,30 @@ public class LevelDataSet {
 	public void setSections(List<SectionDataSet> sections) {
 		this.sections = sections;
 	}
-	public AudioDataSet getAudio() {
+	public boolean isActive() {
+		return active;
+	}
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+	public FileDataSet getAudio() {
 		return audio;
 	}
-	public void setAudio(AudioDataSet audio) {
+	public void setAudio(FileDataSet audio) {
 		this.audio = audio;
 	}
+	public FileDataSet getPdf() {
+		return pdf;
+	}
+	public void setPdf(FileDataSet pdf) {
+		this.pdf = pdf;
+	}
+	public String getUrl() {
+		return url;
+	}
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
 	
 }

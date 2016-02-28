@@ -8,6 +8,13 @@ public class Choice {
 	private String label;
 	private String text;
 	private int question_id;
+	
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
 	public int getNumber() {
 		return number;
 	}

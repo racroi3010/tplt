@@ -1,23 +1,19 @@
 package com.hanaone.tplt;
 
 import java.io.IOException;
-import java.util.Arrays;
-
-import com.hanaone.gg.DriveHelper;
-import com.hanaone.media.AudioControllerView;
-import com.hanaone.media.AudioControllerView.MediaPlayerControl;
 
 import android.app.Activity;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnPreparedListener;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.MotionEvent;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
+
+import com.hanaone.media.AudioControllerView;
+import com.hanaone.media.AudioControllerView.MediaPlayerControl;
 
 public class QuestionActivity extends Activity implements OnPreparedListener, MediaPlayerControl{
 	private AudioControllerView mControllerView;

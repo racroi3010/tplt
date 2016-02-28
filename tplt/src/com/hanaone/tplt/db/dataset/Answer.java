@@ -6,6 +6,13 @@ public class Answer {
 	private int id;
 	private int question_id;
 	private int choice_id;
+	
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
 	public int getQuestion_id() {
 		return question_id;
 	}

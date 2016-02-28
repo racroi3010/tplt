@@ -9,6 +9,13 @@ public class Section {
 	private float endAudio;
 	private String text;
 	private int exam_level_id;
+	
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
 	public int getNumber() {
 		return number;
 	}

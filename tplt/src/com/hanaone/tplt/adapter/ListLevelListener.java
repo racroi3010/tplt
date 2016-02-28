@@ -1,5 +1,5 @@
 package com.hanaone.tplt.adapter;
 
-public interface ListExamLevelListener {
+public interface ListLevelListener {
 	public void onSelect(int examLevelId);
 }

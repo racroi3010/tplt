@@ -8,6 +8,14 @@ public class Question {
 	private int mark;
 	private String text;
 	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	private int section_id;
 
 	public int getNumber() {
