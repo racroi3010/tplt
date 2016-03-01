@@ -8,9 +8,10 @@ public class ExamLevel {
 	private int level_id;
 	private int audio_id;
 	private int pdf_id;	
+	private int txt_id;
 	
 	private int active;
-	private String url;
+	
 	
 	public int getId() {
 		return id;
@@ -55,12 +56,17 @@ public class ExamLevel {
 	public void setActive(int active) {
 		this.active = active;
 	}
-	public String getUrl() {
-		return url;
+	
+
+
+
+	public int getTxt_id() {
+		return txt_id;
 	}
-	public void setUrl(String url) {
-		this.url = url;
+	public void setTxt_id(int txt_id) {
+		this.txt_id = txt_id;
 	}
+
 
 
 
@@ -70,8 +76,9 @@ public class ExamLevel {
 		public static final String COLUMN_NAME_LEVEL_ID = "level_id";	
 		public static final String COLUMN_NAME_AUDIO_ID = "audio_id";
 		public static final String COLUMN_NAME_PDF_ID = "pdf_id";	
+		public static final String COLUMN_NAME_TXT_ID = "txt_id";	
 		
 		public static final String COLUMN_NAME_ACTIVE = "active";
-		public static final String COLUMN_NAME_URL = "url";	
+		
 	}	
 }

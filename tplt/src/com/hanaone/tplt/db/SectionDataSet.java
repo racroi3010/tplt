@@ -8,6 +8,7 @@ public class SectionDataSet {
 	private float startAudio;
 	private float endAudio;
 	private String text;
+	private String hint;
 	private List<QuestionDataSet> questions;
 	public int getId() {
 		return id;
@@ -44,6 +45,12 @@ public class SectionDataSet {
 	}
 	public void setQuestions(List<QuestionDataSet> questions) {
 		this.questions = questions;
+	}
+	public String getHint() {
+		return hint;
+	}
+	public void setHint(String hint) {
+		this.hint = hint;
 	}
 	
 }

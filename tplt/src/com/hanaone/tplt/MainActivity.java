@@ -10,16 +10,19 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.hanaone.gg.DownloadHelper;
+import com.hanaone.gg.JsonReaderHelper;
 import com.hanaone.tplt.adapter.DatabaseAdapter;
 import com.hanaone.tplt.adapter.ListExamAdapter;
 import com.hanaone.tplt.adapter.ListLevelListener;
 import com.hanaone.tplt.db.ExamDataSet;
+import com.hanaone.tplt.db.FileDataSet;
 import com.hanaone.tplt.db.LevelDataSet;
 
 public class MainActivity extends Activity {
@@ -60,51 +63,28 @@ public class MainActivity extends Activity {
 	}
 	private List<ExamDataSet> onReadConf(){
 		DownloadHelper dHelper = new DownloadHelper(mContext);
+		File folder = mContext.getDir("tplt", Context.MODE_PRIVATE);
+		String confPath = folder.getAbsolutePath() + "/config.txt";
 		boolean loaded = false;
-		try {
-			loaded = dHelper.loadExam("https://www.dropbox.com/s/z4tg1y2hywda5u1/tax.txt?dl=0");
+		try {		
+			loaded = dHelper.downloadFile(Constants.REMOTE_CONFIG_FILE_JSON, confPath);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 		if(loaded){
-			File folder = mContext.getDir("tplt", Context.MODE_PRIVATE);
-			File file = new File(folder.getAbsolutePath() + "/config.txt");
+			File file = new File(confPath);
 			if(file.exists()){
 				try {
-					BufferedReader reader = new BufferedReader(new FileReader(file));
-					String txt = "";
-					while((txt = reader.readLine()) != null){
-						if(txt.equals("#EXAM")){
-							ExamDataSet exam = new ExamDataSet();
-							int number = Integer.parseInt(reader.readLine());
-							if(!dbAdapter.checkExam(number)) {
-								exam.setNumber(number);
-								String date = reader.readLine();
-								exam.setDate(date);
-								int numOfLevels = Integer.parseInt(reader.readLine());
-								List<LevelDataSet> levels = new ArrayList<LevelDataSet>();
-								for(int i = 0; i < numOfLevels; i ++){
-									String level = reader.readLine();
-									String[] temp = level.split(";");
-									LevelDataSet data = new LevelDataSet();
-									data.setNumber(Integer.parseInt(temp[0]));
-									data.setLabel(Integer.parseInt(temp[0]) + "");
-									data.setUrl(temp[1]);
-									levels.add(data);
-								}
-								exam.setLevels(levels);
-								
-								dbAdapter.addExam(exam);
-								
-								list.add(exam);								
-							}
-
+					List<ExamDataSet> exams = JsonReaderHelper.readExams(file);
+					for(ExamDataSet exam: exams){
+						if(!dbAdapter.checkExam(exam.getNumber())){
+							dbAdapter.addExam(exam);
+							
+							list.add(exam);									
 						}
 					}
-				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -134,7 +114,9 @@ public class MainActivity extends Activity {
 		@Override
 		public void onSelect(int examLevelId) {
 			Toast.makeText(mContext, "" + examLevelId, Toast.LENGTH_SHORT).show();
-			
+			Intent intent = new Intent(mContext, QuestionActivity.class);
+			intent.putExtra(Constants.LEVEL_ID, examLevelId);
+			startActivity(intent);
 		}
 	};
 	

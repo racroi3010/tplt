@@ -9,24 +9,40 @@ import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.MotionEvent;
 import android.widget.FrameLayout;
 
 import com.hanaone.media.AudioControllerView;
 import com.hanaone.media.AudioControllerView.MediaPlayerControl;
+import com.hanaone.tplt.adapter.DatabaseAdapter;
+import com.hanaone.tplt.adapter.QuestionSlideAdapter;
+import com.hanaone.tplt.db.LevelDataSet;
 
-public class QuestionActivity extends Activity implements OnPreparedListener, MediaPlayerControl{
+public class QuestionActivity extends FragmentActivity implements OnPreparedListener, MediaPlayerControl{
 	private AudioControllerView mControllerView;
 	private Context mContext;
 	private MediaPlayer mPlayer;
 	
-	
+	// view pager
+	private ViewPager mPager;
+	private PagerAdapter mPagerAdapter;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		setContentView(R.layout.activity_question);
+		setContentView(R.layout.activity_question_practice);
 		mContext = this;
+		
+		// init data
+		DatabaseAdapter dbAdapter = new DatabaseAdapter(mContext);
+		int levelId = getIntent().getIntExtra(Constants.LEVEL_ID, -1);
+		LevelDataSet level = dbAdapter.getLevel(levelId);
+		
+		
 		
 		mControllerView = new AudioControllerView(this);		
 		mPlayer = new MediaPlayer();
@@ -53,7 +69,11 @@ public class QuestionActivity extends Activity implements OnPreparedListener, Me
 		}
 
 		
-
+		// pager
+		mPager = (ViewPager) findViewById(R.id.viewpager_question_vp);
+		
+		mPagerAdapter = new QuestionSlideAdapter(getSupportFragmentManager(), level);
+		mPager.setAdapter(mPagerAdapter);
 	}
 	
 	

@@ -28,7 +28,7 @@ import com.hanaone.tplt.db.dataset.Section;
 import com.hanaone.tplt.db.dataset.Section.SectionEntry;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
-	public static final int DATABASE_VERSION = 10;
+	public static final int DATABASE_VERSION = 20;
 	public static final String DATABASE_NAME = "tplt.db";
 	
 	private static final String TEXT_TYPE = " TEXT";
@@ -105,12 +105,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			+ ExamLevelEntry.COLUMN_NAME_LEVEL_ID + INTEGER_TYPE  + COMMA_STEP
 			+ ExamLevelEntry.COLUMN_NAME_AUDIO_ID + INTEGER_TYPE  + COMMA_STEP
 			+ ExamLevelEntry.COLUMN_NAME_PDF_ID + INTEGER_TYPE + COMMA_STEP
+			+ ExamLevelEntry.COLUMN_NAME_TXT_ID + INTEGER_TYPE + COMMA_STEP
 			+ ExamLevelEntry.COLUMN_NAME_ACTIVE + INTEGER_TYPE + COMMA_STEP
-			+ ExamLevelEntry.COLUMN_NAME_URL + TEXT_TYPE + COMMA_STEP
 			+ FOREIGN_KEY + " (" + ExamLevelEntry.COLUMN_NAME_EXAM_ID + ") REFERENCES " + ExamEntry.TABLE_NAME + "(" + ExamEntry.COLUMN_NAME_NUMBER + ")" + COMMA_STEP
 			+ FOREIGN_KEY + " (" + ExamLevelEntry.COLUMN_NAME_LEVEL_ID + ") REFERENCES " + LevelEntry.TABLE_NAME + "(" + LevelEntry._ID + ")" + COMMA_STEP
 			+ FOREIGN_KEY + " (" + ExamLevelEntry.COLUMN_NAME_AUDIO_ID + ") REFERENCES " + FileExtraEntry.TABLE_NAME + "(" + FileExtraEntry._ID + ")" + COMMA_STEP
-			+ FOREIGN_KEY + " (" + ExamLevelEntry.COLUMN_NAME_PDF_ID + ") REFERENCES " + FileExtraEntry.TABLE_NAME + "(" + FileExtraEntry._ID + ")"
+			+ FOREIGN_KEY + " (" + ExamLevelEntry.COLUMN_NAME_PDF_ID + ") REFERENCES " + FileExtraEntry.TABLE_NAME + "(" + FileExtraEntry._ID + ")" + COMMA_STEP
+			+ FOREIGN_KEY + " (" + ExamLevelEntry.COLUMN_NAME_TXT_ID + ") REFERENCES " + FileExtraEntry.TABLE_NAME + "(" + FileExtraEntry._ID + ")"
 			+ ")";	
 	
 	private static final String DELETE_TABLE_ANSWER = 
@@ -200,8 +201,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			values.put(ExamLevelEntry.COLUMN_NAME_LEVEL_ID, examLevel.getLevel_id());	
 			values.put(ExamLevelEntry.COLUMN_NAME_AUDIO_ID, examLevel.getAudio_id());	
 			values.put(ExamLevelEntry.COLUMN_NAME_PDF_ID, examLevel.getPdf_id());
+			values.put(ExamLevelEntry.COLUMN_NAME_TXT_ID, examLevel.getTxt_id());
 			values.put(ExamLevelEntry.COLUMN_NAME_ACTIVE, examLevel.getActive());
-			values.put(ExamLevelEntry.COLUMN_NAME_URL, examLevel.getUrl());
+			
 		} else if(obj instanceof Section){
 			Section section = (Section) obj;
 			
@@ -293,18 +295,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			return null;
 		}
 		
-		if(c.moveToFirst()){
-			Examination exam = new Examination();
-			exam.setNumber(c.getInt(0));
-			exam.setDate(c.getString(1));
-			
-			return exam;
-		}
+		Examination exam = new Examination();
+		exam.setNumber(c.getInt(0));
+		exam.setDate(c.getString(1));		
+		
 			
 		c.close();
 		db.close();
 		
-		return null;
+		return exam;
 	}
 
 	// exam level
@@ -327,8 +326,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			examLevel.setLevel_id(c.getInt(2));
 			examLevel.setAudio_id(c.getInt(3));
 			examLevel.setPdf_id(c.getInt(4));
-			examLevel.setActive(c.getInt(5));
-			examLevel.setUrl(c.getString(6));
+			examLevel.setTxt_id(c.getInt(5));
+			examLevel.setActive(c.getInt(6));
+			
 			list.add(examLevel);
 		} while(c.moveToNext());
 			
@@ -350,19 +350,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			db.close();
 			return null;
 		}
-		if(c.moveToNext()) {
-			FileExtra file = new FileExtra();
-			file.setId(c.getInt(0));
-			file.setType(c.getString(1));
-			file.setName(c.getString(2));
-			file.setPath(c.getString(3));
-			return file;
-		}
+		FileExtra file = new FileExtra();
+		file.setId(c.getInt(0));
+		file.setType(c.getString(1));
+		file.setName(c.getString(2));
+		file.setPath(c.getString(3));
 			
 		c.close();
 		db.close();
 		
-		return null;		
+		return file;		
 	}	
 	
 	// level
@@ -376,19 +373,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			db.close();
 			return null;
 		}		
+		Level level = new Level();
+		level.setId(c.getInt(0));
+		level.setNumber(c.getInt(1));
+		level.setLabel(c.getString(2));		
 		
-		if(c.moveToNext()) {
-			Level level = new Level();
-			level.setId(c.getInt(0));
-			level.setNumber(c.getInt(1));
-			level.setLabel(c.getString(2));
-			return level;
-		}
-			
 		c.close();
 		db.close();
 		
-		return null;		
+		return level;		
 	}	
 	public Level selectLevelById(int levelId){
 		String query = "SELECT * FROM " + LevelEntry.TABLE_NAME 
@@ -401,19 +394,128 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			return null;
 		}		
 		
-		if(c.moveToNext()) {
-			Level level = new Level();
-			level.setId(c.getInt(0));
-			level.setNumber(c.getInt(1));
-			level.setLabel(c.getString(2));
-			return level;
-		}
+		Level level = new Level();
+		level.setId(c.getInt(0));
+		level.setNumber(c.getInt(1));
+		level.setLabel(c.getString(2));
+		
 			
 		c.close();
 		db.close();
 		
-		return null;		
+		return level;	
 	}
 	
+	public ExamLevel selectExamLevelById(int examLevelId){
+		String query = "SELECT * FROM " + ExamLevelEntry.TABLE_NAME 
+				+ " WHERE " + ExamLevelEntry._ID + " = " + examLevelId;
+		SQLiteDatabase db = getReadableDatabase();
+		Cursor c = db.rawQuery(query, null);
+		
+		if(!c.moveToFirst()){
+			db.close();
+			return null;
+		}		
+		
+		ExamLevel examLevel = new ExamLevel();
+		examLevel.setId(c.getInt(0));
+		examLevel.setExam_id(c.getInt(1));
+		examLevel.setLevel_id(c.getInt(2));
+		examLevel.setAudio_id(c.getInt(3));
+		examLevel.setPdf_id(c.getInt(4));
+		examLevel.setTxt_id(c.getInt(5));
+		examLevel.setActive(c.getInt(6));
+			
+		c.close();
+		db.close();
+		
+		return examLevel;			
+	}
+	
+	public List<Section> selectSectionByExamLevelId(int examLevelId){
+		String query = "SELECT * FROM " + SectionEntry.TABLE_NAME 
+				+ " WHERE " + SectionEntry.COLUMN_NAME_EXAM_LEVEL_ID + " = " + examLevelId
+				+ " ORDER BY " + SectionEntry.COLUMN_NAME_NUMBER + " DESC";
+		SQLiteDatabase db = getReadableDatabase();
+		Cursor c = db.rawQuery(query, null);
+		
+		List<Section> list = new ArrayList<Section>();
+		if(!c.moveToFirst()){
+			db.close();
+			return list;
+		}
+		do {
+			Section section = new Section();
+			section.setId(c.getInt(0));
+			section.setNumber(c.getInt(1));
+			section.setStartAudio(c.getFloat(2));
+			section.setEndAudio(c.getFloat(3));
+			section.setText(c.getString(4));
+			section.setExam_level_id(c.getInt(5));
+			
+			list.add(section);
+		} while(c.moveToNext());
+			
+		c.close();
+		db.close();
+			
+		return list;
+	}
+	public List<Question> selectQuestionBySectionId(int sectionId){
+		String query = "SELECT * FROM " + QuestionEntry.TABLE_NAME 
+				+ " WHERE " + QuestionEntry.COLUMN_NAME_SECTION_ID + " = " + sectionId
+				+ " ORDER BY " + QuestionEntry.COLUMN_NAME_NUMBER + " DESC";
+		SQLiteDatabase db = getReadableDatabase();
+		Cursor c = db.rawQuery(query, null);
+		
+		List<Question> list = new ArrayList<Question>();
+		if(!c.moveToFirst()){
+			db.close();
+			return list;
+		}
+		do {
+			Question question = new Question();
+			question.setId(c.getInt(0));
+			question.setNumber(c.getInt(1));
+			question.setMark(c.getInt(2));
+			question.setText(c.getString(3));
+			question.setSection_id(c.getInt(4));
+			
+			list.add(question);
+		} while(c.moveToNext());
+			
+		c.close();
+		db.close();
+			
+		return list;		
+	}
+	public List<Choice> selectChoiceByQuestionId(int questionId){
+		String query = "SELECT * FROM " + ChoiceEntry.TABLE_NAME 
+				+ " WHERE " + ChoiceEntry.COLUMN_QUESTION_ID + " = " + questionId
+				+ " ORDER BY " + ChoiceEntry.COLUMN_NAME_NUMBER + " DESC";
+		SQLiteDatabase db = getReadableDatabase();
+		Cursor c = db.rawQuery(query, null);
+		
+		List<Choice> list = new ArrayList<Choice>();
+		if(!c.moveToFirst()){
+			db.close();
+			return list;
+		}
+		do {
+			Choice choice = new Choice();
+			choice.setId(c.getInt(0));
+			choice.setNumber(c.getInt(1));
+			choice.setLabel(c.getString(2));
+			choice.setText(c.getString(3));
+			choice.setQuestion_id(c.getInt(4));
+			
+			list.add(choice);
+		} while(c.moveToNext());
+			
+		c.close();
+		db.close();
+			
+		return list;		
+	}
 	
 }

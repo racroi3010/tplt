@@ -9,6 +9,9 @@ public class QuestionDataSet {
 	private String text;
 	private List<ChoiceDataSet> choices;
 	private int answer;
+	private String type;
+	private String choiceType;
+	private String hint;
 	public int getId() {
 		return id;
 	}
@@ -44,6 +47,24 @@ public class QuestionDataSet {
 	}
 	public void setAnswer(int answer) {
 		this.answer = answer;
+	}
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
+	public String getHint() {
+		return hint;
+	}
+	public void setHint(String hint) {
+		this.hint = hint;
+	}
+	public String getChoiceType() {
+		return choiceType;
+	}
+	public void setChoiceType(String choiceType) {
+		this.choiceType = choiceType;
 	}
 	
 }

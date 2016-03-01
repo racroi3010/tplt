@@ -8,9 +8,10 @@ public class LevelDataSet {
 	private String label;
 	private List<SectionDataSet> sections;
 	private boolean active;
-	private String url;
+	private FileDataSet txt;
 	private FileDataSet audio;	
 	private FileDataSet pdf;
+	private int score;
 	public int getId() {
 		return id;
 	}
@@ -53,11 +54,18 @@ public class LevelDataSet {
 	public void setPdf(FileDataSet pdf) {
 		this.pdf = pdf;
 	}
-	public String getUrl() {
-		return url;
+	
+	public FileDataSet getTxt() {
+		return txt;
 	}
-	public void setUrl(String url) {
-		this.url = url;
+	public void setTxt(FileDataSet txt) {
+		this.txt = txt;
+	}
+	public int getScore() {
+		return score;
+	}
+	public void setScore(int score) {
+		this.score = score;
 	}
 
 	

@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -19,8 +20,8 @@ public class DownloadHelper {
 	}
 
 
-	public boolean loadExam(String remoteFile) throws IOException{	
-		URL  url = new URL("https://www.dropbox.com/s/91dov94ay0ozsiy/exam_list.txt?raw=1");
+	public boolean downloadFile(String remoteFile, String localFile) throws IOException{	
+		URL  url = new URL(remoteFile);
 		URLConnection connection = url.openConnection();
 		if(connection instanceof HttpURLConnection){
 			HttpURLConnection httpConnection = (HttpURLConnection) connection;
@@ -33,8 +34,8 @@ public class DownloadHelper {
 			if(resCode == HttpURLConnection.HTTP_OK){
 				InputStream is = httpConnection.getInputStream();
 				if(is != null){
-					File folder = mContext.getDir("tplt", Context.MODE_PRIVATE);
-					File file = new File(folder.getAbsolutePath() + "/config.txt");
+					//File folder = mContext.getDir("tplt", Context.MODE_PRIVATE);
+					File file = new File(localFile);
 					FileOutputStream os = new FileOutputStream(file);
 					
 					byte[] buf = new byte[1024];
@@ -50,11 +51,26 @@ public class DownloadHelper {
 			}
 		}
 		
-//		InputStream is = mContext.getAssets().open("test/exam_list.txt");
-		
-
-		
+//		InputStream is = mContext.getAssets().open("test/exam_list.txt");	
 		return false;
 		
+	}
+	public InputStream parseUrl(String remoteFile) throws IOException{
+		URL  url = new URL(remoteFile);
+		URLConnection connection = url.openConnection();
+		if(connection instanceof HttpURLConnection){
+			HttpURLConnection httpConnection = (HttpURLConnection) connection;
+			httpConnection.setAllowUserInteraction(false);
+			httpConnection.setInstanceFollowRedirects(true);
+			httpConnection.setRequestMethod("GET");
+			httpConnection.connect();
+			
+			int resCode = httpConnection.getResponseCode();
+			if(resCode == HttpURLConnection.HTTP_OK){
+				InputStream is = httpConnection.getInputStream();
+				return is;			
+			}
+		}		
+		return null;
 	}
 }
