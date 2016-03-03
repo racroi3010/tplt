@@ -14,7 +14,7 @@ import com.hanaone.tplt.R;
 import com.hanaone.tplt.db.ExamDataSet;
 import com.hanaone.tplt.db.LevelDataSet;
 import com.hanaone.tplt.db.SectionDataSet;
-import com.hanaone.tplt.db.dataset.Section;
+import com.hanaone.tplt.db.model.Section;
 import com.hanaone.tplt.util.ColorUtils;
 import com.hanaone.tplt.util.DatabaseUtils;
 
@@ -44,11 +44,13 @@ public class ListExamAdapter extends BaseAdapter {
 	private ListLevelListener mListener;
 	private List<ExamDataSet> exams;
 	private LayoutInflater mInflater;
+	private DatabaseAdapter dbAdapter;
 	public ListExamAdapter(Context mContext, ListLevelListener mListener) {
 		super();
 		this.mContext = mContext;
 		this.mListener = mListener;
 		this.mInflater = LayoutInflater.from(mContext);
+		this.dbAdapter  = new DatabaseAdapter(mContext);
 	}
 
 	public void setExams(List<ExamDataSet> exams) {
@@ -222,13 +224,14 @@ public class ListExamAdapter extends BaseAdapter {
 					break;
 				case R.id.layout_level3:
 					prgBar = (ProgressBar) v.findViewById(R.id.prg_level_3);
-					txtPer = (TextView) v.findViewById(R.id.txt_score_3);			
+					txtPer = (TextView) v.findViewById(R.id.txt_score_3);	
+						
 					break;			
 				default:
 					break;
 				}
 				
-				new Downloading(prgBar).execute(level);	
+				new Downloading(v,prgBar).execute(level);
 				
 				dialog.dismiss();
 			}
@@ -237,35 +240,46 @@ public class ListExamAdapter extends BaseAdapter {
 		.show();
 
 	}
-	private class Downloading extends AsyncTask<LevelDataSet, Void, Void>{
+	private class Downloading extends AsyncTask<LevelDataSet, Boolean, Boolean>{
+		private LinearLayout layout;
 		private ProgressBar prgBar;
 		//private TextView txtPer;
 		private LevelDataSet level;
 
-		public Downloading(ProgressBar prgBar) {
+		public Downloading(LinearLayout layout, ProgressBar prgBar) {
 			super();
 			this.prgBar = prgBar;
 			//this.txtPer = txtPer;
+			this.layout = layout;
 		}
 
 		@Override
 		protected void onPreExecute() {
 			this.prgBar.setProgress(0);
 			txtPer.setText("0%");
+			this.layout.setAlpha(1f);
 			super.onPreExecute();
 		}
 
 		@Override
-		protected void onPostExecute(Void result) {
-			this.prgBar.setProgress(100);
-			txtPer.setText("100%");
-			level.setActive(true);
-			Toast.makeText(mContext, "download finish!", Toast.LENGTH_SHORT).show();
+		protected void onPostExecute(Boolean result) {
+			if(result){
+				this.prgBar.setProgress(100);
+				txtPer.setText("100%");
+				level.setActive(true);
+				this.layout.setAlpha(1f);
+				int updatedActive = dbAdapter.updateLevelActive(level.getId(), true);
+				Toast.makeText(mContext, "download finish! " + updatedActive, Toast.LENGTH_SHORT).show();				
+			} else {
+				this.layout.setAlpha(0.5f);
+				Toast.makeText(mContext, "download failed!", Toast.LENGTH_SHORT).show();
+			}
+
 			super.onPostExecute(result);
 		}
 
 		@Override
-		protected Void doInBackground(LevelDataSet... params) {
+		protected Boolean doInBackground(LevelDataSet... params) {
 			level = params[0];
 			String url = level.getAudio().getPath();
 			DownloadHelper dlHelper = new DownloadHelper(mContext);
@@ -300,10 +314,11 @@ public class ListExamAdapter extends BaseAdapter {
 //			} catch (IOException e) {
 //				// TODO Auto-generated catch block
 //				e.printStackTrace();
+//				return false;
 //			}
 //			
 			// download text
-			DatabaseAdapter dbAdapter = new DatabaseAdapter(mContext);
+			
 			String txt = level.getTxt().getPath();
 			try {
 				InputStream is = dlHelper.parseUrl(txt);
@@ -330,70 +345,71 @@ public class ListExamAdapter extends BaseAdapter {
 
 				}		
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
+				return false;
 			}			
 			
-			return null;
+			return true;
 		}
 		
 	}
-	
-	private SectionDataSet readSection(BufferedReader bufferedReader) throws IOException{
-		SectionDataSet section = new SectionDataSet();
-		String line = "";
-		String temp = "";		
-		while((line = bufferedReader.readLine()) != null){
-			if("#SECTION_END".equals(line)){
-				break;
-			}
-			// section number;
-			String sectionNumber = bufferedReader.readLine();
-			section.setNumber(Integer.parseInt(sectionNumber));			
-
-			// section question
-			if("#SECTION_QUESTION_BEGIN".equals(bufferedReader.readLine())){
-				temp = "";
-				while((line = bufferedReader.readLine()) != null){
-					if(!"#SECTION_QUESTION_END".equals(line)){
-						temp += line;
-					} else {
-						break;
-					}
-				}
-				section.setText(temp);						
-			}
-			
-			// section hint
-			if("#SECTION_HINT_BEGIN".equals(bufferedReader.readLine())){
-				temp = "";
-				while((line = bufferedReader.readLine()) != null){
-					if(!"#SECTION_HINT_END".equals(line)){
-						temp += line;
-					} else {
-						break;
-					}
-				}
-				section.setHint(temp);					
-			}		
-			
-			// question
-
-			if("#QUESTION".equals(bufferedReader.readLine())){
-				temp = "";
-				while((line = bufferedReader.readLine()) != null){
-					if(!"#SECTION_HINT_END".equals(line)){
-						temp += line;
-					} else {
-						break;
-					}
-				}
-				section.setHint(temp);					
-			}						
-		}
-
-		return section;
-	}
+//	
+//	private SectionDataSet readSection(BufferedReader bufferedReader) throws IOException{
+//		SectionDataSet section = new SectionDataSet();
+//		String line = "";
+//		String temp = "";		
+//		while((line = bufferedReader.readLine()) != null){
+//			if("#SECTION_END".equals(line)){
+//				break;
+//			}
+//			// section number;
+//			String sectionNumber = bufferedReader.readLine();
+//			section.setNumber(Integer.parseInt(sectionNumber));			
+//
+//			// section question
+//			if("#SECTION_QUESTION_BEGIN".equals(bufferedReader.readLine())){
+//				temp = "";
+//				while((line = bufferedReader.readLine()) != null){
+//					if(!"#SECTION_QUESTION_END".equals(line)){
+//						temp += line;
+//					} else {
+//						break;
+//					}
+//				}
+//				section.setText(temp);						
+//			}
+//			
+//			// section hint
+//			if("#SECTION_HINT_BEGIN".equals(bufferedReader.readLine())){
+//				temp = "";
+//				while((line = bufferedReader.readLine()) != null){
+//					if(!"#SECTION_HINT_END".equals(line)){
+//						temp += line;
+//					} else {
+//						break;
+//					}
+//				}
+//				section.setHint(temp);					
+//			}		
+//			
+//			// question
+//
+//			if("#QUESTION".equals(bufferedReader.readLine())){
+//				temp = "";
+//				while((line = bufferedReader.readLine()) != null){
+//					if(!"#SECTION_HINT_END".equals(line)){
+//						temp += line;
+//					} else {
+//						break;
+//					}
+//				}
+//				section.setHint(temp);					
+//			}						
+//		}
+//
+//		return section;
+//	}
 	
 	private static final int HANDLE_PERCENTAGE = 1;
 	private TextView txtPer;

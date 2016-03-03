@@ -57,6 +57,10 @@ public class JsonReaderHelper {
 			String name = reader.nextName();
 			if(name.equals("section_number")){
 				section.setNumber(reader.nextInt());
+			} else if(name.equals("section_audio_start")){
+				section.setStartAudio((float)reader.nextDouble());
+			} else if(name.equals("section_audio_end")){
+				section.setEndAudio((float)reader.nextDouble());			
 			} else if(name.equals("section_txt")){
 				section.setText(reader.nextString());
 			} else if(name.equals("section_hint")){
@@ -101,6 +105,10 @@ public class JsonReaderHelper {
 				data.setChoiceType(reader.nextString());
 			} else if(name.equals("question_choices")){
 				data.setChoices(readChoices(reader));
+			} else if(name.equals("question_start_audio")){
+				data.setStartAudio((float) reader.nextDouble());	
+			} else if(name.equals("question_end_audio")){
+				data.setEndAudio((float) reader.nextDouble());					
 			} else {
 				reader.skipValue();
 			}

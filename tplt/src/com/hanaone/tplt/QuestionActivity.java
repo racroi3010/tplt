@@ -1,19 +1,27 @@
 package com.hanaone.tplt;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
+import android.os.Parcelable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.FrameLayout;
 
 import com.hanaone.media.AudioControllerView;
@@ -21,6 +29,7 @@ import com.hanaone.media.AudioControllerView.MediaPlayerControl;
 import com.hanaone.tplt.adapter.DatabaseAdapter;
 import com.hanaone.tplt.adapter.QuestionSlideAdapter;
 import com.hanaone.tplt.db.LevelDataSet;
+import com.hanaone.tplt.db.SectionDataSet;
 
 public class QuestionActivity extends FragmentActivity implements OnPreparedListener, MediaPlayerControl{
 	private AudioControllerView mControllerView;
@@ -30,6 +39,8 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 	// view pager
 	private ViewPager mPager;
 	private PagerAdapter mPagerAdapter;
+	private LevelDataSet level;
+	private int currentItem;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -40,13 +51,10 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 		// init data
 		DatabaseAdapter dbAdapter = new DatabaseAdapter(mContext);
 		int levelId = getIntent().getIntExtra(Constants.LEVEL_ID, -1);
-		LevelDataSet level = dbAdapter.getLevel(levelId);
-		
-		
-		
+		level = dbAdapter.getLevel(levelId);
+			
 		mControllerView = new AudioControllerView(this);		
 		mPlayer = new MediaPlayer();
-		
 		String path = Environment.getExternalStorageDirectory().getPath() +"/35.mp3";
 		try {
 			mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -74,9 +82,32 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 		
 		mPagerAdapter = new QuestionSlideAdapter(getSupportFragmentManager(), level);
 		mPager.setAdapter(mPagerAdapter);
+		
+		
 	}
 	
-	
+	public void onClick(View v){
+		currentItem = mPager.getCurrentItem();
+		int sectionSize = level.getSections().size();
+		switch (v.getId()) {
+		case R.id.btn_previous:
+			currentItem --;
+			mPager.setCurrentItem(currentItem);
+			break;
+		case R.id.btn_next:
+			if(currentItem < sectionSize - 1){
+				currentItem ++;
+				mPager.setCurrentItem(currentItem);
+			} else {
+				Intent intent = new Intent(mContext, ResultActivity.class);
+				intent.putParcelableArrayListExtra(Constants.LIST_SECTIONS, (ArrayList<? extends Parcelable>) level.getSections());
+				startActivity(intent);
+			}
+			break;
+		default:
+			break;
+		}
+	}
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		
@@ -92,17 +123,33 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 	}
 	
 	public void start() {
+		SectionDataSet section = level.getSections().get(currentItem);
+		int start = (int)(section.getStartAudio() * 1000);
+		int end = (int)(section.getEndAudio() * 1000);
+		mPlayer.seekTo(start);
 		mPlayer.start();
+		
+		Timer timer = new Timer(true);
+		timer.schedule(new Sleeper(), (end - start));
 		
 	}
 	public void pause() {
 		mPlayer.pause();
 	}
 	public int getDuration() {
-		return mPlayer.getDuration();
+		// re calculate
+		SectionDataSet section = level.getSections().get(currentItem);
+		int start = (int)(section.getStartAudio() * 1000);
+		int end = (int)(section.getEndAudio() * 1000);
+		return (end - start);
+		//return mPlayer.getDuration();
 	}
 	public int getCurrentPosition() {
-		return mPlayer.getCurrentPosition();
+		// recalculate
+		SectionDataSet section = level.getSections().get(currentItem);
+		int start = (int)(section.getStartAudio() * 1000);
+		int current = mPlayer.getCurrentPosition();
+		return (current - start);
 	}
 	public void seekTo(int pos) {
 		mPlayer.seekTo(pos);
@@ -130,5 +177,28 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 		
 	}
 
+	private static final int HANDLE_STOP_AUDIO = 1;
+	private Handler mHander = new Handler(){
 
+		@Override
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+			case HANDLE_STOP_AUDIO:
+				mPlayer.stop();
+				break;
+
+			default:
+				break;
+			}
+		}
+		
+	};
+	private class Sleeper extends TimerTask{
+
+		@Override
+		public void run() {
+			mHander.obtainMessage(HANDLE_STOP_AUDIO).sendToTarget();
+		}
+		
+	}
 }

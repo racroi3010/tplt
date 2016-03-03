@@ -1,4 +1,4 @@
-package com.hanaone.tplt.db.dataset;
+package com.hanaone.tplt.db.model;
 
 import android.provider.BaseColumns;
 

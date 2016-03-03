@@ -27,6 +27,7 @@
             </intent-filter>
         </activity>   
         <activity android:name="com.hanaone.tplt.QuestionActivity"></activity>   
+        <activity android:name="com.hanaone.tplt.ResultActivity"></activity>  
     </application>
 
 </manifest>

@@ -1,4 +1,4 @@
-package com.hanaone.tplt.db.dataset;
+package com.hanaone.tplt.db.model;
 
 import android.provider.BaseColumns;
 
@@ -8,6 +8,7 @@ public class Section {
 	private float startAudio;
 	private float endAudio;
 	private String text;
+	private String hint;
 	private int exam_level_id;
 	
 	public int getId() {
@@ -52,12 +53,22 @@ public class Section {
 
 
 
+	public String getHint() {
+		return hint;
+	}
+	public void setHint(String hint) {
+		this.hint = hint;
+	}
+
+
+
 	public static abstract class SectionEntry implements BaseColumns{
 		public static final String TABLE_NAME = "section";
 		public static final String COLUMN_NAME_NUMBER = "number";
 		public static final String COLUMN_NAME_START_AUDIO = "start_audio";
 		public static final String COLUMN_NAME_END_AUDIO = "end_audio";
 		public static final String COLUMN_NAME_TEXT = "text";
+		public static final String COLUMN_NAME_HINT = "hint";
 		public static final String COLUMN_NAME_EXAM_LEVEL_ID = "exam_level_id";
 	}	
 }

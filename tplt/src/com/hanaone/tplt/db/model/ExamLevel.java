@@ -1,4 +1,4 @@
-package com.hanaone.tplt.db.dataset;
+package com.hanaone.tplt.db.model;
 
 import android.provider.BaseColumns;
 
@@ -9,7 +9,7 @@ public class ExamLevel {
 	private int audio_id;
 	private int pdf_id;	
 	private int txt_id;
-	
+	private int score;
 	private int active;
 	
 	
@@ -70,6 +70,16 @@ public class ExamLevel {
 
 
 
+	public int getScore() {
+		return score;
+	}
+	public void setScore(int score) {
+		this.score = score;
+	}
+
+
+
+
 	public abstract class ExamLevelEntry implements BaseColumns{
 		public static final String TABLE_NAME = "examlevel";
 		public static final String COLUMN_NAME_EXAM_ID = "exam_id";
@@ -77,7 +87,7 @@ public class ExamLevel {
 		public static final String COLUMN_NAME_AUDIO_ID = "audio_id";
 		public static final String COLUMN_NAME_PDF_ID = "pdf_id";	
 		public static final String COLUMN_NAME_TXT_ID = "txt_id";	
-		
+		public static final String COLUMN_NAME_SCORE = "score";
 		public static final String COLUMN_NAME_ACTIVE = "active";
 		
 	}	

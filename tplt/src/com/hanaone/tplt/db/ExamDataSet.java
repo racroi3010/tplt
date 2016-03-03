@@ -1,12 +1,18 @@
 package com.hanaone.tplt.db;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class ExamDataSet {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class ExamDataSet implements Parcelable {
 	private int number;
 	private String date;
 	private List<LevelDataSet> levels;
-	
+	public ExamDataSet() {
+
+	}		
 	public int getNumber() {
 		return number;
 	}
@@ -26,5 +32,40 @@ public class ExamDataSet {
 	public void setLevels(List<LevelDataSet> levels) {
 		this.levels = levels;
 	}
+	@Override
+	public int describeContents() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeInt(number);
+		dest.writeString(date);
+		dest.writeTypedList(levels);
+		
+	}
+	public static final Parcelable.Creator<ExamDataSet> CREATOR
+	= new Parcelable.Creator<ExamDataSet>() {
+
+		@Override
+		public ExamDataSet createFromParcel(Parcel source) {
+			
+			return new ExamDataSet(source);
+		}
+
+		@Override
+		public ExamDataSet[] newArray(int size) {
+			return new ExamDataSet[size];
+		}
+
+
+	};
+	private ExamDataSet(Parcel in){
+		number = in.readInt();
+		date = in.readString();
+		
+		levels = new ArrayList<LevelDataSet>();
+		in.readList(levels, (ClassLoader) LevelDataSet.CREATOR);
 	
+	}	
 }

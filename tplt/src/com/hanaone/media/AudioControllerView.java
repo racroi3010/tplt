@@ -354,6 +354,7 @@ public class AudioControllerView extends FrameLayout {
 
         return position;
     }
+   
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {

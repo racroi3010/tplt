@@ -10,25 +10,23 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.hanaone.tplt.db.dataset.Answer;
-import com.hanaone.tplt.db.dataset.Answer.AnswerEntry;
-import com.hanaone.tplt.db.dataset.Choice;
-import com.hanaone.tplt.db.dataset.Choice.ChoiceEntry;
-import com.hanaone.tplt.db.dataset.ExamLevel;
-import com.hanaone.tplt.db.dataset.ExamLevel.ExamLevelEntry;
-import com.hanaone.tplt.db.dataset.Examination;
-import com.hanaone.tplt.db.dataset.Examination.ExamEntry;
-import com.hanaone.tplt.db.dataset.FileExtra;
-import com.hanaone.tplt.db.dataset.FileExtra.FileExtraEntry;
-import com.hanaone.tplt.db.dataset.Level;
-import com.hanaone.tplt.db.dataset.Level.LevelEntry;
-import com.hanaone.tplt.db.dataset.Question;
-import com.hanaone.tplt.db.dataset.Question.QuestionEntry;
-import com.hanaone.tplt.db.dataset.Section;
-import com.hanaone.tplt.db.dataset.Section.SectionEntry;
+import com.hanaone.tplt.db.model.Choice;
+import com.hanaone.tplt.db.model.ExamLevel;
+import com.hanaone.tplt.db.model.Examination;
+import com.hanaone.tplt.db.model.FileExtra;
+import com.hanaone.tplt.db.model.Level;
+import com.hanaone.tplt.db.model.Question;
+import com.hanaone.tplt.db.model.Section;
+import com.hanaone.tplt.db.model.Choice.ChoiceEntry;
+import com.hanaone.tplt.db.model.ExamLevel.ExamLevelEntry;
+import com.hanaone.tplt.db.model.Examination.ExamEntry;
+import com.hanaone.tplt.db.model.FileExtra.FileExtraEntry;
+import com.hanaone.tplt.db.model.Level.LevelEntry;
+import com.hanaone.tplt.db.model.Question.QuestionEntry;
+import com.hanaone.tplt.db.model.Section.SectionEntry;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
-	public static final int DATABASE_VERSION = 20;
+	public static final int DATABASE_VERSION = 34;
 	public static final String DATABASE_NAME = "tplt.db";
 	
 	private static final String TEXT_TYPE = " TEXT";
@@ -40,14 +38,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	private static final String AUTOINCREMENT = " AUTOINCREMENT";
 	private static final String COMMA_STEP = ",";
 	
-	private static final String CREATE_TABLE_ANSWER = 
-			"CREATE TABLE " + AnswerEntry.TABLE_NAME + " ("
-			+ AnswerEntry._ID + INTEGER_TYPE + PRIMARY_KEY + AUTOINCREMENT + COMMA_STEP
-			+ AnswerEntry.COLUMN_NAME_QUESTION_ID + INTEGER_TYPE + COMMA_STEP
-			+ AnswerEntry.COLUMN_NAME_CHOICE_ID + INTEGER_TYPE + COMMA_STEP
-			+ FOREIGN_KEY + " (" + AnswerEntry.COLUMN_NAME_QUESTION_ID + ") REFERENCES " + QuestionEntry.TABLE_NAME + "(" + QuestionEntry._ID + ")" + COMMA_STEP
-			+ FOREIGN_KEY + " (" + AnswerEntry.COLUMN_NAME_CHOICE_ID + ") REFERENCES " + ChoiceEntry.TABLE_NAME + "(" + ChoiceEntry._ID + ")"
-			+ ")";
 	private static final String CREATE_TABLE_FILE = 
 			"CREATE TABLE " + FileExtraEntry.TABLE_NAME + " ("
 			+ FileExtraEntry._ID + INTEGER_TYPE + PRIMARY_KEY + AUTOINCREMENT + COMMA_STEP
@@ -77,6 +67,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			+ QuestionEntry.COLUMN_NAME_NUMBER + INTEGER_TYPE + COMMA_STEP
 			+ QuestionEntry.COLUMN_NAME_MARK + INTEGER_TYPE + COMMA_STEP
 			+ QuestionEntry.COLUMN_NAME_TEXT + TEXT_TYPE + COMMA_STEP
+			+ QuestionEntry.COLUMN_NAME_ANSWER + INTEGER_TYPE + COMMA_STEP
+			+ QuestionEntry.COLUMN_NAME_TYPE + TEXT_TYPE + COMMA_STEP
+			+ QuestionEntry.COLUMN_NAME_CHOICE_TYPE + TEXT_TYPE + COMMA_STEP
+			+ QuestionEntry.COLUMN_NAME_HINT + TEXT_TYPE + COMMA_STEP
+			+ QuestionEntry.COLUMN_NAME_START_AUDIO + FLOAT_TYPE + COMMA_STEP
+			+ QuestionEntry.COLUMN_NAME_END_AUDIO + FLOAT_TYPE + COMMA_STEP
 			+ QuestionEntry.COLUMN_NAME_SECTION_ID + INTEGER_TYPE + COMMA_STEP
 			+ FOREIGN_KEY + " (" + QuestionEntry.COLUMN_NAME_SECTION_ID + ") REFERENCES " + SectionEntry.TABLE_NAME + "(" + SectionEntry._ID + ")"
 			+ ")";	
@@ -87,6 +83,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			+ SectionEntry.COLUMN_NAME_START_AUDIO + FLOAT_TYPE + COMMA_STEP
 			+ SectionEntry.COLUMN_NAME_END_AUDIO + FLOAT_TYPE + COMMA_STEP
 			+ SectionEntry.COLUMN_NAME_TEXT + TEXT_TYPE + COMMA_STEP
+			+ SectionEntry.COLUMN_NAME_HINT + TEXT_TYPE + COMMA_STEP
 			+ SectionEntry.COLUMN_NAME_EXAM_LEVEL_ID + INTEGER_TYPE + COMMA_STEP
 			+ FOREIGN_KEY + " (" + SectionEntry.COLUMN_NAME_EXAM_LEVEL_ID + ") REFERENCES " + ExamLevelEntry.TABLE_NAME + "(" + ExamLevelEntry._ID + ")"
 			+ ")";	
@@ -106,6 +103,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			+ ExamLevelEntry.COLUMN_NAME_AUDIO_ID + INTEGER_TYPE  + COMMA_STEP
 			+ ExamLevelEntry.COLUMN_NAME_PDF_ID + INTEGER_TYPE + COMMA_STEP
 			+ ExamLevelEntry.COLUMN_NAME_TXT_ID + INTEGER_TYPE + COMMA_STEP
+			+ ExamLevelEntry.COLUMN_NAME_SCORE + INTEGER_TYPE + COMMA_STEP
 			+ ExamLevelEntry.COLUMN_NAME_ACTIVE + INTEGER_TYPE + COMMA_STEP
 			+ FOREIGN_KEY + " (" + ExamLevelEntry.COLUMN_NAME_EXAM_ID + ") REFERENCES " + ExamEntry.TABLE_NAME + "(" + ExamEntry.COLUMN_NAME_NUMBER + ")" + COMMA_STEP
 			+ FOREIGN_KEY + " (" + ExamLevelEntry.COLUMN_NAME_LEVEL_ID + ") REFERENCES " + LevelEntry.TABLE_NAME + "(" + LevelEntry._ID + ")" + COMMA_STEP
@@ -113,9 +111,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			+ FOREIGN_KEY + " (" + ExamLevelEntry.COLUMN_NAME_PDF_ID + ") REFERENCES " + FileExtraEntry.TABLE_NAME + "(" + FileExtraEntry._ID + ")" + COMMA_STEP
 			+ FOREIGN_KEY + " (" + ExamLevelEntry.COLUMN_NAME_TXT_ID + ") REFERENCES " + FileExtraEntry.TABLE_NAME + "(" + FileExtraEntry._ID + ")"
 			+ ")";	
-	
-	private static final String DELETE_TABLE_ANSWER = 
-			"DROP TABLE IF EXISTS " + AnswerEntry.TABLE_NAME; 
+
 	private static final String DELETE_TABLE_FILE = 
 			"DROP TABLE IF EXISTS " + FileExtraEntry.TABLE_NAME; 
 	private static final String DELETE_TABLE_CHOICE = 
@@ -152,14 +148,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		db.execSQL(CREATE_TABLE_FILE);
 		db.execSQL(CREATE_TABLE_QUESTION);
 		db.execSQL(CREATE_TABLE_CHOICE);
-		db.execSQL(CREATE_TABLE_ANSWER);
 		
 		
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		db.execSQL(DELETE_TABLE_ANSWER);
 		db.execSQL(DELETE_TABLE_CHOICE);
 		db.execSQL(DELETE_TABLE_QUESTION);
 		db.execSQL(DELETE_TABLE_FILE);
@@ -202,6 +196,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			values.put(ExamLevelEntry.COLUMN_NAME_AUDIO_ID, examLevel.getAudio_id());	
 			values.put(ExamLevelEntry.COLUMN_NAME_PDF_ID, examLevel.getPdf_id());
 			values.put(ExamLevelEntry.COLUMN_NAME_TXT_ID, examLevel.getTxt_id());
+			values.put(ExamLevelEntry.COLUMN_NAME_SCORE, examLevel.getScore());
 			values.put(ExamLevelEntry.COLUMN_NAME_ACTIVE, examLevel.getActive());
 			
 		} else if(obj instanceof Section){
@@ -213,6 +208,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			values.put(SectionEntry.COLUMN_NAME_START_AUDIO, section.getStartAudio());		
 			values.put(SectionEntry.COLUMN_NAME_END_AUDIO, section.getEndAudio());	
 			values.put(SectionEntry.COLUMN_NAME_TEXT, section.getText());	
+			values.put(SectionEntry.COLUMN_NAME_HINT, section.getHint());	
 			values.put(SectionEntry.COLUMN_NAME_EXAM_LEVEL_ID, section.getExam_level_id());	
 		} else if(obj instanceof FileExtra){
 			FileExtra file = (FileExtra) obj;
@@ -229,7 +225,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			values = new ContentValues();
 			values.put(QuestionEntry.COLUMN_NAME_NUMBER, question.getNumber());
 			values.put(QuestionEntry.COLUMN_NAME_MARK, question.getMark());	
-			values.put(QuestionEntry.COLUMN_NAME_TEXT, question.getMark());		
+			values.put(QuestionEntry.COLUMN_NAME_TEXT, question.getMark());	
+			values.put(QuestionEntry.COLUMN_NAME_ANSWER, question.getAnswer());	
+			values.put(QuestionEntry.COLUMN_NAME_TYPE, question.getType());	
+			values.put(QuestionEntry.COLUMN_NAME_CHOICE_TYPE, question.getChoiceType());	
+			values.put(QuestionEntry.COLUMN_NAME_HINT, question.getHint());	
+			values.put(QuestionEntry.COLUMN_NAME_START_AUDIO, question.getStartAudio());	
+			values.put(QuestionEntry.COLUMN_NAME_END_AUDIO, question.getEndAudio());	
 			values.put(QuestionEntry.COLUMN_NAME_SECTION_ID, question.getSection_id());		
 		} else if(obj instanceof Choice){
 			Choice choice = (Choice) obj;
@@ -240,13 +242,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			values.put(ChoiceEntry.COLUMN_NAME_LABEL, choice.getLabel());
 			values.put(ChoiceEntry.COLUMN_NAME_TEXT, choice.getText());
 			values.put(ChoiceEntry.COLUMN_QUESTION_ID, choice.getQuestion_id());
-		} else if(obj instanceof Answer){
-			Answer answer = (Answer) obj;
-			
-			tableName = AnswerEntry.TABLE_NAME;
-			values = new ContentValues();
-			values.put(AnswerEntry.COLUMN_NAME_QUESTION_ID, answer.getQuestion_id());
-			values.put(AnswerEntry.COLUMN_NAME_CHOICE_ID, answer.getChoice_id());
 		}
 		
 		if(values != null){
@@ -257,7 +252,116 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		
 		return rowId;
 	}
-	
+	protected int update(Object obj){		
+		int rowId = -1;
+		if(obj == null) return rowId;
+		ContentValues values  = null;
+		String tableName = null;
+		int id = -1;
+		String idColumn = null;
+		if(obj instanceof Examination){
+			Examination exam = (Examination) obj;
+			
+			tableName = ExamEntry.TABLE_NAME;
+			id = exam.getNumber();
+			idColumn = ExamEntry.COLUMN_NAME_NUMBER;
+			
+			values = new ContentValues();
+			values.put(ExamEntry.COLUMN_NAME_NUMBER, exam.getNumber());
+			values.put(ExamEntry.COLUMN_NAME_DATE, exam.getDate());
+		} else if(obj instanceof Level){
+			Level level = (Level) obj;
+			
+			tableName = LevelEntry.TABLE_NAME;
+			id = level.getId();
+			idColumn = LevelEntry._ID;
+			
+			values = new ContentValues();
+			values.put(LevelEntry.COLUMN_NAME_NUMBER, level.getNumber());
+			values.put(LevelEntry.COLUMN_NAME_LABEL, level.getLabel());
+			
+		} else if(obj instanceof ExamLevel){
+			ExamLevel examLevel = (ExamLevel) obj;
+			
+			tableName = ExamLevelEntry.TABLE_NAME;
+			id = examLevel.getId();
+			idColumn = ExamLevelEntry._ID;
+			
+			values = new ContentValues();
+			values.put(ExamLevelEntry.COLUMN_NAME_EXAM_ID, examLevel.getExam_id());
+			values.put(ExamLevelEntry.COLUMN_NAME_LEVEL_ID, examLevel.getLevel_id());	
+			values.put(ExamLevelEntry.COLUMN_NAME_AUDIO_ID, examLevel.getAudio_id());	
+			values.put(ExamLevelEntry.COLUMN_NAME_PDF_ID, examLevel.getPdf_id());
+			values.put(ExamLevelEntry.COLUMN_NAME_TXT_ID, examLevel.getTxt_id());
+			values.put(ExamLevelEntry.COLUMN_NAME_SCORE, examLevel.getScore());
+			values.put(ExamLevelEntry.COLUMN_NAME_ACTIVE, examLevel.getActive());
+			
+		} else if(obj instanceof Section){
+			Section section = (Section) obj;
+			
+			tableName = SectionEntry.TABLE_NAME;
+			id = section.getId();
+			idColumn = SectionEntry._ID;
+			
+			values = new ContentValues();
+			values.put(SectionEntry.COLUMN_NAME_NUMBER, section.getNumber());
+			values.put(SectionEntry.COLUMN_NAME_START_AUDIO, section.getStartAudio());		
+			values.put(SectionEntry.COLUMN_NAME_END_AUDIO, section.getEndAudio());	
+			values.put(SectionEntry.COLUMN_NAME_TEXT, section.getText());	
+			values.put(SectionEntry.COLUMN_NAME_HINT, section.getHint());	
+			values.put(SectionEntry.COLUMN_NAME_EXAM_LEVEL_ID, section.getExam_level_id());	
+		} else if(obj instanceof FileExtra){
+			FileExtra file = (FileExtra) obj;
+			
+			tableName = FileExtraEntry.TABLE_NAME;
+			id = file.getId();
+			idColumn = FileExtraEntry._ID;
+			
+			values = new ContentValues();
+			values.put(FileExtraEntry.COLUMN_NAME_FILE_TYPE, file.getType());
+			values.put(FileExtraEntry.COLUMN_NAME_FILE_NAME, file.getName());
+			values.put(FileExtraEntry.COLUMN_NAME_FILE_PATH, file.getPath());
+		} else if(obj instanceof Question){
+			Question question = (Question) obj;
+			
+			tableName = QuestionEntry.TABLE_NAME;
+			id = question.getId();
+			idColumn = QuestionEntry._ID;
+			
+			values = new ContentValues();
+			values.put(QuestionEntry.COLUMN_NAME_NUMBER, question.getNumber());
+			values.put(QuestionEntry.COLUMN_NAME_MARK, question.getMark());	
+			values.put(QuestionEntry.COLUMN_NAME_TEXT, question.getMark());	
+			values.put(QuestionEntry.COLUMN_NAME_ANSWER, question.getAnswer());	
+			values.put(QuestionEntry.COLUMN_NAME_TYPE, question.getType());	
+			values.put(QuestionEntry.COLUMN_NAME_CHOICE_TYPE, question.getChoiceType());	
+			values.put(QuestionEntry.COLUMN_NAME_HINT, question.getHint());
+			values.put(QuestionEntry.COLUMN_NAME_START_AUDIO, question.getStartAudio());	
+			values.put(QuestionEntry.COLUMN_NAME_END_AUDIO, question.getEndAudio());
+			values.put(QuestionEntry.COLUMN_NAME_SECTION_ID, question.getSection_id());		
+		} else if(obj instanceof Choice){
+			Choice choice = (Choice) obj;
+			
+			tableName = ChoiceEntry.TABLE_NAME;
+			id = choice.getId();
+			idColumn = ChoiceEntry._ID;
+			
+			values = new ContentValues();
+			values.put(ChoiceEntry.COLUMN_NAME_NUMBER, choice.getNumber());
+			values.put(ChoiceEntry.COLUMN_NAME_LABEL, choice.getLabel());
+			values.put(ChoiceEntry.COLUMN_NAME_TEXT, choice.getText());
+			values.put(ChoiceEntry.COLUMN_QUESTION_ID, choice.getQuestion_id());
+		}
+		
+		if(values != null){
+			SQLiteDatabase db = getWritableDatabase();
+			//rowId = db.insert(tableName, null, values);
+			rowId = db.update(tableName, values, idColumn + " = ?" , new String[]{id + ""});
+			db.close();
+		}
+		
+		return rowId;
+	}	
 	// exam
 	public List<Examination> selectAllExam(){
 		String query = "SELECT * FROM " + ExamEntry.TABLE_NAME 
@@ -327,7 +431,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			examLevel.setAudio_id(c.getInt(3));
 			examLevel.setPdf_id(c.getInt(4));
 			examLevel.setTxt_id(c.getInt(5));
-			examLevel.setActive(c.getInt(6));
+			examLevel.setScore(c.getInt(6));
+			examLevel.setActive(c.getInt(7));
 			
 			list.add(examLevel);
 		} while(c.moveToNext());
@@ -435,7 +540,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	public List<Section> selectSectionByExamLevelId(int examLevelId){
 		String query = "SELECT * FROM " + SectionEntry.TABLE_NAME 
 				+ " WHERE " + SectionEntry.COLUMN_NAME_EXAM_LEVEL_ID + " = " + examLevelId
-				+ " ORDER BY " + SectionEntry.COLUMN_NAME_NUMBER + " DESC";
+				+ " ORDER BY " + SectionEntry.COLUMN_NAME_NUMBER + " ASC";
 		SQLiteDatabase db = getReadableDatabase();
 		Cursor c = db.rawQuery(query, null);
 		
@@ -451,7 +556,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			section.setStartAudio(c.getFloat(2));
 			section.setEndAudio(c.getFloat(3));
 			section.setText(c.getString(4));
-			section.setExam_level_id(c.getInt(5));
+			section.setText(c.getString(5));
+			section.setExam_level_id(c.getInt(6));
 			
 			list.add(section);
 		} while(c.moveToNext());
@@ -464,7 +570,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	public List<Question> selectQuestionBySectionId(int sectionId){
 		String query = "SELECT * FROM " + QuestionEntry.TABLE_NAME 
 				+ " WHERE " + QuestionEntry.COLUMN_NAME_SECTION_ID + " = " + sectionId
-				+ " ORDER BY " + QuestionEntry.COLUMN_NAME_NUMBER + " DESC";
+				+ " ORDER BY " + QuestionEntry.COLUMN_NAME_NUMBER + " ASC";
 		SQLiteDatabase db = getReadableDatabase();
 		Cursor c = db.rawQuery(query, null);
 		
@@ -479,8 +585,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			question.setNumber(c.getInt(1));
 			question.setMark(c.getInt(2));
 			question.setText(c.getString(3));
-			question.setSection_id(c.getInt(4));
-			
+			question.setAnswer(c.getInt(4));
+			question.setType(c.getString(5));
+			question.setChoiceType(c.getString(6));
+			question.setHint(c.getString(7));
+			question.setStartAudio(c.getFloat(8));
+			question.setEndAudio(c.getFloat(9));
+			question.setSection_id(c.getInt(10));			
 			list.add(question);
 		} while(c.moveToNext());
 			
@@ -492,7 +603,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	public List<Choice> selectChoiceByQuestionId(int questionId){
 		String query = "SELECT * FROM " + ChoiceEntry.TABLE_NAME 
 				+ " WHERE " + ChoiceEntry.COLUMN_QUESTION_ID + " = " + questionId
-				+ " ORDER BY " + ChoiceEntry.COLUMN_NAME_NUMBER + " DESC";
+				+ " ORDER BY " + ChoiceEntry.COLUMN_NAME_NUMBER + " ASC";
 		SQLiteDatabase db = getReadableDatabase();
 		Cursor c = db.rawQuery(query, null);
 		

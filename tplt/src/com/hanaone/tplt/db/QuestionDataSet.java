@@ -1,17 +1,27 @@
 package com.hanaone.tplt.db;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class QuestionDataSet {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class QuestionDataSet implements Parcelable{
 	private int id;
 	private int number;
 	private int mark;
 	private String text;
 	private List<ChoiceDataSet> choices;
 	private int answer;
+	private int choice;
 	private String type;
 	private String choiceType;
 	private String hint;
+	private float startAudio;
+	private float endAudio;
+	public QuestionDataSet() {
+		choice = -1;
+	}	
 	public int getId() {
 		return id;
 	}
@@ -67,4 +77,80 @@ public class QuestionDataSet {
 		this.choiceType = choiceType;
 	}
 	
+	public int getChoice() {
+		return choice;
+	}
+	public void setChoice(int choice) {
+		this.choice = choice;
+	}
+	
+	public float getStartAudio() {
+		return startAudio;
+	}
+	public void setStartAudio(float startAudio) {
+		this.startAudio = startAudio;
+	}
+	public float getEndAudio() {
+		return endAudio;
+	}
+	public void setEndAudio(float endAudio) {
+		this.endAudio = endAudio;
+	}
+	@Override
+	public int describeContents() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+
+		
+		dest.writeInt(id);
+		dest.writeInt(number);
+		dest.writeInt(mark);
+		dest.writeString(text);
+		dest.writeTypedList(choices);
+		dest.writeInt(answer);
+		dest.writeInt(choice);
+		dest.writeString(type);
+		dest.writeString(choiceType);
+		dest.writeString(hint);
+		dest.writeFloat(startAudio);
+		dest.writeFloat(endAudio);
+		
+	}
+	public static final Parcelable.Creator<QuestionDataSet> CREATOR
+	= new Parcelable.Creator<QuestionDataSet>() {
+
+		@Override
+		public QuestionDataSet createFromParcel(Parcel source) {
+			
+			return new QuestionDataSet(source);
+		}
+
+		@Override
+		public QuestionDataSet[] newArray(int size) {
+			return new QuestionDataSet[size];
+		}
+
+
+	};
+	private QuestionDataSet(Parcel in){	
+		id = in.readInt();
+		number = in.readInt();
+		mark = in.readInt();
+		
+		text = in.readString();
+		choices = new ArrayList<ChoiceDataSet>();
+		in.readTypedList(choices, ChoiceDataSet.CREATOR);
+		
+		answer = in.readInt();
+		choice = in.readInt();
+		type = in.readString();
+		choiceType = in.readString();
+		hint = in.readString();
+		startAudio = in.readFloat();
+		endAudio = in.readFloat();
+	}		
 }

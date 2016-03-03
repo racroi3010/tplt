@@ -1,20 +1,25 @@
 package com.hanaone.tplt.adapter;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.hanaone.gg.DownloadHelper;
+import com.hanaone.tplt.Constants;
 import com.hanaone.tplt.db.ChoiceDataSet;
 import com.hanaone.tplt.db.ExamDataSet;
+import com.hanaone.tplt.db.FileDataSet;
 import com.hanaone.tplt.db.LevelDataSet;
 import com.hanaone.tplt.db.QuestionDataSet;
 import com.hanaone.tplt.db.SectionDataSet;
-import com.hanaone.tplt.db.dataset.Choice;
-import com.hanaone.tplt.db.dataset.ExamLevel;
-import com.hanaone.tplt.db.dataset.Examination;
-import com.hanaone.tplt.db.dataset.FileExtra;
-import com.hanaone.tplt.db.dataset.Level;
-import com.hanaone.tplt.db.dataset.Question;
-import com.hanaone.tplt.db.dataset.Section;
+import com.hanaone.tplt.db.model.Choice;
+import com.hanaone.tplt.db.model.ExamLevel;
+import com.hanaone.tplt.db.model.Examination;
+import com.hanaone.tplt.db.model.FileExtra;
+import com.hanaone.tplt.db.model.Level;
+import com.hanaone.tplt.db.model.Question;
+import com.hanaone.tplt.db.model.Section;
 import com.hanaone.tplt.util.DatabaseUtils;
 
 import android.content.Context;
@@ -22,16 +27,18 @@ import android.content.Context;
 public class DatabaseAdapter{
 	private Context mContext;
 	private DatabaseHelper dbHelper;
+	private DownloadHelper dlHelper;
 	public DatabaseAdapter(Context context){
 		this.mContext = context;
 		this.dbHelper = new DatabaseHelper(mContext);
+		this.dlHelper = new DownloadHelper(mContext);
 	}
 	
 	public List<ExamDataSet> getAllExam(){
 		List<Examination> examModels = dbHelper.selectAllExam();
 		List<ExamDataSet> list = new ArrayList<ExamDataSet>();
 		for(Examination exam: examModels){
-			ExamDataSet data = DatabaseUtils.examModel2Pojo(exam);
+			ExamDataSet data = DatabaseUtils.convertObject(exam, ExamDataSet.class);
 			List<LevelDataSet> levels = new ArrayList<LevelDataSet>();
 			
 			List<ExamLevel> levelModels = dbHelper.selectExamLevelByExamNumber(exam.getNumber());
@@ -49,13 +56,13 @@ public class DatabaseAdapter{
 					l.setActive(active);
 					
 					FileExtra audio = dbHelper.selectFileById(lmodel.getAudio_id());
-					l.setAudio(DatabaseUtils.fileModel2Pojo(audio));
+					l.setAudio(DatabaseUtils.convertObject(audio, FileDataSet.class));
 					
 					FileExtra pdf = dbHelper.selectFileById(lmodel.getPdf_id());
-					l.setPdf(DatabaseUtils.fileModel2Pojo(pdf));	
+					l.setPdf(DatabaseUtils.convertObject(pdf, FileDataSet.class));	
 					
 					FileExtra txt = dbHelper.selectFileById(lmodel.getTxt_id());
-					l.setTxt(DatabaseUtils.fileModel2Pojo(txt));
+					l.setTxt(DatabaseUtils.convertObject(txt, FileDataSet.class));
 					
 					levels.add(l);
 				}
@@ -78,7 +85,8 @@ public class DatabaseAdapter{
 		
 	}
 	public void addExam(ExamDataSet examDataSet){
-		Examination exam = DatabaseUtils.examPojo2Model(examDataSet);
+		//Examination exam = DatabaseUtils.examPojo2Model(examDataSet);
+		Examination exam = DatabaseUtils.convertObject(examDataSet, Examination.class);
 		dbHelper.insert(exam);
 		
 		List<LevelDataSet> levels = examDataSet.getLevels();
@@ -97,9 +105,9 @@ public class DatabaseAdapter{
 				examLevel.setLevel_id(level.getId());
 
 				
-				examLevel.setAudio_id((int)dbHelper.insert(DatabaseUtils.filePojo2Model(data.getAudio())));
-				examLevel.setPdf_id((int)dbHelper.insert(DatabaseUtils.filePojo2Model(data.getPdf())));
-				examLevel.setTxt_id((int)dbHelper.insert(DatabaseUtils.filePojo2Model(data.getTxt())));
+				examLevel.setAudio_id((int)dbHelper.insert(DatabaseUtils.convertObject(data.getAudio(), FileExtra.class)));
+				examLevel.setPdf_id((int)dbHelper.insert(DatabaseUtils.convertObject(data.getPdf(), FileExtra.class)));
+				examLevel.setTxt_id((int)dbHelper.insert(DatabaseUtils.convertObject(data.getTxt(), FileExtra.class)));
 				
 				examLevel.setActive(0);
 				
@@ -123,27 +131,27 @@ public class DatabaseAdapter{
 		levelDataSet.setActive(active);
 		
 		FileExtra audio = dbHelper.selectFileById(examLevelModel.getAudio_id());
-		levelDataSet.setAudio(DatabaseUtils.fileModel2Pojo(audio));
+		levelDataSet.setAudio(DatabaseUtils.convertObject(audio, FileDataSet.class));
 		
 		FileExtra pdf = dbHelper.selectFileById(examLevelModel.getPdf_id());
-		levelDataSet.setPdf(DatabaseUtils.fileModel2Pojo(pdf));	
+		levelDataSet.setPdf(DatabaseUtils.convertObject(pdf, FileDataSet.class));	
 		
 		FileExtra txt = dbHelper.selectFileById(examLevelModel.getTxt_id());
-		levelDataSet.setTxt(DatabaseUtils.fileModel2Pojo(txt));	
+		levelDataSet.setTxt(DatabaseUtils.convertObject(txt, FileDataSet.class));	
 		
 		List<Section> sections = dbHelper.selectSectionByExamLevelId(examLevelModel.getId());
 		List<SectionDataSet> sectiondatas = new ArrayList<SectionDataSet>();
 		for(Section section:sections){
-			SectionDataSet sectionData = DatabaseUtils.sectionModel2Pojo(section);
+			SectionDataSet sectionData = DatabaseUtils.convertObject(section, SectionDataSet.class);
 			
 			List<Question> questionModels = dbHelper.selectQuestionBySectionId(section.getId());
 			List<QuestionDataSet> questionDatas = new ArrayList<QuestionDataSet>();
 			for(Question questionModel: questionModels){
-				QuestionDataSet questionData = DatabaseUtils.questionModel2Pojo(questionModel);
+				QuestionDataSet questionData = DatabaseUtils.convertObject(questionModel, QuestionDataSet.class);
 				List<Choice> choiceModels = dbHelper.selectChoiceByQuestionId(questionModel.getId());
 				List<ChoiceDataSet> choiceDatas = new ArrayList<ChoiceDataSet>();
 				for(Choice choiceModel: choiceModels){
-					ChoiceDataSet choiceData = DatabaseUtils.choiceModel2Pojo(choiceModel);
+					ChoiceDataSet choiceData = DatabaseUtils.convertObject(choiceModel, ChoiceDataSet.class);
 					choiceDatas.add(choiceData);
 				}
 				questionData.setChoices(choiceDatas);
@@ -157,23 +165,55 @@ public class DatabaseAdapter{
 		
 		return levelDataSet;
 	}
-	
+	public int updateLevelActive(int levelId, boolean active){
+		ExamLevel levelModel = this.dbHelper.selectExamLevelById(levelId);
+		if(levelModel != null){
+			if(active){
+				levelModel.setActive(1);
+			} else {
+				levelModel.setActive(0);
+			}
+			return this.dbHelper.update(levelModel);
+		}
+		return -1;
+	}
 	public void addSection(SectionDataSet data, int levelId){
-		Section model = DatabaseUtils.sectionPojo2Model(data);
+		Section model = DatabaseUtils.convertObject(data, Section.class);
 		model.setExam_level_id(levelId);	
 		long sectionId = dbHelper.insert(model);
 		
 		
 		List<QuestionDataSet> questions = data.getQuestions();
 		for(QuestionDataSet questionData: questions){
-			Question questionModel = DatabaseUtils.questionPojo2Model(questionData);
+			Question questionModel = DatabaseUtils.convertObject(questionData, Question.class);
 			questionModel.setSection_id((int)sectionId);
 			long questionId = dbHelper.insert(questionModel);
 			
 			List<ChoiceDataSet> choiceDatas = questionData.getChoices();
 			for(ChoiceDataSet choiceData: choiceDatas){
-				Choice choice = DatabaseUtils.choicePojo2Model(choiceData);
+				Choice choice = DatabaseUtils.convertObject(choiceData, Choice.class);
 				choice.setQuestion_id((int)questionId);
+				
+				// image type
+				if(Constants.FILE_TYPE_IMG.equals(questionData.getChoiceType())){
+					// download
+					File folder = mContext.getDir("tplt", Context.MODE_PRIVATE);
+					String path = folder.getAbsolutePath() + "/file/";
+					File file = new File(path);
+					if(!file.exists()){
+						file.mkdirs();
+					}
+					
+					path += "img_" + sectionId + "_" + questionId + "_" +  choiceData.getLabel() + ".jpg";
+					try {
+						this.dlHelper.downloadFile(choice.getText(), path);
+						choice.setText(path);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				
 				dbHelper.insert(choice);
 			}
 		}

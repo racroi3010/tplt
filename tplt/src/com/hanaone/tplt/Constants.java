@@ -11,6 +11,11 @@ public class Constants {
 	public static final String FILE_TYPE_PDF = "PDF";
 	public static final String FILE_TYPE_TXT = "TXT";
 	public static final String FILE_TYPE_MP3 = "MP3";
+	public static final String FILE_TYPE_IMG = "IMG";
 	
 	public static final String LEVEL_ID = "level_id";
+	
+	public static final String LIST_CHOICES = "list_choices";
+	public static final String LIST_ANSWERS = "list_answers";
+	public static final String LIST_SECTIONS = "list_sections";
 }
