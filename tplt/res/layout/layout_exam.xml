@@ -20,7 +20,8 @@
             android:gravity="center"
             android:text="TOPIK - 41회"
             android:textSize="15sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:textColor="@color/BLACK" />
 
         <Button
             android:id="@+id/btn_down"

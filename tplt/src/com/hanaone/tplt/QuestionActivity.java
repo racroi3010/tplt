@@ -5,19 +5,16 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Parcelable;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.MotionEvent;
@@ -40,6 +37,7 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 	private ViewPager mPager;
 	private PagerAdapter mPagerAdapter;
 	private LevelDataSet level;
+	private String mMode;
 	private int currentItem;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -47,15 +45,17 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 		
 		setContentView(R.layout.activity_question_practice);
 		mContext = this;
-		
-		// init data
 		DatabaseAdapter dbAdapter = new DatabaseAdapter(mContext);
+		
+		// init data		
 		int levelId = getIntent().getIntExtra(Constants.LEVEL_ID, -1);
 		level = dbAdapter.getLevel(levelId);
+		
+		mMode = getIntent().getStringExtra(Constants.QUESTION_MODE);
 			
 		mControllerView = new AudioControllerView(this);		
 		mPlayer = new MediaPlayer();
-		String path = Environment.getExternalStorageDirectory().getPath() +"/35.mp3";
+		String path = level.getAudio().getPath();
 		try {
 			mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 			mPlayer.setDataSource(path);
@@ -80,7 +80,7 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 		// pager
 		mPager = (ViewPager) findViewById(R.id.viewpager_question_vp);
 		
-		mPagerAdapter = new QuestionSlideAdapter(getSupportFragmentManager(), level);
+		mPagerAdapter = new QuestionSlideAdapter(getSupportFragmentManager(), level, mMode);
 		mPager.setAdapter(mPagerAdapter);
 		
 		
@@ -93,11 +93,23 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 		case R.id.btn_previous:
 			currentItem --;
 			mPager.setCurrentItem(currentItem);
+			
+			// re calculate
+			SectionDataSet section = level.getSections().get(currentItem);
+			int start = (int)(section.getStartAudio() * 1000);
+			seekTo(start);
+			mControllerView.show();
 			break;
 		case R.id.btn_next:
 			if(currentItem < sectionSize - 1){
 				currentItem ++;
 				mPager.setCurrentItem(currentItem);
+				
+				// re calculate
+				section = level.getSections().get(currentItem);
+				start = (int)(section.getStartAudio() * 1000);
+				seekTo(start);				
+				mControllerView.show();
 			} else {
 				Intent intent = new Intent(mContext, ResultActivity.class);
 				intent.putParcelableArrayListExtra(Constants.LIST_SECTIONS, (ArrayList<? extends Parcelable>) level.getSections());
@@ -119,18 +131,21 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 		mControllerView.setMediaPlayer(this);
 		mControllerView.setAnchorView((FrameLayout) findViewById(R.id.layout_audio));		
 		//mPlayer.start();
-		mControllerView.show(0);
+		if(Constants.QUESTION_MODE_PRACTICE.equals(mMode)){
+			mControllerView.show();
+		}
+		
 	}
 	
 	public void start() {
-		SectionDataSet section = level.getSections().get(currentItem);
-		int start = (int)(section.getStartAudio() * 1000);
-		int end = (int)(section.getEndAudio() * 1000);
-		mPlayer.seekTo(start);
+//		SectionDataSet section = level.getSections().get(currentItem);
+//		int start = (int)(section.getStartAudio() * 1000);
+//		int end = (int)(section.getEndAudio() * 1000);
+//		mPlayer.seekTo(start);
 		mPlayer.start();
 		
 		Timer timer = new Timer(true);
-		timer.schedule(new Sleeper(), (end - start));
+		timer.schedule(new Sleeper(), getDuration());
 		
 	}
 	public void pause() {
@@ -184,7 +199,7 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case HANDLE_STOP_AUDIO:
-				mPlayer.stop();
+				mPlayer.pause();
 				break;
 
 			default:

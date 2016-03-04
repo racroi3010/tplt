@@ -1,32 +1,91 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/WHITE"
-    android:orientation="vertical">
-	
-    <RelativeLayout 
+    android:background="@color/WHITE" >
+
+    <RelativeLayout
+        android:id="@+id/layout_top"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        >
-        <TextView 
+        android:layout_alignParentTop="true" >
+		<Button 
+		    android:layout_width="50dp"
+		    android:layout_height="50dp"
+		    android:background="@drawable/ic_reorder_black_24dp"
+		    android:layout_alignParentLeft="true"
+		    android:layout_centerVertical="true"
+		    android:layout_marginLeft="30dp"
+		    />
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:text="@string/title_name"
             android:textColor="@color/BLACK"
             android:textSize="18sp"
-            android:textStyle="bold"
-            android:layout_centerInParent="true"
-            />
+            android:textStyle="bold" />
     </RelativeLayout>
-    <ListView 
+
+    <LinearLayout
+        android:id="@+id/layout_top_under"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/layout_top"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/GRAY_UNDER_BAR" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/shadow_below" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_bot"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="20dp" >
+
+        <LinearLayout
+            android:id="@+id/layout_sync"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:visibility="visible" >
+
+            <ImageView
+                android:id="@+id/img_sync"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/ic_sync_black_24dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Loading New Exams..."
+                android:gravity="center_vertical"
+                android:textColor="@color/BLACK" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <ListView
         android:id="@+id/list_exam"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" 
-        android:listSelector="@android:color/transparent"
-        android:cacheColorHint="@android:color/transparent"       
-        >
-        
+        android:layout_height="match_parent"
+        android:layout_above="@id/layout_bot"
+        android:layout_below="@id/layout_top_under"
+        android:cacheColorHint="@android:color/transparent"
+        android:listSelector="@android:color/transparent" >
     </ListView>
 
-</LinearLayout>
+</RelativeLayout>

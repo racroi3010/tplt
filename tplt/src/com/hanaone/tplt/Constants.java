@@ -1,5 +1,8 @@
 package com.hanaone.tplt;
 
+import java.io.File;
+
+import android.content.Context;
 import android.os.Environment;
 
 public class Constants {
@@ -14,8 +17,23 @@ public class Constants {
 	public static final String FILE_TYPE_IMG = "IMG";
 	
 	public static final String LEVEL_ID = "level_id";
+	public static final String LEVEL_NAME = "level_name";
+	public static final String QUESTION_MODE = "question_mode";
+	public static final String QUESTION_MODE_PRACTICE = "question_mode_practice";
+	public static final String QUESTION_MODE_EXAM = "question_mode_exam";
 	
 	public static final String LIST_CHOICES = "list_choices";
 	public static final String LIST_ANSWERS = "list_answers";
 	public static final String LIST_SECTIONS = "list_sections";
+	
+	
+	public static final String PATH_ROOT = "tplt";
+	
+	
+	
+	
+	public static String getRootPath(Context context){
+		File folder = context.getDir(Constants.PATH_ROOT, Context.MODE_PRIVATE);
+		return folder.getAbsolutePath();
+	}
 }

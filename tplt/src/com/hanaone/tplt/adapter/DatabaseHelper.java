@@ -26,7 +26,7 @@ import com.hanaone.tplt.db.model.Question.QuestionEntry;
 import com.hanaone.tplt.db.model.Section.SectionEntry;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
-	public static final int DATABASE_VERSION = 34;
+	public static final int DATABASE_VERSION = 41;
 	public static final String DATABASE_NAME = "tplt.db";
 	
 	private static final String TEXT_TYPE = " TEXT";

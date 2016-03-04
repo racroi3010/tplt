@@ -292,6 +292,9 @@ public class AudioControllerView extends FrameLayout {
             mHandler.removeMessages(FADE_OUT);
             mHandler.sendMessageDelayed(msg, timeout);
         }
+        
+        // init progress bar
+        //mProgress.setProgress(0);
     }
     
     public boolean isShowing() {

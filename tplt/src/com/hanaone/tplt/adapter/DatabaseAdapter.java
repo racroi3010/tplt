@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.hanaone.gg.DownloadHelper;
+import com.hanaone.http.DownloadHelper;
 import com.hanaone.tplt.Constants;
 import com.hanaone.tplt.db.ChoiceDataSet;
 import com.hanaone.tplt.db.ExamDataSet;
@@ -117,7 +117,14 @@ public class DatabaseAdapter{
 		
 		
 	}
-	
+	public String getLevelLabel(int levelId){
+		ExamLevel examLevelModel = dbHelper.selectExamLevelById(levelId);
+		Level levelModel = dbHelper.selectLevelById(examLevelModel.getLevel_id());
+		if(levelModel != null){
+			return levelModel.getLabel();					
+		}		
+		return null;
+	}
 	public LevelDataSet getLevel(int levelId){
 		LevelDataSet levelDataSet = new LevelDataSet();
 		
@@ -177,6 +184,40 @@ public class DatabaseAdapter{
 		}
 		return -1;
 	}
+	public int updateLevelAudio(int levelId, String audio){
+		ExamLevel levelModel = this.dbHelper.selectExamLevelById(levelId);
+		if(levelModel != null){
+			FileExtra file = new FileExtra();
+			file.setName("audio_" + levelId);
+			file.setPath(audio);
+			file.setType(Constants.FILE_TYPE_MP3);
+			
+			long audioId = this.dbHelper.insert(file);
+			if(audioId != -1){
+				levelModel.setAudio_id((int)audioId);
+				return this.dbHelper.update(levelModel);
+			}
+		}
+		
+		return -1;
+	}
+	public int updateLevelTxt(int levelId, String txt){
+		ExamLevel levelModel = this.dbHelper.selectExamLevelById(levelId);
+		if(levelModel != null){
+			FileExtra file = new FileExtra();
+			file.setName("audio_" + levelId);
+			file.setPath(txt);
+			file.setType(Constants.FILE_TYPE_MP3);
+			
+			long audioId = this.dbHelper.insert(file);
+			if(audioId != -1){
+				levelModel.setTxt_id((int)audioId);
+				return this.dbHelper.update(levelModel);
+			}
+		}
+		
+		return -1;
+	}
 	public void addSection(SectionDataSet data, int levelId){
 		Section model = DatabaseUtils.convertObject(data, Section.class);
 		model.setExam_level_id(levelId);	
@@ -205,13 +246,13 @@ public class DatabaseAdapter{
 					}
 					
 					path += "img_" + sectionId + "_" + questionId + "_" +  choiceData.getLabel() + ".jpg";
-					try {
-						this.dlHelper.downloadFile(choice.getText(), path);
-						choice.setText(path);
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+//					try {
+//						this.dlHelper.downloadFile(choice.getText(), path);
+//						choice.setText(path);
+//					} catch (IOException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					}
 				}
 				
 				dbHelper.insert(choice);

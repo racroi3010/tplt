@@ -8,8 +8,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-import com.hanaone.gg.DownloadHelper;
-import com.hanaone.gg.JsonReaderHelper;
+import com.hanaone.http.DownloadHelper;
+import com.hanaone.http.JsonReaderHelper;
+import com.hanaone.tplt.Constants;
 import com.hanaone.tplt.R;
 import com.hanaone.tplt.db.ExamDataSet;
 import com.hanaone.tplt.db.LevelDataSet;
@@ -23,6 +24,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.LayoutInflater;
@@ -125,7 +127,8 @@ public class ListExamAdapter extends BaseAdapter {
 		
 		ExamDataSet data = exams.get(position);
 		if(data != null){
-			holder.txtTitle.setText("TOPIK " + data.getNumber()+ "회");
+			final String examName = "TOPIK " + data.getNumber()+ "회";
+			holder.txtTitle.setText(examName);
 			
 			final List<LevelDataSet> levels = data.getLevels();
 			if(levels != null){
@@ -138,7 +141,8 @@ public class ListExamAdapter extends BaseAdapter {
 							@Override
 							public void onClick(View v) {
 								if(levels.get(2).isActive()){
-									mListener.onSelect(levels.get(2).getId());
+									String examLevelName = examName + " - " + levels.get(2).getLabel();
+									mListener.onSelect(levels.get(2).getId(), examLevelName);
 								} else {
 									onclick(holder.layoutLevel3, levels.get(2));
 								}								
@@ -157,7 +161,8 @@ public class ListExamAdapter extends BaseAdapter {
 							@Override
 							public void onClick(View v) {
 								if(levels.get(1).isActive()){
-									mListener.onSelect(levels.get(1).getId());
+									String examLevelName = examName + " - " + levels.get(1).getLabel();
+									mListener.onSelect(levels.get(1).getId(), examLevelName);
 								} else {
 									onclick(holder.layoutLevel2, levels.get(1));
 								}
@@ -176,7 +181,8 @@ public class ListExamAdapter extends BaseAdapter {
 							@Override
 							public void onClick(View v) {
 								if(levels.get(0).isActive()){
-									mListener.onSelect(levels.get(0).getId());
+									String examLevelName = examName + " - " + levels.get(0).getLabel();
+									mListener.onSelect(levels.get(0).getId(), examLevelName);
 								} else {
 									onclick(holder.layoutLevel1, levels.get(0));
 								}
@@ -213,6 +219,7 @@ public class ListExamAdapter extends BaseAdapter {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				ProgressBar prgBar = null;
+				TextView txtPer = null;
 				switch (v.getId()) {
 				case R.id.layout_level1:
 					prgBar = (ProgressBar) v.findViewById(R.id.prg_level_1);
@@ -231,7 +238,7 @@ public class ListExamAdapter extends BaseAdapter {
 					break;
 				}
 				
-				new Downloading(v,prgBar).execute(level);
+				new Downloading(v,prgBar, txtPer).execute(level);
 				
 				dialog.dismiss();
 			}
@@ -243,13 +250,13 @@ public class ListExamAdapter extends BaseAdapter {
 	private class Downloading extends AsyncTask<LevelDataSet, Boolean, Boolean>{
 		private LinearLayout layout;
 		private ProgressBar prgBar;
-		//private TextView txtPer;
+		private TextView txtPer;
 		private LevelDataSet level;
 
-		public Downloading(LinearLayout layout, ProgressBar prgBar) {
+		public Downloading(LinearLayout layout, ProgressBar prgBar, TextView txtPer) {
 			super();
 			this.prgBar = prgBar;
-			//this.txtPer = txtPer;
+			this.txtPer = txtPer;
 			this.layout = layout;
 		}
 
@@ -263,172 +270,168 @@ public class ListExamAdapter extends BaseAdapter {
 
 		@Override
 		protected void onPostExecute(Boolean result) {
-			if(result){
-				this.prgBar.setProgress(100);
-				txtPer.setText("100%");
-				level.setActive(true);
-				this.layout.setAlpha(1f);
-				int updatedActive = dbAdapter.updateLevelActive(level.getId(), true);
-				Toast.makeText(mContext, "download finish! " + updatedActive, Toast.LENGTH_SHORT).show();				
-			} else {
-				this.layout.setAlpha(0.5f);
-				Toast.makeText(mContext, "download failed!", Toast.LENGTH_SHORT).show();
+			if(!result){
+				mHandler.obtainMessage(HANDLE_ACTIVE_LEVEL, false).sendToTarget();
 			}
-
 			super.onPostExecute(result);
 		}
 
 		@Override
 		protected Boolean doInBackground(LevelDataSet... params) {
 			level = params[0];
-			String url = level.getAudio().getPath();
+			
 			DownloadHelper dlHelper = new DownloadHelper(mContext);
-//			try {
-//				InputStream is = dlHelper.parseUrl(url);
-//				if(is != null){
-//					File folder = mContext.getDir("tplt", Context.MODE_PRIVATE);
-//					File file = new File(folder.getAbsolutePath() + "/test.mp3");
-//					FileOutputStream os = new FileOutputStream(file);
-//					
-//					byte[] buf = new byte[1024];
-//					int read = 0;
-//											
-//					int a = 0;
-//					int sum = 0;
-//					int size = 73450798;
-//					while((read = is.read(buf)) > 0){
-//						os.write(buf, 0, read);	
-//						//a = is.available();	
-//						sum += read;
-//						a = (int) (((float)sum/size) * 100);		
-//						
-//						if(a != 0){
-//							this.prgBar.setProgress(a);
-//							mHandler.obtainMessage(HANDLE_PERCENTAGE, a).sendToTarget();
-//						}
-//					}
-//					os.close();
-//					is.close();		
-//
-//				}		
-//			} catch (IOException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//				return false;
-//			}
-//			
+			
+			// download audio
+			boolean audioFlag = false;
+			boolean txtFlag = false;
+			String url = level.getAudio().getPath();
+			String rootPath = Constants.getRootPath(mContext);
+			String audioPath = rootPath + "/" + Constants.FILE_TYPE_MP3 + "_" + level.getId() + ".mp3";
+			File file = new File(audioPath);
+			if(url.contains("http")){
+				try {				
+					InputStream is = dlHelper.parseUrl(url);
+					if(is != null){
+
+						FileOutputStream os = new FileOutputStream(file);
+						
+						byte[] buf = new byte[1024];
+						int read = 0;
+												
+						int a = 0;
+						int sum = 0;
+						int size = 73450798;
+						while((read = is.read(buf)) > 0){
+							os.write(buf, 0, read);	
+							//a = is.available();	
+							sum += read;
+							a = (int) (((float)sum/size) * 100);		
+							
+							if(a != 0){
+								this.prgBar.setProgress(a);
+								mHandler.obtainMessage(HANDLE_PERCENTAGE, a).sendToTarget();
+							}
+						}
+						os.close();
+						is.close();	
+						
+						// update audio
+						audioFlag = true;
+											
+					}						
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					showMsg(e.getMessage());
+				}				
+			}
+
+			
 			// download text
 			
-			String txt = level.getTxt().getPath();
-			try {
-				InputStream is = dlHelper.parseUrl(txt);
-				if(is != null){
-					File folder = mContext.getDir("tplt", Context.MODE_PRIVATE);
-					File file = new File(folder.getAbsolutePath() + "/test.txt");
-					FileOutputStream os = new FileOutputStream(file);
-					
-					byte[] buf = new byte[1024];
-					int read = 0;
+			url = level.getTxt().getPath();
+			String txtPath = rootPath + "/" + Constants.FILE_TYPE_TXT + "_" + level.getId() + ".txt";
+			if(url.contains("http")){
+				try {
+					InputStream is = dlHelper.parseUrl(url);
+					if(is != null){
+						file = new File(txtPath);
+						FileOutputStream os = new FileOutputStream(file);
+						
+						byte[] buf = new byte[1024];
+						int read = 0;
 
-					while((read = is.read(buf)) > 0){
-						os.write(buf, 0, read);	
-					}
-					os.close();
-					is.close();		
-					
-					// read
-					List<SectionDataSet> sections = JsonReaderHelper.readSections(file);
-					for(SectionDataSet data: sections){
-						dbAdapter.addSection(data, level.getId());						
-					}
-							
+						while((read = is.read(buf)) > 0){
+							os.write(buf, 0, read);	
+						}
+						os.close();
+						is.close();		
+						
+						// read
+						txtFlag = true;
 
-				}		
-			} catch (IOException e) {
-				
-				e.printStackTrace();
-				return false;
-			}			
+					}		
+				} catch (IOException e) {
+					showMsg(e.getMessage());
+					e.printStackTrace();
+				}					
+			}
+
+			// update level
+			if(audioFlag && dbAdapter.updateLevelAudio(level.getId(), audioPath) > 0){
+				level.getAudio().setPath(audioPath);
+			}
+			if(txtFlag && dbAdapter.updateLevelTxt(level.getId(), txtPath) > 0){
+				level.getTxt().setPath(txtPath);
+				mHandler.obtainMessage(HANDLE_INSERT_SECTION, txtPath).sendToTarget();
+			}
 			
 			return true;
 		}
 		
+		private Handler mHandler = new Handler(){
+			@Override
+			public void handleMessage(Message msg) {
+				switch (msg.what) {
+				case HANDLE_PERCENTAGE:
+					int per = (Integer) msg.obj;
+					txtPer.setText(per + "%");
+					break;
+				case HANDLE_INSERT_SECTION:
+					String path = (String) msg.obj;
+
+
+					File file = new File(path);
+					if(file.exists() && file.isFile()){
+						List<SectionDataSet> sections;
+						try {
+							sections = JsonReaderHelper.readSections(file);
+							for(SectionDataSet data: sections){
+								
+								dbAdapter.addSection(data, level.getId());						
+							}		
+							obtainMessage(HANDLE_ACTIVE_LEVEL, true).sendToTarget();
+						} catch (IOException e) {
+							
+							e.printStackTrace();
+							showMsg(e.getMessage());	
+							obtainMessage(HANDLE_ACTIVE_LEVEL, false).sendToTarget();
+						}
+				
+					}
+					break;					
+				case HANDLE_ACTIVE_LEVEL:
+					boolean result = (Boolean) msg.obj;
+					if(result){
+						prgBar.setProgress(100);
+						txtPer.setText("100%");
+						level.setActive(true);
+						layout.setAlpha(1f);
+						int updatedActive = dbAdapter.updateLevelActive(level.getId(), true);
+						
+						showMsg("download finish! " + updatedActive);			
+					} else {
+						layout.setAlpha(0.5f);
+						showMsg("download failed!");
+					}						
+					break;
+				default:
+					break;
+				}
+			}			
+		};
+		
 	}
-//	
-//	private SectionDataSet readSection(BufferedReader bufferedReader) throws IOException{
-//		SectionDataSet section = new SectionDataSet();
-//		String line = "";
-//		String temp = "";		
-//		while((line = bufferedReader.readLine()) != null){
-//			if("#SECTION_END".equals(line)){
-//				break;
-//			}
-//			// section number;
-//			String sectionNumber = bufferedReader.readLine();
-//			section.setNumber(Integer.parseInt(sectionNumber));			
-//
-//			// section question
-//			if("#SECTION_QUESTION_BEGIN".equals(bufferedReader.readLine())){
-//				temp = "";
-//				while((line = bufferedReader.readLine()) != null){
-//					if(!"#SECTION_QUESTION_END".equals(line)){
-//						temp += line;
-//					} else {
-//						break;
-//					}
-//				}
-//				section.setText(temp);						
-//			}
-//			
-//			// section hint
-//			if("#SECTION_HINT_BEGIN".equals(bufferedReader.readLine())){
-//				temp = "";
-//				while((line = bufferedReader.readLine()) != null){
-//					if(!"#SECTION_HINT_END".equals(line)){
-//						temp += line;
-//					} else {
-//						break;
-//					}
-//				}
-//				section.setHint(temp);					
-//			}		
-//			
-//			// question
-//
-//			if("#QUESTION".equals(bufferedReader.readLine())){
-//				temp = "";
-//				while((line = bufferedReader.readLine()) != null){
-//					if(!"#SECTION_HINT_END".equals(line)){
-//						temp += line;
-//					} else {
-//						break;
-//					}
-//				}
-//				section.setHint(temp);					
-//			}						
-//		}
-//
-//		return section;
-//	}
+
 	
 	private static final int HANDLE_PERCENTAGE = 1;
-	private TextView txtPer;
-	private Handler mHandler = new Handler(){
-
-		@Override
-		public void handleMessage(Message msg) {
-			switch (msg.what) {
-			case HANDLE_PERCENTAGE:
-				int per = (Integer) msg.obj;
-				txtPer.setText(per + "%");
-				break;
-
-			default:
-				break;
-			}
-		}
-		
-	};
+	private static final int HANDLE_INSERT_SECTION = 2;
+	private static final int HANDLE_ACTIVE_LEVEL = 3;
+	
+	private void showMsg(String msg){
+		Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
+	}
 	private class ViewHolder{
 		TextView txtTitle;
 		Button btnView;
