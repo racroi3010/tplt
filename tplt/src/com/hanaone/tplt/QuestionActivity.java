@@ -1,5 +1,7 @@
 package com.hanaone.tplt;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Timer;
@@ -11,6 +13,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Parcelable;
@@ -58,7 +61,9 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 		String path = level.getAudio().getPath();
 		try {
 			mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-			mPlayer.setDataSource(path);
+			FileInputStream is = new FileInputStream(path);
+			mPlayer.setDataSource(is.getFD());
+			is.close();
 			mPlayer.prepareAsync();
 			mPlayer.setOnPreparedListener(this);
 			//mControllerView.show(0);
@@ -90,15 +95,18 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 		currentItem = mPager.getCurrentItem();
 		int sectionSize = level.getSections().size();
 		switch (v.getId()) {
-		case R.id.btn_previous:
-			currentItem --;
-			mPager.setCurrentItem(currentItem);
-			
-			// re calculate
-			SectionDataSet section = level.getSections().get(currentItem);
-			int start = (int)(section.getStartAudio() * 1000);
-			seekTo(start);
-			mControllerView.show();
+		case R.id.btn_previous:	
+			if(currentItem > 0){
+				currentItem --;
+				mPager.setCurrentItem(currentItem);
+				
+				// re calculate
+				SectionDataSet section = level.getSections().get(currentItem);
+				int start = (int)(section.getStartAudio() * 1000);
+				seekTo(start);
+				mControllerView.show();				
+			}
+
 			break;
 		case R.id.btn_next:
 			if(currentItem < sectionSize - 1){
@@ -106,8 +114,8 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 				mPager.setCurrentItem(currentItem);
 				
 				// re calculate
-				section = level.getSections().get(currentItem);
-				start = (int)(section.getStartAudio() * 1000);
+				SectionDataSet section = level.getSections().get(currentItem);
+				int start = (int)(section.getStartAudio() * 1000);
 				seekTo(start);				
 				mControllerView.show();
 			} else {
@@ -130,7 +138,7 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 	public void onPrepared(MediaPlayer mp) {
 		mControllerView.setMediaPlayer(this);
 		mControllerView.setAnchorView((FrameLayout) findViewById(R.id.layout_audio));		
-		//mPlayer.start();
+//		mPlayer.start();
 		if(Constants.QUESTION_MODE_PRACTICE.equals(mMode)){
 			mControllerView.show();
 		}
@@ -138,10 +146,9 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 	}
 	
 	public void start() {
-//		SectionDataSet section = level.getSections().get(currentItem);
-//		int start = (int)(section.getStartAudio() * 1000);
-//		int end = (int)(section.getEndAudio() * 1000);
-//		mPlayer.seekTo(start);
+		SectionDataSet section = level.getSections().get(currentItem);
+		int start = (int)(section.getStartAudio() * 1000);
+		seekTo(start);				
 		mPlayer.start();
 		
 		Timer timer = new Timer(true);
@@ -157,7 +164,7 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 		int start = (int)(section.getStartAudio() * 1000);
 		int end = (int)(section.getEndAudio() * 1000);
 		return (end - start);
-		//return mPlayer.getDuration();
+//		return mPlayer.getDuration();
 	}
 	public int getCurrentPosition() {
 		// recalculate
@@ -165,6 +172,7 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 		int start = (int)(section.getStartAudio() * 1000);
 		int current = mPlayer.getCurrentPosition();
 		return (current - start);
+//		return mPlayer.getCurrentPosition();
 	}
 	public void seekTo(int pos) {
 		mPlayer.seekTo(pos);

@@ -116,8 +116,7 @@ public class ListExamAdapter extends BaseAdapter {
 				
 
 			}
-		});
-		
+		});	
 		
 		int color = ColorUtils.randomColor();
 		

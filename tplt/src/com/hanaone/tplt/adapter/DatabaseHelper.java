@@ -26,7 +26,7 @@ import com.hanaone.tplt.db.model.Question.QuestionEntry;
 import com.hanaone.tplt.db.model.Section.SectionEntry;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
-	public static final int DATABASE_VERSION = 41;
+	public static final int DATABASE_VERSION = 51;
 	public static final String DATABASE_NAME = "tplt.db";
 	
 	private static final String TEXT_TYPE = " TEXT";
@@ -245,9 +245,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		}
 		
 		if(values != null){
-			SQLiteDatabase db = getWritableDatabase();
+			SQLiteDatabase db = getWritableDatabaseFix();
 			rowId = db.insert(tableName, null, values);
-			db.close();
+			closeFix();
 		}
 		
 		return rowId;
@@ -354,10 +354,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		}
 		
 		if(values != null){
-			SQLiteDatabase db = getWritableDatabase();
+			SQLiteDatabase db = getWritableDatabaseFix();
 			//rowId = db.insert(tableName, null, values);
 			rowId = db.update(tableName, values, idColumn + " = ?" , new String[]{id + ""});
-			db.close();
+			closeFix();
 		}
 		
 		return rowId;
@@ -366,12 +366,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	public List<Examination> selectAllExam(){
 		String query = "SELECT * FROM " + ExamEntry.TABLE_NAME 
 				+ " ORDER BY " + ExamEntry.COLUMN_NAME_NUMBER + " DESC";
-		SQLiteDatabase db = getReadableDatabase();
+		SQLiteDatabase db = getReadableDatabaseFix();
 		Cursor c = db.rawQuery(query, null);
 		
 		List<Examination> list = new ArrayList<Examination>();
 		if(!c.moveToFirst()){
-			db.close();
+			c.close();
+			closeFix();
 			return list;
 		}
 		do {
@@ -384,7 +385,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		} while(c.moveToNext());
 			
 		c.close();
-		db.close();
+		closeFix();
 		
 		return list;				
 	}
@@ -392,10 +393,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	public Examination selectExamByNumber(int examNumber){
 		String query = "SELECT * FROM " + ExamEntry.TABLE_NAME 
 				+ " WHERE " + ExamEntry.COLUMN_NAME_NUMBER + " = " + examNumber;
-		SQLiteDatabase db = getReadableDatabase();
+		SQLiteDatabase db = getReadableDatabaseFix();
 		Cursor c = db.rawQuery(query, null);	
 		if(!c.moveToFirst()){
-			db.close();
+			c.close();
+			closeFix();
 			return null;
 		}
 		
@@ -405,7 +407,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		
 			
 		c.close();
-		db.close();
+		closeFix();
 		
 		return exam;
 	}
@@ -415,12 +417,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		String query = "SELECT * FROM " + ExamLevelEntry.TABLE_NAME 
 					+ " WHERE " + ExamLevelEntry.COLUMN_NAME_EXAM_ID + " = " + examNumber
 					+ " ORDER BY " + ExamLevelEntry._ID + " DESC";
-		SQLiteDatabase db = getReadableDatabase();
+		SQLiteDatabase db = getReadableDatabaseFix();
 		Cursor c = db.rawQuery(query, null);
 		
 		List<ExamLevel> list = new ArrayList<ExamLevel>();
 		if(!c.moveToFirst()){
-			db.close();
+			c.close();
+			closeFix();
 			return list;
 		}
 		do {
@@ -438,7 +441,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		} while(c.moveToNext());
 			
 		c.close();
-		db.close();
+		closeFix();
 		
 		return list;		
 	}
@@ -448,11 +451,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		String query = "SELECT * FROM " + FileExtraEntry.TABLE_NAME 
 					+ " WHERE " + FileExtraEntry._ID + " = " + fileid
 					+ " ORDER BY " + ExamLevelEntry._ID + " DESC";
-		SQLiteDatabase db = getReadableDatabase();
+		SQLiteDatabase db = getReadableDatabaseFix();
 		Cursor c = db.rawQuery(query, null);
 		
 		if(!c.moveToFirst()){
-			db.close();
+			c.close();
+			closeFix();
 			return null;
 		}
 		FileExtra file = new FileExtra();
@@ -462,7 +466,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		file.setPath(c.getString(3));
 			
 		c.close();
-		db.close();
+		closeFix();
 		
 		return file;		
 	}	
@@ -471,11 +475,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	public Level selectLevelByNumber(int levelNumber){
 		String query = "SELECT * FROM " + LevelEntry.TABLE_NAME 
 				+ " WHERE " + LevelEntry.COLUMN_NAME_NUMBER + " = " + levelNumber;
-		SQLiteDatabase db = getReadableDatabase();
+		SQLiteDatabase db = getReadableDatabaseFix();
 		Cursor c = db.rawQuery(query, null);
 		
 		if(!c.moveToFirst()){
-			db.close();
+			c.close();
+			closeFix();
 			return null;
 		}		
 		Level level = new Level();
@@ -484,18 +489,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		level.setLabel(c.getString(2));		
 		
 		c.close();
-		db.close();
+		closeFix();
 		
 		return level;		
 	}	
 	public Level selectLevelById(int levelId){
 		String query = "SELECT * FROM " + LevelEntry.TABLE_NAME 
 				+ " WHERE " + LevelEntry._ID + " = " + levelId;
-		SQLiteDatabase db = getReadableDatabase();
+		SQLiteDatabase db = getReadableDatabaseFix();
 		Cursor c = db.rawQuery(query, null);
 		
 		if(!c.moveToFirst()){
-			db.close();
+			c.close();
+			closeFix();
 			return null;
 		}		
 		
@@ -506,7 +512,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		
 			
 		c.close();
-		db.close();
+		closeFix();
 		
 		return level;	
 	}
@@ -514,11 +520,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	public ExamLevel selectExamLevelById(int examLevelId){
 		String query = "SELECT * FROM " + ExamLevelEntry.TABLE_NAME 
 				+ " WHERE " + ExamLevelEntry._ID + " = " + examLevelId;
-		SQLiteDatabase db = getReadableDatabase();
+		SQLiteDatabase db = getReadableDatabaseFix();
 		Cursor c = db.rawQuery(query, null);
 		
 		if(!c.moveToFirst()){
-			db.close();
+			c.close();
+			closeFix();
 			return null;
 		}		
 		
@@ -532,7 +539,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		examLevel.setActive(c.getInt(6));
 			
 		c.close();
-		db.close();
+		closeFix();
 		
 		return examLevel;			
 	}
@@ -541,12 +548,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		String query = "SELECT * FROM " + SectionEntry.TABLE_NAME 
 				+ " WHERE " + SectionEntry.COLUMN_NAME_EXAM_LEVEL_ID + " = " + examLevelId
 				+ " ORDER BY " + SectionEntry.COLUMN_NAME_NUMBER + " ASC";
-		SQLiteDatabase db = getReadableDatabase();
+		SQLiteDatabase db = getReadableDatabaseFix();
 		Cursor c = db.rawQuery(query, null);
 		
 		List<Section> list = new ArrayList<Section>();
 		if(!c.moveToFirst()){
-			db.close();
+			c.close();
+			closeFix();
 			return list;
 		}
 		do {
@@ -563,7 +571,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		} while(c.moveToNext());
 			
 		c.close();
-		db.close();
+		closeFix();
 			
 		return list;
 	}
@@ -571,12 +579,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		String query = "SELECT * FROM " + QuestionEntry.TABLE_NAME 
 				+ " WHERE " + QuestionEntry.COLUMN_NAME_SECTION_ID + " = " + sectionId
 				+ " ORDER BY " + QuestionEntry.COLUMN_NAME_NUMBER + " ASC";
-		SQLiteDatabase db = getReadableDatabase();
+		SQLiteDatabase db = getReadableDatabaseFix();
 		Cursor c = db.rawQuery(query, null);
 		
 		List<Question> list = new ArrayList<Question>();
 		if(!c.moveToFirst()){
-			db.close();
+			c.close();
+			closeFix();
 			return list;
 		}
 		do {
@@ -596,7 +605,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		} while(c.moveToNext());
 			
 		c.close();
-		db.close();
+		closeFix();
 			
 		return list;		
 	}
@@ -604,12 +613,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		String query = "SELECT * FROM " + ChoiceEntry.TABLE_NAME 
 				+ " WHERE " + ChoiceEntry.COLUMN_QUESTION_ID + " = " + questionId
 				+ " ORDER BY " + ChoiceEntry.COLUMN_NAME_NUMBER + " ASC";
-		SQLiteDatabase db = getReadableDatabase();
+		SQLiteDatabase db = getReadableDatabaseFix();
 		Cursor c = db.rawQuery(query, null);
 		
 		List<Choice> list = new ArrayList<Choice>();
 		if(!c.moveToFirst()){
-			db.close();
+			c.close();
+			closeFix();
 			return list;
 		}
 		do {
@@ -624,9 +634,28 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		} while(c.moveToNext());
 			
 		c.close();
-		db.close();
+		closeFix();
 			
 		return list;		
+	}
+	
+	// fix routine error
+	private int openConnection = 0;
+	
+	private synchronized SQLiteDatabase getReadableDatabaseFix(){
+		openConnection ++;
+		return getReadableDatabase();
+	}
+	private synchronized SQLiteDatabase getWritableDatabaseFix(){
+		openConnection ++;
+		return getWritableDatabase();
+	}	
+	
+	private synchronized void closeFix(){
+		openConnection --;
+		if(openConnection == 0){
+			close();
+		}
 	}
 	
 }
