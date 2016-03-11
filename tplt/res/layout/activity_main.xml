@@ -10,9 +10,11 @@
         android:layout_height="70dp"
         android:layout_alignParentTop="true" >
 		<Button 
+		    android:id="@+id/btn_setting"
 		    android:layout_width="50dp"
 		    android:layout_height="50dp"
 		    android:background="@drawable/ic_reorder_black_24dp"
+		    android:onClick="onClick"
 		    android:layout_alignParentLeft="true"
 		    android:layout_centerVertical="true"
 		    android:layout_marginLeft="30dp"
@@ -61,7 +63,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:visibility="visible" >
+            android:visibility="gone" >
 
             <ImageView
                 android:id="@+id/img_sync"
@@ -76,6 +78,29 @@
                 android:gravity="center_vertical"
                 android:textColor="@color/BLACK" />
         </LinearLayout>
+        <LinearLayout
+            android:id="@+id/layout_sample_test"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="right|center_vertical"
+            android:visibility="visible" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Do a Sample Test"
+                android:gravity="center_vertical"
+                android:textColor="@color/BLACK" />
+            <Button 
+                android:id="@+id/btn_sample_test"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:onClick="onClick"
+                android:background="@drawable/sample_test"
+                
+                />
+        </LinearLayout>        
     </LinearLayout>
 
     <ListView

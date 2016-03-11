@@ -7,15 +7,15 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class LevelDataSet implements Parcelable {
-	private int id;
-	private int number;
-	private String label;
-	private List<SectionDataSet> sections;
-	private boolean active;
-	private FileDataSet txt;
-	private FileDataSet audio;	
-	private FileDataSet pdf;
-	private int score;
+	protected int id;
+	protected int number;
+	protected String label;
+	protected List<SectionDataSet> sections;
+	protected int active;
+	protected FileDataSet txt;
+	protected List<FileDataSet> audio;	
+	protected FileDataSet pdf;
+	protected int score;
 	
 	public LevelDataSet() {
 
@@ -44,16 +44,18 @@ public class LevelDataSet implements Parcelable {
 	public void setSections(List<SectionDataSet> sections) {
 		this.sections = sections;
 	}
-	public boolean isActive() {
+	
+	public int getActive() {
 		return active;
 	}
-	public void setActive(boolean active) {
+	public void setActive(int active) {
 		this.active = active;
 	}
-	public FileDataSet getAudio() {
+	
+	public List<FileDataSet> getAudio() {
 		return audio;
 	}
-	public void setAudio(FileDataSet audio) {
+	public void setAudio(List<FileDataSet> audio) {
 		this.audio = audio;
 	}
 	public FileDataSet getPdf() {
@@ -88,9 +90,10 @@ public class LevelDataSet implements Parcelable {
 		dest.writeInt(number);
 		dest.writeString(label);
 		dest.writeTypedList(sections);
-		dest.writeBooleanArray(new boolean[]{active});
+		dest.writeInt(active);
 		dest.writeParcelable(txt, 1);
-		dest.writeParcelable(audio, 1);
+		dest.writeTypedList(audio);
+
 		dest.writeParcelable(pdf, 1);
 		dest.writeInt(score);
 		
@@ -111,7 +114,7 @@ public class LevelDataSet implements Parcelable {
 
 
 	};
-	private LevelDataSet(Parcel in){
+	protected LevelDataSet(Parcel in){
 	
 		id = in.readInt();
 		number = in.readInt();
@@ -119,12 +122,11 @@ public class LevelDataSet implements Parcelable {
 		sections = new ArrayList<SectionDataSet>();
 		in.readTypedList(sections, SectionDataSet.CREATOR);
 		
-		boolean[] arr = new boolean[1];
-		in.readBooleanArray(arr);
-		active = arr[0];
+		active = in.readInt();
 		
 		txt = in.readParcelable((ClassLoader) FileDataSet.CREATOR);
-		audio = in.readParcelable((ClassLoader) FileDataSet.CREATOR);
+		audio = new ArrayList<FileDataSet>();
+		in.readTypedList(audio, FileDataSet.CREATOR);
 		pdf = in.readParcelable((ClassLoader) FileDataSet.CREATOR);
 		
 		score = in.readInt();

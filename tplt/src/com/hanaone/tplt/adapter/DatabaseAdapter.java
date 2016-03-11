@@ -1,9 +1,11 @@
 package com.hanaone.tplt.adapter;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+
+import android.content.Context;
 
 import com.hanaone.http.DownloadHelper;
 import com.hanaone.tplt.Constants;
@@ -20,9 +22,9 @@ import com.hanaone.tplt.db.model.FileExtra;
 import com.hanaone.tplt.db.model.Level;
 import com.hanaone.tplt.db.model.Question;
 import com.hanaone.tplt.db.model.Section;
+import com.hanaone.tplt.db.sample.QuestionSample;
+import com.hanaone.tplt.db.sample.SectionSample;
 import com.hanaone.tplt.util.DatabaseUtils;
-
-import android.content.Context;
 
 public class DatabaseAdapter{
 	private Context mContext;
@@ -52,11 +54,13 @@ public class DatabaseAdapter{
 						l.setNumber(levelModel.getNumber());
 						l.setLabel(levelModel.getLabel());					
 					}
-					boolean active = lmodel.getActive() == 0 ? false : true;
-					l.setActive(active);
+
+					l.setActive(lmodel.getActive());
 					
 					FileExtra audio = dbHelper.selectFileById(lmodel.getAudio_id());
-					l.setAudio(DatabaseUtils.convertObject(audio, FileDataSet.class));
+					List<FileDataSet> audios = new ArrayList<FileDataSet>();
+					audios.add(DatabaseUtils.convertObject(audio, FileDataSet.class));				
+					l.setAudio(audios);
 					
 					FileExtra pdf = dbHelper.selectFileById(lmodel.getPdf_id());
 					l.setPdf(DatabaseUtils.convertObject(pdf, FileDataSet.class));	
@@ -105,7 +109,7 @@ public class DatabaseAdapter{
 				examLevel.setLevel_id(level.getId());
 
 				
-				examLevel.setAudio_id((int)dbHelper.insert(DatabaseUtils.convertObject(data.getAudio(), FileExtra.class)));
+				examLevel.setAudio_id((int)dbHelper.insert(DatabaseUtils.convertObject(data.getAudio().get(0), FileExtra.class)));
 				examLevel.setPdf_id((int)dbHelper.insert(DatabaseUtils.convertObject(data.getPdf(), FileExtra.class)));
 				examLevel.setTxt_id((int)dbHelper.insert(DatabaseUtils.convertObject(data.getTxt(), FileExtra.class)));
 				
@@ -134,11 +138,12 @@ public class DatabaseAdapter{
 			levelDataSet.setNumber(levelModel.getNumber());
 			levelDataSet.setLabel(levelModel.getLabel());					
 		}
-		boolean active = examLevelModel.getActive() == 0 ? false : true;
-		levelDataSet.setActive(active);
+		levelDataSet.setActive(examLevelModel.getActive());
 		
 		FileExtra audio = dbHelper.selectFileById(examLevelModel.getAudio_id());
-		levelDataSet.setAudio(DatabaseUtils.convertObject(audio, FileDataSet.class));
+		List<FileDataSet> audios = new ArrayList<FileDataSet>();
+		audios.add(DatabaseUtils.convertObject(audio, FileDataSet.class));
+		levelDataSet.setAudio(audios);
 		
 		FileExtra pdf = dbHelper.selectFileById(examLevelModel.getPdf_id());
 		levelDataSet.setPdf(DatabaseUtils.convertObject(pdf, FileDataSet.class));	
@@ -238,21 +243,16 @@ public class DatabaseAdapter{
 				// image type
 				if(Constants.FILE_TYPE_IMG.equals(questionData.getChoiceType())){
 					// download
-					File folder = mContext.getDir("tplt", Context.MODE_PRIVATE);
-					String path = folder.getAbsolutePath() + "/file/";
-					File file = new File(path);
-					if(!file.exists()){
-						file.mkdirs();
-					}
+					String path = Constants.getPath(mContext, Constants.PATH_FILE);
 					
-					path += "img_" + sectionId + "_" + questionId + "_" +  choiceData.getLabel() + ".jpg";
-//					try {
-//						this.dlHelper.downloadFile(choice.getText(), path);
-//						choice.setText(path);
-//					} catch (IOException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					}
+					path += "/img_" + sectionId + "_" + questionId + "_" +  choiceData.getLabel() + ".jpg";
+					try {
+						this.dlHelper.downloadFile(choice.getText(), path);
+						choice.setText(path);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 				
 				dbHelper.insert(choice);
@@ -260,4 +260,97 @@ public class DatabaseAdapter{
 		}
 		
 	}
+	
+	public LevelDataSet generateSampleTest(int level){
+		LevelDataSet levelData = new LevelDataSet();
+		levelData.setNumber(level);
+		levelData.setLabel(level + "");
+		levelData.setActive(Constants.STATUS_ACTIVE);
+		levelData.setScore(100);		
+		
+		List<SectionDataSet> sections = new ArrayList<SectionDataSet>();
+		List<FileDataSet> audios = new ArrayList<FileDataSet>();
+		
+		levelData.setSections(sections);
+		levelData.setAudio(audios);
+		
+		Random random = new Random();
+		
+		// question 1 - 20
+		for(int i = 1; i < 21; i ++){
+			SectionDataSet section = new SectionDataSet();			
+			section.setNumber(i);
+			List<QuestionDataSet> questionDatasets = new ArrayList<QuestionDataSet>();
+				
+			
+			List<QuestionSample> questionModels = this.dbHelper.selectionQuestionByExamLevelAndQuestionNumber(35, level, i);
+			
+			if(questionModels != null && questionModels.size() > 0){
+				int rdIdx = random.nextInt(questionModels.size());
+				
+				QuestionSample questionModel = questionModels.get(rdIdx);
+				QuestionDataSet questionDataset = DatabaseUtils.convertObject(questionModel, QuestionDataSet.class);			
+				
+				List<Choice> choiceModels = this.dbHelper.selectChoiceByQuestionId(questionModel.getId());
+				List<ChoiceDataSet> choiceDataset = new ArrayList<ChoiceDataSet>();
+				for(Choice choiceModel: choiceModels){
+					choiceDataset.add(DatabaseUtils.convertObject(choiceModel, ChoiceDataSet.class));
+				}
+				
+				questionDataset.setChoices(choiceDataset);				
+				questionDatasets.add(questionDataset);
+				
+				section.setQuestions(questionDatasets);	
+				section.setStartAudio(questionDataset.getStartAudio());
+				section.setEndAudio(questionDataset.getEndAudio());
+				
+				FileExtra audio = this.dbHelper.selectFileById(questionModel.getAudio());
+				audios.add(DatabaseUtils.convertObject(audio, FileDataSet.class));
+
+				sections.add(section);
+			}		
+			
+			
+		}	
+		
+		// question 21 - 30
+		for(int i = 6; i < 21; i ++){
+			List<SectionSample> sectionModels = this.dbHelper.selectSectionByExamLevelandSectionNumber(35, level, i);
+			if(sectionModels != null && sectionModels.size() >  0){
+				int rdIdx = random.nextInt(sectionModels.size());
+				SectionSample sectionModel = sectionModels.get(rdIdx);			
+				SectionDataSet section = DatabaseUtils.convertObject(sectionModel, SectionDataSet.class);
+				
+				List<Question> questionModels = this.dbHelper.selectQuestionBySectionId(sectionModel.getId());
+				List<QuestionDataSet> questionDatasets = new ArrayList<QuestionDataSet>();
+				for(Question questionModel: questionModels){
+					QuestionDataSet questionDataset = DatabaseUtils.convertObject(questionModel, QuestionDataSet.class);
+					
+					List<Choice> choiceModels = this.dbHelper.selectChoiceByQuestionId(questionModel.getId());
+					List<ChoiceDataSet> choiceDataset = new ArrayList<ChoiceDataSet>();
+					for(Choice choiceModel: choiceModels){
+						choiceDataset.add(DatabaseUtils.convertObject(choiceModel, ChoiceDataSet.class));
+					}
+					
+					questionDataset.setChoices(choiceDataset);
+					
+					
+					questionDatasets.add(questionDataset);
+				}
+				
+				section.setQuestions(questionDatasets);
+				FileExtra audio = this.dbHelper.selectFileById(sectionModel.getAudio());
+				audios.add(DatabaseUtils.convertObject(audio, FileDataSet.class));
+				
+				sections.add(section);
+				
+			}
+		}
+		
+		
+		return levelData;
+	}
+	
+	
+	
 }

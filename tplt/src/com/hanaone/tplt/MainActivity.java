@@ -15,6 +15,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -25,6 +26,7 @@ import android.widget.Toast;
 import com.hanaone.http.DownloadHelper;
 import com.hanaone.http.JsonReaderHelper;
 import com.hanaone.tplt.adapter.DatabaseAdapter;
+import com.hanaone.tplt.adapter.DownloadInfo;
 import com.hanaone.tplt.adapter.ListExamAdapter;
 import com.hanaone.tplt.adapter.ListLevelListener;
 import com.hanaone.tplt.db.ExamDataSet;
@@ -38,6 +40,7 @@ public class MainActivity extends Activity {
 	private DatabaseAdapter dbAdapter;
 	private ListView listExam;
 	private List<ExamDataSet> list;
+	private List<DownloadInfo> infos;
 	private ListExamAdapter adapter;
 	
 	private ImageView imgSync;
@@ -63,10 +66,33 @@ public class MainActivity extends Activity {
 		new LoadingNewData().execute();
 	}
  
+    public void onClick(View v){
+    	switch (v.getId()) {
+		case R.id.btn_setting:
+			startActivity(new Intent(mContext, HelpActivity.class));
+			break;
+		case R.id.btn_sample_test:
+			Intent intent = new Intent(mContext, SelectionActivity.class);
+			intent.putExtra(Constants.SELECTION_MODE, Constants.SELECTION_MODE_SAMPLE);
+
+			startActivity(intent);			
+			break;
+		default:
+			break;
+		}
+    }
 	private void init(){		
 		list = dbAdapter.getAllExam();
-		adapter = new ListExamAdapter(mContext, mListener);
+		adapter = new ListExamAdapter(mContext, mListener);	
+		
+		infos = new ArrayList<DownloadInfo>();
+		for(int i = 0; i < list.size(); i ++){
+			infos.add(new DownloadInfo());
+		}
+		adapter.setDownloadInfos(infos);
+
 		adapter.setExams(list);
+		
 		listExam.setAdapter(adapter);
 		
 		new LoadingNewData().execute();
@@ -93,6 +119,7 @@ public class MainActivity extends Activity {
 							dbAdapter.addExam(exam);
 							
 							list.add(exam);	
+							infos.add(new DownloadInfo());
 						}
 					}
 				} catch (IOException e) {
@@ -114,7 +141,7 @@ public class MainActivity extends Activity {
 		@Override
 		protected void onPostExecute(Void result) {
 			adapter.notifyDataSetChanged();
-			imgSync.getAnimation().cancel();
+			if(imgSync.getAnimation() != null) imgSync.getAnimation().cancel();
 			layoutSync.setVisibility(LinearLayout.GONE);
 			super.onPostExecute(result);
 		}
@@ -136,6 +163,7 @@ public class MainActivity extends Activity {
 			Toast.makeText(mContext, "" + examLevelId, Toast.LENGTH_SHORT).show();
 			
 			Intent intent = new Intent(mContext, SelectionActivity.class);
+			intent.putExtra(Constants.SELECTION_MODE, Constants.SELECTION_MODE_EXAM);
 			intent.putExtra(Constants.LEVEL_ID, examLevelId);
 			intent.putExtra(Constants.LEVEL_NAME, examLevelName);
 			startActivity(intent);

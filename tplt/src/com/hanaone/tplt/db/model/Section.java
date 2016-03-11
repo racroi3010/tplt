@@ -3,13 +3,13 @@ package com.hanaone.tplt.db.model;
 import android.provider.BaseColumns;
 
 public class Section {
-	private int id;
-	private int number;
-	private float startAudio;
-	private float endAudio;
-	private String text;
-	private String hint;
-	private int exam_level_id;
+	protected int id;
+	protected int number;
+	protected float startAudio;
+	protected float endAudio;
+	protected String text;
+	protected String hint;
+	protected int exam_level_id;
 	
 	public int getId() {
 		return id;

@@ -7,18 +7,18 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class QuestionDataSet implements Parcelable{
-	private int id;
-	private int number;
-	private int mark;
-	private String text;
-	private List<ChoiceDataSet> choices;
-	private int answer;
-	private int choice;
-	private String type;
-	private String choiceType;
-	private String hint;
-	private float startAudio;
-	private float endAudio;
+	protected int id;
+	protected int number;
+	protected int mark;
+	protected String text;
+	protected List<ChoiceDataSet> choices;
+	protected int answer;
+	protected int choice;
+	protected String type;
+	protected String choiceType;
+	protected String hint;
+	protected float startAudio;
+	protected float endAudio;
 	public QuestionDataSet() {
 		choice = -1;
 	}	
@@ -136,7 +136,7 @@ public class QuestionDataSet implements Parcelable{
 
 
 	};
-	private QuestionDataSet(Parcel in){	
+	protected QuestionDataSet(Parcel in){	
 		id = in.readInt();
 		number = in.readInt();
 		mark = in.readInt();

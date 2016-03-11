@@ -2,8 +2,10 @@ package com.hanaone.tplt;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -11,6 +13,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.os.Bundle;
 import android.os.Environment;
@@ -28,6 +31,7 @@ import com.hanaone.media.AudioControllerView;
 import com.hanaone.media.AudioControllerView.MediaPlayerControl;
 import com.hanaone.tplt.adapter.DatabaseAdapter;
 import com.hanaone.tplt.adapter.QuestionSlideAdapter;
+import com.hanaone.tplt.db.FileDataSet;
 import com.hanaone.tplt.db.LevelDataSet;
 import com.hanaone.tplt.db.SectionDataSet;
 
@@ -42,45 +46,18 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 	private LevelDataSet level;
 	private String mMode;
 	private int currentItem;
+	private DatabaseAdapter dbAdapter;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.activity_question_practice);
 		mContext = this;
-		DatabaseAdapter dbAdapter = new DatabaseAdapter(mContext);
+		dbAdapter = new DatabaseAdapter(mContext);
 		
 		// init data		
-		int levelId = getIntent().getIntExtra(Constants.LEVEL_ID, -1);
-		level = dbAdapter.getLevel(levelId);
-		
-		mMode = getIntent().getStringExtra(Constants.QUESTION_MODE);
-			
-		mControllerView = new AudioControllerView(this);		
-		mPlayer = new MediaPlayer();
-		String path = level.getAudio().getPath();
-		try {
-			mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-			FileInputStream is = new FileInputStream(path);
-			mPlayer.setDataSource(is.getFD());
-			is.close();
-			mPlayer.prepareAsync();
-			mPlayer.setOnPreparedListener(this);
-			//mControllerView.show(0);
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalStateException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
+		onInit();
+					
 		
 		// pager
 		mPager = (ViewPager) findViewById(R.id.viewpager_question_vp);
@@ -88,6 +65,49 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 		mPagerAdapter = new QuestionSlideAdapter(getSupportFragmentManager(), level, mMode);
 		mPager.setAdapter(mPagerAdapter);
 		
+		
+	}
+	
+	private void onInit(){
+		mMode = getIntent().getStringExtra(Constants.QUESTION_MODE);
+		mControllerView = new AudioControllerView(this);		
+		mPlayer = new MediaPlayer();		
+		if(mMode.equals(Constants.QUESTION_MODE_EXAM) || mMode.equals(Constants.QUESTION_MODE_PRACTICE)){
+			int levelId = getIntent().getIntExtra(Constants.LEVEL_ID, -1);
+			level = dbAdapter.getLevel(levelId);			
+			
+			String path = level.getAudio().get(0).getPath();
+			try {
+				mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+				FileInputStream is = new FileInputStream(path);
+				mPlayer.setDataSource(is.getFD());
+				is.close();
+				mPlayer.prepareAsync();
+				mPlayer.setOnPreparedListener(this);
+				//mControllerView.show(0);
+			} catch (IllegalArgumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SecurityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalStateException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}			
+		} else if(mMode.equals(Constants.QUESTION_MODE_SAMPLE_BEGINNER)){
+			level = dbAdapter.generateSampleTest(1);
+			currentItem = 0;
+			mHander.obtainMessage(HANDLE_PLAY_LIST).sendToTarget();
+			
+		} else if(mMode.equals(Constants.QUESTION_MODE_SAMPLE_INTERMEDIATE)){
+			level = dbAdapter.generateSampleTest(2);
+			currentItem = 0;
+			mHander.obtainMessage(HANDLE_PLAY_LIST).sendToTarget();
+		}
 		
 	}
 	
@@ -141,6 +161,8 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 //		mPlayer.start();
 		if(Constants.QUESTION_MODE_PRACTICE.equals(mMode)){
 			mControllerView.show();
+		} else {
+			start();
 		}
 		
 	}
@@ -201,6 +223,8 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 	}
 
 	private static final int HANDLE_STOP_AUDIO = 1;
+	private static final int HANDLE_PLAY_AUDIO = 2;
+	private static final int HANDLE_PLAY_LIST = 3;
 	private Handler mHander = new Handler(){
 
 		@Override
@@ -209,7 +233,41 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 			case HANDLE_STOP_AUDIO:
 				mPlayer.pause();
 				break;
+			case HANDLE_PLAY_AUDIO:
+				String path = (String) msg.obj;
+				mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+				FileInputStream is;
+				try {
+					is = new FileInputStream(path);
+					mPlayer.setDataSource(is.getFD());
+					is.close();
+					mPlayer.prepareAsync();
+					mPlayer.setOnPreparedListener(QuestionActivity.this);
 
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IllegalArgumentException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IllegalStateException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+	
+				break;
+			case HANDLE_PLAY_LIST:
+				List<FileDataSet> audios = level.getAudio();
+				
+				if(audios.size() > 0){
+					path = audios.get(0).getPath();
+					obtainMessage(HANDLE_PLAY_AUDIO, path).sendToTarget();
+					audios.remove(0);
+				}
+				break;
 			default:
 				break;
 			}
@@ -221,7 +279,13 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 		@Override
 		public void run() {
 			mHander.obtainMessage(HANDLE_STOP_AUDIO).sendToTarget();
+			if(Constants.QUESTION_MODE_SAMPLE_BEGINNER.equals(mMode) || Constants.QUESTION_MODE_SAMPLE_INTERMEDIATE.equals(mMode)){
+				mHander.obtainMessage(HANDLE_PLAY_LIST).sendToTarget();
+				currentItem ++;
+			} 
+			
 		}
 		
 	}
+	
 }

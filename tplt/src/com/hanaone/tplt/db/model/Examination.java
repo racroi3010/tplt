@@ -3,9 +3,16 @@ package com.hanaone.tplt.db.model;
 import android.provider.BaseColumns;
 
 public class Examination {
+	private int id;
 	private int number;
 	private String date;
 	
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
 	public int getNumber() {
 		return number;
 	}

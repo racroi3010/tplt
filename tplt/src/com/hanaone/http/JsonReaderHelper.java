@@ -216,7 +216,9 @@ public class JsonReaderHelper {
 				FileDataSet audio = new FileDataSet();
 				audio.setName("pdf");
 				audio.setPath(reader.nextString());
-				data.setAudio(audio);				
+				List<FileDataSet> audios = new ArrayList<FileDataSet>();
+				audios.add(audio);
+				data.setAudio(audios);				
 			} else {
 				reader.skipValue();
 			}

@@ -3,16 +3,16 @@ package com.hanaone.tplt.db.model;
 import android.provider.BaseColumns;
 
 public class Question {
-	private int id;
-	private int number;
-	private int mark;
-	private String text;
-	private int answer;
-	private String type;
-	private String choiceType;
-	private String hint;	
-	private float startAudio;
-	private float endAudio;	
+	protected int id;
+	protected int number;
+	protected int mark;
+	protected String text;
+	protected int answer;
+	protected String type;
+	protected String choiceType;
+	protected String hint;	
+	protected float startAudio;
+	protected float endAudio;	
 	public int getId() {
 		return id;
 	}

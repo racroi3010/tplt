@@ -7,13 +7,13 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class SectionDataSet implements Parcelable {
-	private int id;
-	private int number;
-	private float startAudio;
-	private float endAudio;
-	private String text;
-	private String hint;
-	private List<QuestionDataSet> questions;
+	protected int id;
+	protected int number;
+	protected float startAudio;
+	protected float endAudio;
+	protected String text;
+	protected String hint;
+	protected List<QuestionDataSet> questions;
 	public SectionDataSet() {
 
 	}	
@@ -93,7 +93,7 @@ public class SectionDataSet implements Parcelable {
 
 
 	};
-	private SectionDataSet(Parcel in){
+	protected SectionDataSet(Parcel in){
 		id = in.readInt();
 		number = in.readInt();
 		startAudio = in.readFloat();

@@ -18,9 +18,19 @@ public class Constants {
 	
 	public static final String LEVEL_ID = "level_id";
 	public static final String LEVEL_NAME = "level_name";
+	
+	public static final String SELECTION_MODE = "selection_mode";
+	public static final String SELECTION_MODE_EXAM = "selection_mode_exam";
+	public static final String SELECTION_MODE_SAMPLE = "selection_mode_sample";
+	
+	
 	public static final String QUESTION_MODE = "question_mode";
+	
 	public static final String QUESTION_MODE_PRACTICE = "question_mode_practice";
 	public static final String QUESTION_MODE_EXAM = "question_mode_exam";
+	public static final String QUESTION_MODE_SAMPLE_BEGINNER = "QUESTION_MODE_SAMPLE_BEGINNER";
+	public static final String QUESTION_MODE_SAMPLE_INTERMEDIATE = "QUESTION_MODE_SAMPLE_INTERMEDIATE";
+	public static final String QUESTION_MODE_SAMPLE_ADVANCED = "QUESTION_MODE_SAMPLE_ADVANCED";
 	
 	public static final String LIST_CHOICES = "list_choices";
 	public static final String LIST_ANSWERS = "list_answers";
@@ -29,11 +39,25 @@ public class Constants {
 	
 	public static final String PATH_ROOT = "tplt";
 	
+	public static final String PATH_TEMP = "temp";
+	public static final String PATH_FILE = "file";
+	
+	public static final int STATUS_INACTIVE = 0;
+	public static final int STATUS_ACTIVE = 1;
+	public static final int STATUS_DOWNLOADING = 2;
+	
 	
 	
 	
 	public static String getRootPath(Context context){
 		File folder = context.getDir(Constants.PATH_ROOT, Context.MODE_PRIVATE);
 		return folder.getAbsolutePath();
+	}
+	public static String getPath(Context context, String folder){
+		File root = context.getDir(Constants.PATH_ROOT, Context.MODE_PRIVATE);
+		File dir = new File(root.getAbsolutePath() + File.separator + folder);
+		dir.mkdirs();
+		
+		return dir.getAbsolutePath();
 	}
 }

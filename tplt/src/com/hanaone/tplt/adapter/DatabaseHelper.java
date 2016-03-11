@@ -11,22 +11,24 @@ import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.hanaone.tplt.db.model.Choice;
-import com.hanaone.tplt.db.model.ExamLevel;
-import com.hanaone.tplt.db.model.Examination;
-import com.hanaone.tplt.db.model.FileExtra;
-import com.hanaone.tplt.db.model.Level;
-import com.hanaone.tplt.db.model.Question;
-import com.hanaone.tplt.db.model.Section;
 import com.hanaone.tplt.db.model.Choice.ChoiceEntry;
+import com.hanaone.tplt.db.model.ExamLevel;
 import com.hanaone.tplt.db.model.ExamLevel.ExamLevelEntry;
+import com.hanaone.tplt.db.model.Examination;
 import com.hanaone.tplt.db.model.Examination.ExamEntry;
+import com.hanaone.tplt.db.model.FileExtra;
 import com.hanaone.tplt.db.model.FileExtra.FileExtraEntry;
+import com.hanaone.tplt.db.model.Level;
 import com.hanaone.tplt.db.model.Level.LevelEntry;
+import com.hanaone.tplt.db.model.Question;
 import com.hanaone.tplt.db.model.Question.QuestionEntry;
+import com.hanaone.tplt.db.model.Section;
 import com.hanaone.tplt.db.model.Section.SectionEntry;
+import com.hanaone.tplt.db.sample.QuestionSample;
+import com.hanaone.tplt.db.sample.SectionSample;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
-	public static final int DATABASE_VERSION = 51;
+	public static final int DATABASE_VERSION = 83;
 	public static final String DATABASE_NAME = "tplt.db";
 	
 	private static final String TEXT_TYPE = " TEXT";
@@ -58,7 +60,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	private static final String CREATE_TABLE_EXAM = 
 			"CREATE TABLE " + ExamEntry.TABLE_NAME + " ("
-			+ ExamEntry.COLUMN_NAME_NUMBER + INTEGER_TYPE + PRIMARY_KEY + COMMA_STEP
+			+ ExamEntry._ID + INTEGER_TYPE + PRIMARY_KEY + AUTOINCREMENT + COMMA_STEP 
+			+ ExamEntry.COLUMN_NAME_NUMBER + INTEGER_TYPE + COMMA_STEP
 			+ ExamEntry.COLUMN_NAME_DATE + TEXT_TYPE
 			+ ")";		
 	private static final String CREATE_TABLE_QUESTION = 
@@ -364,7 +367,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	}	
 	// exam
 	public List<Examination> selectAllExam(){
-		String query = "SELECT * FROM " + ExamEntry.TABLE_NAME 
+		String query = "SELECT " + ExamEntry.COLUMN_NAME_NUMBER + "," + ExamEntry.COLUMN_NAME_DATE +" FROM " + ExamEntry.TABLE_NAME 
 				+ " ORDER BY " + ExamEntry.COLUMN_NAME_NUMBER + " DESC";
 		SQLiteDatabase db = getReadableDatabaseFix();
 		Cursor c = db.rawQuery(query, null);
@@ -391,7 +394,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	}
 
 	public Examination selectExamByNumber(int examNumber){
-		String query = "SELECT * FROM " + ExamEntry.TABLE_NAME 
+		String query = "SELECT " + ExamEntry.COLUMN_NAME_NUMBER + "," + ExamEntry.COLUMN_NAME_DATE +" FROM " + ExamEntry.TABLE_NAME 
 				+ " WHERE " + ExamEntry.COLUMN_NAME_NUMBER + " = " + examNumber;
 		SQLiteDatabase db = getReadableDatabaseFix();
 		Cursor c = db.rawQuery(query, null);	
@@ -636,6 +639,87 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		c.close();
 		closeFix();
 			
+		return list;		
+	}
+	public List<QuestionSample> selectionQuestionByExamLevelAndQuestionNumber(int examNumberStart, int examLevel, int questionNumber){
+		String query = "SELECT " + " q.*" + ", " + " e." + ExamLevelEntry.COLUMN_NAME_AUDIO_ID + " FROM " + 
+						ExamLevelEntry.TABLE_NAME + " e " +
+						" INNER JOIN " + LevelEntry.TABLE_NAME + " l " + " ON " + " e." + ExamLevelEntry.COLUMN_NAME_LEVEL_ID + "=" + "l." + LevelEntry._ID + 
+						" INNER JOIN " + SectionEntry.TABLE_NAME + " s " + " ON " + " e." + ExamLevelEntry._ID + "=" + "s." + SectionEntry.COLUMN_NAME_EXAM_LEVEL_ID + 
+						" INNER JOIN " + QuestionEntry.TABLE_NAME + " q " + " ON " + " s." + SectionEntry._ID + "=" + "q." + QuestionEntry.COLUMN_NAME_SECTION_ID +
+						" WHERE " + " l." + LevelEntry.COLUMN_NAME_NUMBER + "=" + examLevel + " AND " +
+								  " e." + ExamLevelEntry.COLUMN_NAME_EXAM_ID + " >= " + examNumberStart + " AND " +
+								  " q." + QuestionEntry.COLUMN_NAME_NUMBER + " = " + questionNumber;
+		SQLiteDatabase db = getReadableDatabaseFix();
+		Cursor c = db.rawQuery(query, null);
+		
+		List<QuestionSample> list = new ArrayList<QuestionSample>();
+		if(!c.moveToFirst()){
+			c.close();
+			closeFix();
+			return list;
+		}
+		do {
+			
+			QuestionSample question = new QuestionSample();
+			question.setId(c.getInt(0));
+			question.setNumber(c.getInt(1));
+			question.setMark(c.getInt(2));
+			question.setText(c.getString(3));
+			question.setAnswer(c.getInt(4));
+			question.setType(c.getString(5));
+			question.setChoiceType(c.getString(6));
+			question.setHint(c.getString(7));
+			question.setStartAudio(c.getFloat(8));
+			question.setEndAudio(c.getFloat(9));
+			question.setSection_id(c.getInt(10));	
+			question.setAudio(c.getInt(11));
+			
+			list.add(question);
+		} while(c.moveToNext());
+			
+		c.close();
+		closeFix();		
+		
+		return list;
+	}
+	
+	public List<SectionSample> selectSectionByExamLevelandSectionNumber(int examNumberStart, int examLevel, int sectionNumber){
+		String query = "SELECT " + " s.*" + ", " + " e." + ExamLevelEntry.COLUMN_NAME_AUDIO_ID + " FROM " + 
+				ExamLevelEntry.TABLE_NAME + " e " +
+				" INNER JOIN " + LevelEntry.TABLE_NAME + " l " + " ON " + " e." + ExamLevelEntry.COLUMN_NAME_LEVEL_ID + "=" + "l." + LevelEntry._ID + 
+				" INNER JOIN " + SectionEntry.TABLE_NAME + " s " + " ON " + " e." + ExamLevelEntry._ID + "=" + "s." + SectionEntry.COLUMN_NAME_EXAM_LEVEL_ID + 
+				" WHERE " + " l." + LevelEntry.COLUMN_NAME_NUMBER + "=" + examLevel + " AND " +
+						  " e." + ExamLevelEntry.COLUMN_NAME_EXAM_ID + " >= " + examNumberStart + " AND " +
+						  " s." + SectionEntry.COLUMN_NAME_NUMBER + " = " + sectionNumber;	
+		
+		SQLiteDatabase db = getReadableDatabaseFix();
+		Cursor c = db.rawQuery(query, null);
+		
+		List<SectionSample> list = new ArrayList<SectionSample>();
+		if(!c.moveToFirst()){
+			c.close();
+			closeFix();
+			return list;
+		}
+		do {
+			
+			SectionSample section = new SectionSample();
+			section.setId(c.getInt(0));
+			section.setNumber(c.getInt(1));
+			section.setStartAudio(c.getFloat(2));
+			section.setEndAudio(c.getFloat(3));
+			section.setText(c.getString(4));
+			section.setText(c.getString(5));
+			section.setExam_level_id(c.getInt(6));	
+			section.setAudio(c.getInt(7));
+			
+			list.add(section);
+		} while(c.moveToNext());
+			
+		c.close();
+		closeFix();		
+		
 		return list;		
 	}
 	
