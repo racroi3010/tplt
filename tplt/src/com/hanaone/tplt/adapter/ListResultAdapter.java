@@ -16,9 +16,9 @@ import android.widget.TextView;
 public class ListResultAdapter extends BaseAdapter {
 	private Context mContext;
 	private LayoutInflater mInflater;
-	private ListResultListener mListener;
+	private ListAdapterListener mListener;
 	private List<ResultDataSet> dataSets;
-	public ListResultAdapter(Context mContext, ListResultListener mListener) {
+	public ListResultAdapter(Context mContext, ListAdapterListener mListener) {
 		super();
 		this.mContext = mContext;
 		this.mListener = mListener;

@@ -32,7 +32,7 @@ public class DatabaseAdapter{
 	private DownloadHelper dlHelper;
 	public DatabaseAdapter(Context context){
 		this.mContext = context;
-		this.dbHelper = new DatabaseHelper(mContext);
+		this.dbHelper = DatabaseHelper.getInstance(mContext);
 		this.dlHelper = new DownloadHelper(mContext);
 	}
 	
@@ -240,20 +240,20 @@ public class DatabaseAdapter{
 				Choice choice = DatabaseUtils.convertObject(choiceData, Choice.class);
 				choice.setQuestion_id((int)questionId);
 				
-				// image type
-				if(Constants.FILE_TYPE_IMG.equals(questionData.getChoiceType())){
-					// download
-					String path = Constants.getPath(mContext, Constants.PATH_FILE);
-					
-					path += "/img_" + sectionId + "_" + questionId + "_" +  choiceData.getLabel() + ".jpg";
-					try {
-						this.dlHelper.downloadFile(choice.getText(), path);
-						choice.setText(path);
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
+//				// image type
+//				if(Constants.FILE_TYPE_IMG.equals(questionData.getChoiceType())){
+//					// download
+//					String path = Constants.getPath(mContext, Constants.PATH_FILE);
+//					
+//					path += "/img_" + sectionId + "_" + questionId + "_" +  choiceData.getLabel() + ".jpg";
+//					try {
+//						this.dlHelper.downloadFile(choice.getText(), path);
+//						choice.setText(path);
+//					} catch (IOException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					}
+//				}
 				
 				dbHelper.insert(choice);
 			}

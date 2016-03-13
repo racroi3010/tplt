@@ -15,8 +15,10 @@ import com.hanaone.http.DownloadHelper;
 import com.hanaone.http.JsonReaderHelper;
 import com.hanaone.tplt.Constants;
 import com.hanaone.tplt.R;
+import com.hanaone.tplt.db.ChoiceDataSet;
 import com.hanaone.tplt.db.ExamDataSet;
 import com.hanaone.tplt.db.LevelDataSet;
+import com.hanaone.tplt.db.QuestionDataSet;
 import com.hanaone.tplt.db.SectionDataSet;
 import com.hanaone.tplt.db.model.Section;
 import com.hanaone.tplt.util.ColorUtils;
@@ -111,24 +113,24 @@ public class ListExamAdapter extends BaseAdapter {
 			
 			convertView.setTag(holder);
 		} else {
-			holder = (ViewHolder) convertView.getTag();
-
+			holder = (ViewHolder) convertView.getTag();	
+			
 			holder.info.setPrgBar1(null);
 			holder.info.setPrgBar2(null);
 			holder.info.setPrgBar3(null);
 			holder.info.setTxtView1(null);
 			holder.info.setTxtView2(null);
-			holder.info.setTxtView3(null);
+			holder.info.setTxtView3(null);	
 			
 			holder.info = info;
 			
-			holder.info.setPrgBar1((ProgressBar)holder.layoutLevel1.findViewById(R.id.prg_level_1));
-			holder.info.setPrgBar2((ProgressBar)holder.layoutLevel2.findViewById(R.id.prg_level_2));
-			holder.info.setPrgBar3((ProgressBar)holder.layoutLevel3.findViewById(R.id.prg_level_3));
-			
-			holder.info.setTxtView1((TextView)holder.layoutLevel1.findViewById(R.id.txt_score_1));
-			holder.info.setTxtView2((TextView)holder.layoutLevel2.findViewById(R.id.txt_score_2));
-			holder.info.setTxtView3((TextView)holder.layoutLevel3.findViewById(R.id.txt_score_3));
+//			holder.info.setPrgBar1((ProgressBar)holder.layoutLevel1.findViewById(R.id.prg_level_1));
+//			holder.info.setPrgBar2((ProgressBar)holder.layoutLevel2.findViewById(R.id.prg_level_2));
+//			holder.info.setPrgBar3((ProgressBar)holder.layoutLevel3.findViewById(R.id.prg_level_3));
+//			
+//			holder.info.setTxtView1((TextView)holder.layoutLevel1.findViewById(R.id.txt_score_1));
+//			holder.info.setTxtView2((TextView)holder.layoutLevel2.findViewById(R.id.txt_score_2));
+//			holder.info.setTxtView3((TextView)holder.layoutLevel3.findViewById(R.id.txt_score_3));
 			
 			
 		} 		
@@ -355,55 +357,29 @@ public class ListExamAdapter extends BaseAdapter {
 			// download audio
 			boolean audioFlag = false;
 			boolean txtFlag = false;
-			String url = level.getAudio().get(0).getPath();
 			String rootPath = Constants.getRootPath(mContext);
-			String audioPath = rootPath + "/" + Constants.FILE_TYPE_MP3 + "_" + level.getId() + ".mp3";
-			File file = new File(audioPath);
-			if(url.contains("http")){
-				try {				
-					InputStream is = dlHelper.parseUrl(url);
-					if(is != null){
-
-						FileOutputStream os = new FileOutputStream(file);
-						
-						byte[] buf = new byte[1024];
-						int read = 0;
-												
-						int a = 0;
-						int sum = 0;
-						int size = 73450798;
-						while((read = is.read(buf)) > 0){
-							os.write(buf, 0, read);	
-							//a = is.available();	
-							sum += read;
-							a = (int) (((float)sum/size) * 100);		
-							
-							if(a != 0){
-								publishProgress(a);
-							}
-						}
-						os.close();
-						is.close();	
-						
-						// update audio
-						audioFlag = true;
-											
-					}						
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-					//showMsg(e.getMessage());
-				}				
-			}
-
+			String urlTxt = level.getTxt().getPath();
+			String urlAudio = level.getAudio().get(0).getPath();
 			
+			// calculate size
+			long size = 0;
+			try {
+				size += dlHelper.getSize(urlTxt);
+				size += dlHelper.getSize(urlAudio);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+			long sum = 0;
 			// download text
 			
-			url = level.getTxt().getPath();
+			
 			String txtPath = rootPath + "/" + Constants.FILE_TYPE_TXT + "_" + level.getId() + ".txt";
-			if(url.contains("http")){
+			File file = new File(txtPath);
+			if(urlTxt.contains("http")){
 				try {
-					InputStream is = dlHelper.parseUrl(url);
+					InputStream is = dlHelper.parseUrl(urlTxt);
 					if(is != null){
 						file = new File(txtPath);
 						FileOutputStream os = new FileOutputStream(file);
@@ -413,45 +389,136 @@ public class ListExamAdapter extends BaseAdapter {
 
 						while((read = is.read(buf)) > 0){
 							os.write(buf, 0, read);	
+							sum += read;		
+							publishProgress((int)((sum * 100l)/size));							
 						}
 						os.close();
 						is.close();		
-						
-						// read
-						txtFlag = true;
 
 					}		
 				} catch (IOException e) {
-					showMsg(e.getMessage());
+//					showMsg(e.getMessage());
 					e.printStackTrace();
 				}					
 			}
-
-			// update level
-			if(audioFlag && dbAdapter.updateLevelAudio(level.getId(), audioPath) > 0){
-				level.getAudio().get(0).setPath(audioPath);
-			}
-			if(txtFlag && dbAdapter.updateLevelTxt(level.getId(), txtPath) > 0){
-				level.getTxt().setPath(txtPath);
-				file = new File(txtPath);
-				if(file.exists() && file.isFile()){
-					List<SectionDataSet> sections;
-					try {
-						sections = JsonReaderHelper.readSections(file);
-						for(SectionDataSet data: sections){
-							
-							dbAdapter.addSection(data, level.getId());						
-						}		
-					} catch (IOException e) {
-						
-						e.printStackTrace();
-						//showMsg(e.getMessage());	
-					}
 			
+			file = new File(txtPath);
+			List<SectionDataSet> sections = null;
+			if(file.exists()){
+				
+				
+				try {
+					sections = JsonReaderHelper.readSections(file);
+
+
+				} catch (IOException e) {
+					
+					e.printStackTrace();
+					//showMsg(e.getMessage());	
+				}							
+			}			
+			// download image file
+			if(sections != null){
+				for(SectionDataSet section: sections)
+					for(QuestionDataSet question: section.getQuestions())
+						if(Constants.FILE_TYPE_IMG.equals(question.getChoiceType())){
+							for(ChoiceDataSet choice: question.getChoices()){
+								String urlChoice = choice.getText();
+								try {
+									size += dlHelper.getSize(urlAudio);
+								} catch (IOException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+								String choicePath = rootPath + "/img_" + level.getId() + "_" + section.getId() 
+										+ "_" + question.getId() + "_" +  choice.getLabel() + ".jpg";
+								try {
+									InputStream is = dlHelper.parseUrl(urlChoice);
+									if(is != null){
+										file = new File(choicePath);
+										FileOutputStream os = new FileOutputStream(file);
+										
+										byte[] buf = new byte[1024];
+										int read = 0;
+
+										while((read = is.read(buf)) > 0){
+											os.write(buf, 0, read);	
+											sum += read;		
+											publishProgress((int)((sum * 100l)/size));						
+										}
+										os.close();
+										is.close();		
+
+									}		
+									choice.setText(choicePath);
+								} catch (IOException e) {
+//									showMsg(e.getMessage());
+									e.printStackTrace();
+								}	
+								
+							}							
+						}
+
+			}
+			
+			// update
+			
+			if(sections != null){
+				for(SectionDataSet data: sections){
+					
+					dbAdapter.addSection(data, level.getId());						
+				}	
+				if(dbAdapter.updateLevelTxt(level.getId(), txtPath) > 0){
+					level.getTxt().setPath(txtPath);
+					txtFlag = true;						
+				}					
+			}
+		
+			
+			
+			String audioPath = rootPath + "/" + Constants.FILE_TYPE_MP3 + "_" + level.getId() + ".mp3";
+			if(urlAudio.contains("http")){
+				try {				
+					InputStream is = dlHelper.parseUrl(urlAudio);
+					if(is != null){
+
+						FileOutputStream os = new FileOutputStream(file);
+						
+						byte[] buf = new byte[1024];
+						int read = 0;
+												
+						while((read = is.read(buf)) > 0){
+							os.write(buf, 0, read);	
+							
+							sum += read;		
+							publishProgress((int)((sum * 100l)/size));
+						}
+						os.close();
+						is.close();	
+						
+						// update audio
+						
+											
+					}						
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					//showMsg(e.getMessage());
+				}				
+			}
+			// update level
+			file = new File(audioPath);
+			if(file.exists()){
+				
+				if(dbAdapter.updateLevelAudio(level.getId(), audioPath) > 0){
+					audioFlag = true;
+					level.getAudio().get(0).setPath(audioPath);
 				}
 			}
 			
-			return true;
+
+			
+			return txtFlag && audioFlag;
 		}
 		
 		
@@ -478,8 +545,11 @@ public class ListExamAdapter extends BaseAdapter {
 			default:
 				break;
 			}		
-			if(prgBar != null) prgBar.setProgress(p);
-			if(txtPer != null) txtPer.setText(p + "%");
+			if(p < 99){
+				if(prgBar != null) prgBar.setProgress(p);
+				if(txtPer != null) txtPer.setText(p + "%");				
+			}
+
 		}
 
 

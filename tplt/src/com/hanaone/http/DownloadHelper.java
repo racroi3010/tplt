@@ -8,8 +8,11 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.List;
+import java.util.Map;
 
 import android.content.Context;
+import android.os.AsyncTask;
 
 public class DownloadHelper {
     private Context mContext;
@@ -72,5 +75,16 @@ public class DownloadHelper {
 			}
 		}		
 		return null;
+	}
+	public int getSize(String remoteFile) throws IOException{
+		URL  url = new URL(remoteFile);
+		URLConnection connection = url.openConnection();
+		List<String> values = connection.getHeaderFields().get("content-Length");
+		if(values != null && !values.isEmpty()){
+			String sLength = values.get(0);
+			
+			return Integer.parseInt(sLength);
+		}
+		return 0;
 	}
 }

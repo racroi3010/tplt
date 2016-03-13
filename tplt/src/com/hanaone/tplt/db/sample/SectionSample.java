@@ -1,13 +1,59 @@
 package com.hanaone.tplt.db.sample;
 
-import com.hanaone.tplt.db.model.Section;
 
-import android.provider.BaseColumns;
-
-public class SectionSample extends Section {
+public class SectionSample{
+	protected int id;
+	protected int number;
+	protected float startAudio;
+	protected float endAudio;
+	protected String text;
+	protected String hint;
+	protected int exam_level_id;	
 	private int audio;
 
 
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public int getNumber() {
+		return number;
+	}
+	public void setNumber(int number) {
+		this.number = number;
+	}
+	public float getStartAudio() {
+		return startAudio;
+	}
+	public void setStartAudio(float startAudio) {
+		this.startAudio = startAudio;
+	}
+	public float getEndAudio() {
+		return endAudio;
+	}
+	public void setEndAudio(float endAudio) {
+		this.endAudio = endAudio;
+	}
+	public String getText() {
+		return text;
+	}
+	public void setText(String text) {
+		this.text = text;
+	}
+	public String getHint() {
+		return hint;
+	}
+	public void setHint(String hint) {
+		this.hint = hint;
+	}
+	public int getExam_level_id() {
+		return exam_level_id;
+	}
+	public void setExam_level_id(int exam_level_id) {
+		this.exam_level_id = exam_level_id;
+	}
 	public int getAudio() {
 		return audio;
 	}

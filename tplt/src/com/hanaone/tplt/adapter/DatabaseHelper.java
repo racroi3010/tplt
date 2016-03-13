@@ -28,7 +28,7 @@ import com.hanaone.tplt.db.sample.QuestionSample;
 import com.hanaone.tplt.db.sample.SectionSample;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
-	public static final int DATABASE_VERSION = 83;
+	public static final int DATABASE_VERSION = 112;
 	public static final String DATABASE_NAME = "tplt.db";
 	
 	private static final String TEXT_TYPE = " TEXT";
@@ -130,9 +130,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	private static final String DELETE_TABLE_EXAM_LEVEL = 
 			"DROP TABLE IF EXISTS " + ExamLevelEntry.TABLE_NAME; 		
 	
-	public DatabaseHelper(Context context) {
+	private static DatabaseHelper sInstance;
+	public static synchronized DatabaseHelper getInstance(Context context) {
+	    if (sInstance == null) {
+	         sInstance = new DatabaseHelper(context.getApplicationContext());
+	    }
+	    return sInstance;
+	  }	
+	private DatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
-		// TODO Auto-generated constructor stub
 	}	
 	
 	public DatabaseHelper(Context context, String name, CursorFactory factory,
@@ -228,7 +234,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			values = new ContentValues();
 			values.put(QuestionEntry.COLUMN_NAME_NUMBER, question.getNumber());
 			values.put(QuestionEntry.COLUMN_NAME_MARK, question.getMark());	
-			values.put(QuestionEntry.COLUMN_NAME_TEXT, question.getMark());	
+			values.put(QuestionEntry.COLUMN_NAME_TEXT, question.getText());	
 			values.put(QuestionEntry.COLUMN_NAME_ANSWER, question.getAnswer());	
 			values.put(QuestionEntry.COLUMN_NAME_TYPE, question.getType());	
 			values.put(QuestionEntry.COLUMN_NAME_CHOICE_TYPE, question.getChoiceType());	
@@ -266,8 +272,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			Examination exam = (Examination) obj;
 			
 			tableName = ExamEntry.TABLE_NAME;
-			id = exam.getNumber();
-			idColumn = ExamEntry.COLUMN_NAME_NUMBER;
+			id = exam.getId();
+			idColumn = ExamEntry._ID;
 			
 			values = new ContentValues();
 			values.put(ExamEntry.COLUMN_NAME_NUMBER, exam.getNumber());
@@ -679,7 +685,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		} while(c.moveToNext());
 			
 		c.close();
-		closeFix();		
+		closeFix();
 		
 		return list;
 	}
@@ -718,7 +724,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		} while(c.moveToNext());
 			
 		c.close();
-		closeFix();		
+		closeFix();
 		
 		return list;		
 	}
@@ -738,7 +744,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	private synchronized void closeFix(){
 		openConnection --;
 		if(openConnection == 0){
-			close();
+			//close();
 		}
 	}
 	

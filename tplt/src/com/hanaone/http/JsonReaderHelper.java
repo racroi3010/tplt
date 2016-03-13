@@ -97,6 +97,8 @@ public class JsonReaderHelper {
 				data.setMark(reader.nextInt());
 			} else if(name.equals("question_type")){
 				data.setType(reader.nextString());
+			} else if(name.equals("question_txt")){
+				data.setText(reader.nextString());
 			} else if(name.equals("question_hint")){
 				data.setHint(reader.nextString());
 			} else if(name.equals("question_answer")){
