@@ -25,6 +25,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 
@@ -118,12 +119,18 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 		mPager = (ViewPager) findViewById(R.id.viewpager_question_vp);
 		mList = (ListView) findViewById(R.id.list_sections);
 		if(Constants.QUESTION_MODE_PRACTICE.equals(mMode)){
+			findViewById(R.id.btn_previous).setVisibility(Button.VISIBLE);
+			findViewById(R.id.btn_next).setVisibility(Button.VISIBLE);	
+			findViewById(R.id.btn_submit).setVisibility(Button.GONE);	
 			mPager.setVisibility(ViewPager.VISIBLE);
 			mList.setVisibility(ListView.GONE);
 			
 			mPagerAdapter = new QuestionSlideAdapter(getSupportFragmentManager(), level, mMode);
 			mPager.setAdapter(mPagerAdapter);			
 		} else {
+			findViewById(R.id.btn_previous).setVisibility(Button.GONE);
+			findViewById(R.id.btn_next).setVisibility(Button.GONE);
+			findViewById(R.id.btn_submit).setVisibility(Button.VISIBLE);	
 			mPager.setVisibility(ViewPager.GONE);
 			mList.setVisibility(ListView.VISIBLE);
 			
@@ -171,6 +178,11 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 				intent.putParcelableArrayListExtra(Constants.LIST_SECTIONS, (ArrayList<? extends Parcelable>) level.getSections());
 				startActivity(intent);
 			}
+			break;
+		case R.id.btn_submit:
+			Intent intent = new Intent(mContext, ResultActivity.class);
+			intent.putParcelableArrayListExtra(Constants.LIST_SECTIONS, (ArrayList<? extends Parcelable>) level.getSections());
+			startActivity(intent);		
 			break;
 		case R.id.btn_home:
 			startActivity(new Intent(mContext, MainActivity.class)

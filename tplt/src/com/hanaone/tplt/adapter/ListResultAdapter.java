@@ -2,12 +2,16 @@ package com.hanaone.tplt.adapter;
 
 import java.util.List;
 
+import com.hanaone.tplt.Constants;
+import com.hanaone.tplt.QuestionActivity;
 import com.hanaone.tplt.R;
 import com.hanaone.tplt.db.ResultDataSet;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
@@ -68,7 +72,7 @@ public class ListResultAdapter extends BaseAdapter {
 			holder = (ViewHolder) convertView.getTag();
 		}
 		
-		ResultDataSet data = dataSets.get(position);
+		final ResultDataSet data = dataSets.get(position);
 		if(data != null){
 			holder.txtQuestion.setText(data.getChoice() + "");
 			holder.txtScore.setText("0");
@@ -81,7 +85,17 @@ public class ListResultAdapter extends BaseAdapter {
 				holder.txtChoice.setText(data.getChoice() + "");
 				holder.txtChoice.setTextColor(mContext.getResources().getColor(R.color.RED));				
 			}
-			
+			holder.btnReview.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					Intent intent = new Intent(mContext, QuestionActivity.class);
+					intent.putExtra(Constants.QUESTION_MODE, Constants.QUESTION_MODE_REVIEW);
+					intent.putExtra(Constants.RESULT, data);
+					mContext.startActivity(intent);					
+					
+				}
+			});
 		}
 		
 		

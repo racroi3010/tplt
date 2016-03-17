@@ -28,6 +28,7 @@ public class Constants {
 	
 	public static final String QUESTION_MODE_PRACTICE = "question_mode_practice";
 	public static final String QUESTION_MODE_EXAM = "question_mode_exam";
+	public static final String QUESTION_MODE_REVIEW = "question_mode_review";
 	public static final String QUESTION_MODE_SAMPLE_BEGINNER = "QUESTION_MODE_SAMPLE_BEGINNER";
 	public static final String QUESTION_MODE_SAMPLE_INTERMEDIATE = "QUESTION_MODE_SAMPLE_INTERMEDIATE";
 	public static final String QUESTION_MODE_SAMPLE_ADVANCED = "QUESTION_MODE_SAMPLE_ADVANCED";
@@ -35,6 +36,8 @@ public class Constants {
 	public static final String LIST_CHOICES = "list_choices";
 	public static final String LIST_ANSWERS = "list_answers";
 	public static final String LIST_SECTIONS = "list_sections";
+	
+	public static final String RESULT = "RESULT";
 	
 	
 	public static final String PATH_ROOT = "tplt";
