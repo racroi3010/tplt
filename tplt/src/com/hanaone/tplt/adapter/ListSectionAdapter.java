@@ -76,11 +76,25 @@ public class ListSectionAdapter extends BaseAdapter {
 		}
 		
 		final SectionDataSet section = mDataSet.get(position);
-		holder.txtQuestion.setText("*" + section.getText());
-		holder.txtHint.setText(section.getHint());
+
+		if(section.getHint() == null || section.getHint().isEmpty()){
+			holder.txtHint.setVisibility(TextView.GONE);
+		} else {
+			holder.txtHint.setText(section.getHint());
+			holder.txtHint.setVisibility(TextView.VISIBLE);
+		}		
+		
 			
 		holder.layoutQuestion.removeAllViews();
 		List<QuestionDataSet> questions = section.getQuestions();
+
+		String txt = "";
+		if(questions != null && !questions.isEmpty()){
+			txt += "#[" + questions.get(0).getNumber() + "~" + questions.get(questions.size() - 1).getNumber() + "] ";
+		}
+		txt += section.getText();	
+		holder.txtQuestion.setText(txt);
+		
 		if(questions != null){
 			for(final QuestionDataSet question: questions){
 				LinearLayout questionView = (LinearLayout) mInflater.inflate(R.layout.layout_question_question, holder.layoutQuestion, false);
@@ -119,7 +133,7 @@ public class ListSectionAdapter extends BaseAdapter {
 				if(questionTxt != null && !questionTxt.isEmpty()){
 					txtQuestionTxt.setText(questionTxt);
 				} else {
-					txtQuestionTxt.setText(question.getMark() + " 점");
+					txtQuestionTxt.setText("(" + question.getMark() + "점)");
 				}
 				
 				

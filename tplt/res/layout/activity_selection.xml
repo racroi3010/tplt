@@ -5,6 +5,36 @@
     android:background="@color/WHITE"
     android:orientation="vertical" >
 
+    <RelativeLayout
+        android:id="@+id/layout_top"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_alignParentTop="true" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_keyboard_arrow_left_cyan_24dp" />
+
+            <Button
+                android:id="@+id/btn_home"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@null"
+                android:onClick="onClick"
+                android:text="@string/title_home"
+                android:textColor="@color/CYAN" />
+        </LinearLayout>
+    </RelativeLayout>
+
     <LinearLayout
         android:id="@+id/layout_exam"
         android:layout_width="match_parent"
@@ -27,16 +57,22 @@
             android:id="@+id/btn_selection_practice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/btn_save"
             android:gravity="center"
             android:onClick="onClick"
-            android:text="PRACTICE" />
+            android:text="PRACTICE"
+            android:textColor="@color/WHITE" />
 
         <Button
             android:id="@+id/btn_selection_exam"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/btn_save"
             android:onClick="onClick"
-            android:text="TAKE AN EXAM" />
+            android:text="TAKE AN EXAM"
+            android:textColor="@color/WHITE" />
     </LinearLayout>
 
     <LinearLayout
@@ -62,23 +98,22 @@
             android:id="@+id/btn_selection_sample_beginner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/btn_save"
             android:gravity="center"
             android:onClick="onClick"
-            android:text="BEGINNER" />
+            android:text="TOPIK I"
+            android:textColor="@color/WHITE" />
 
         <Button
             android:id="@+id/btn_selection_sample_intermediate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/btn_save"
             android:onClick="onClick"
-            android:text="INTERMEDIATE" />
-
-        <Button
-            android:id="@+id/btn_selection_sample_advanced"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="onClick"
-            android:text="ADVANCED" />
+            android:text="TOPIK II"
+            android:textColor="@color/WHITE" />
     </LinearLayout>
 
 </LinearLayout>

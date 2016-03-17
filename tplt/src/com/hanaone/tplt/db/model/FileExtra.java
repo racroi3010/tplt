@@ -7,6 +7,7 @@ public class FileExtra {
 	private String type;
 	private String name;
 	private String path;
+	private long size;
 	public int getId() {
 		return id;
 	}
@@ -33,10 +34,18 @@ public class FileExtra {
 		this.name = name;
 	}
 
+	public long getSize() {
+		return size;
+	}
+	public void setSize(long size) {
+		this.size = size;
+	}
+
 	public abstract class FileExtraEntry implements BaseColumns{
 		public static final String TABLE_NAME = "fileextra";
 		public static final String COLUMN_NAME_FILE_TYPE = "filetype";
 		public static final String COLUMN_NAME_FILE_NAME = "filename";
 		public static final String COLUMN_NAME_FILE_PATH = "path";
+		public static final String COLUMN_NAME_FILE_SIZE = "size";
 	}		
 }

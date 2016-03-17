@@ -6,13 +6,20 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.xml.sax.SAXException;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
@@ -33,6 +40,7 @@ import com.hanaone.tplt.db.ExamDataSet;
 import com.hanaone.tplt.db.FileDataSet;
 import com.hanaone.tplt.db.LevelDataSet;
 import com.hanaone.tplt.db.SectionDataSet;
+import com.hanaone.tplt.util.ColorUtils;
 
 public class MainActivity extends Activity {
 	private static final String TAG = "MainActivity";
@@ -73,9 +81,11 @@ public class MainActivity extends Activity {
 			break;
 		case R.id.btn_sample_test:
 			Intent intent = new Intent(mContext, SelectionActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 			intent.putExtra(Constants.SELECTION_MODE, Constants.SELECTION_MODE_SAMPLE);
 
-			startActivity(intent);			
+			startActivity(intent);
+			overridePendingTransition(R.anim.fadein, R.anim.fadeout);
 			break;
 		default:
 			break;
@@ -101,10 +111,17 @@ public class MainActivity extends Activity {
 	private List<ExamDataSet> onReadConf(){
 		DownloadHelper dHelper = new DownloadHelper(mContext);
 		String confPath = Constants.getRootPath(mContext) + "/config.txt";
+		//confPath = Environment.getExternalStorageDirectory().getPath() + "/config.txt";
 		boolean loaded = false;
 		try {		
 			loaded = dHelper.downloadFile(Constants.REMOTE_CONFIG_FILE_JSON, confPath);
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SAXException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParserConfigurationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -114,8 +131,16 @@ public class MainActivity extends Activity {
 			if(file.exists()){
 				try {
 					List<ExamDataSet> exams = JsonReaderHelper.readExams(file);
+					int colorOld = 0;
+					int colorNew = 0;
 					for(ExamDataSet exam: exams){
 						if(!dbAdapter.checkExam(exam.getNumber())){
+							
+							do{
+								colorOld = colorNew;
+								colorNew = ColorUtils.randomColor(50, 250, 20, 0.9f, 0.5f);
+							} while(colorNew == colorOld);
+							exam.setColor(colorNew);
 							dbAdapter.addExam(exam);
 							
 							list.add(exam);	
@@ -128,6 +153,7 @@ public class MainActivity extends Activity {
 				}
 			}
 		}
+
 		return list;
 	}
 	private class LoadingNewData extends AsyncTask<Void, Void, Void> {
@@ -140,6 +166,7 @@ public class MainActivity extends Activity {
 
 		@Override
 		protected void onPostExecute(Void result) {
+			
 			adapter.notifyDataSetChanged();
 			if(imgSync.getAnimation() != null) imgSync.getAnimation().cancel();
 			layoutSync.setVisibility(LinearLayout.GONE);
@@ -162,11 +189,13 @@ public class MainActivity extends Activity {
 		public void onSelect(int examLevelId, String examLevelName) {
 			Toast.makeText(mContext, "" + examLevelId, Toast.LENGTH_SHORT).show();
 			
-			Intent intent = new Intent(mContext, SelectionActivity.class);
+			Intent intent = new Intent(mContext, SelectionActivity.class);	
+
 			intent.putExtra(Constants.SELECTION_MODE, Constants.SELECTION_MODE_EXAM);
 			intent.putExtra(Constants.LEVEL_ID, examLevelId);
 			intent.putExtra(Constants.LEVEL_NAME, examLevelName);
 			startActivity(intent);
+			overridePendingTransition(R.anim.fadein, R.anim.fadeout);
 		}
 	};
 

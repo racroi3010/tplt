@@ -90,7 +90,7 @@ public class DatabaseAdapter{
 	}
 	public void addExam(ExamDataSet examDataSet){
 		//Examination exam = DatabaseUtils.examPojo2Model(examDataSet);
-		Examination exam = DatabaseUtils.convertObject(examDataSet, Examination.class);
+		Examination exam = DatabaseUtils.convertObject(examDataSet, Examination.class);		
 		dbHelper.insert(exam);
 		
 		List<LevelDataSet> levels = examDataSet.getLevels();
@@ -101,6 +101,7 @@ public class DatabaseAdapter{
 					level = new Level();
 					level.setNumber(data.getNumber());
 					level.setLabel(data.getLabel());
+					
 					level.setId((int)dbHelper.insert(level));
 				}
 				
@@ -114,6 +115,7 @@ public class DatabaseAdapter{
 				examLevel.setTxt_id((int)dbHelper.insert(DatabaseUtils.convertObject(data.getTxt(), FileExtra.class)));
 				
 				examLevel.setActive(0);
+				
 				
 				data.setId((int)dbHelper.insert(examLevel));
 			}

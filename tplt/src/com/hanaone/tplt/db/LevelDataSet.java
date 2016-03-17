@@ -7,16 +7,17 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class LevelDataSet implements Parcelable {
-	protected int id;
-	protected int number;
-	protected String label;
-	protected List<SectionDataSet> sections;
-	protected int active;
-	protected FileDataSet txt;
-	protected List<FileDataSet> audio;	
-	protected FileDataSet pdf;
-	protected int score;
+	private int id;
+	private int number;
+	private String label;
+	private List<SectionDataSet> sections;
+	private int active;
+	private FileDataSet txt;
+	private List<FileDataSet> audio;	
+	private FileDataSet pdf;
+	private int score;
 	
+
 	public LevelDataSet() {
 
 	}

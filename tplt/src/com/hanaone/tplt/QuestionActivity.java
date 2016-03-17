@@ -36,6 +36,7 @@ import com.hanaone.tplt.adapter.QuestionSlideAdapter;
 import com.hanaone.tplt.db.FileDataSet;
 import com.hanaone.tplt.db.LevelDataSet;
 import com.hanaone.tplt.db.SectionDataSet;
+import com.hanaone.tplt.util.PreferenceHandler;
 
 public class QuestionActivity extends FragmentActivity implements OnPreparedListener, MediaPlayerControl{
 	private AudioControllerView mControllerView;
@@ -145,7 +146,10 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 				SectionDataSet section = level.getSections().get(currentItem);
 				int start = (int)(section.getStartAudio() * 1000);
 				seekTo(start);
-				mControllerView.show();				
+				mControllerView.show();	
+				if(PreferenceHandler.getAudioPlayPreference(mContext)){
+					start();
+				}				
 			}
 
 			break;
@@ -159,12 +163,19 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 				int start = (int)(section.getStartAudio() * 1000);
 				seekTo(start);				
 				mControllerView.show();
+				if(PreferenceHandler.getAudioPlayPreference(mContext)){
+					start();
+				}				
 			} else {
 				Intent intent = new Intent(mContext, ResultActivity.class);
 				intent.putParcelableArrayListExtra(Constants.LIST_SECTIONS, (ArrayList<? extends Parcelable>) level.getSections());
 				startActivity(intent);
 			}
 			break;
+		case R.id.btn_home:
+			startActivity(new Intent(mContext, MainActivity.class)
+						.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+			break;			
 		default:
 			break;
 		}
@@ -194,6 +205,9 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 //		mPlayer.start();
 		if(Constants.QUESTION_MODE_PRACTICE.equals(mMode)){
 			mControllerView.show();
+			if(PreferenceHandler.getAudioPlayPreference(mContext)){
+				start();
+			}
 		} else if(Constants.QUESTION_MODE_EXAM.equals(mMode)) {
 			mPlayer.start();
 		} else {

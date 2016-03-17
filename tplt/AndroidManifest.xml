@@ -18,6 +18,7 @@
         android:theme="@android:style/Theme.NoTitleBar" >
         <activity
             android:name="com.hanaone.tplt.MainActivity"
+            android:launchMode="singleInstance"
             android:label="@string/app_name" >
             <intent-filter>
                 
@@ -26,10 +27,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>  
-        <activity android:name="com.hanaone.tplt.SelectionActivity"></activity>   
-        <activity android:name="com.hanaone.tplt.QuestionActivity"></activity>   
-        <activity android:name="com.hanaone.tplt.ResultActivity"></activity>  
-        <activity android:name="com.hanaone.tplt.HelpActivity"></activity>  
+        <activity android:name="com.hanaone.tplt.SelectionActivity" android:noHistory="true"></activity>   
+        <activity android:name="com.hanaone.tplt.QuestionActivity" android:noHistory="true"></activity>   
+        <activity android:name="com.hanaone.tplt.ResultActivity" android:noHistory="true"></activity>  
+        <activity android:name="com.hanaone.tplt.HelpActivity" android:noHistory="true"></activity>  
     </application>
 
 </manifest>

@@ -9,16 +9,31 @@
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:layout_alignParentTop="true" >
-		<Button 
-		    android:id="@+id/btn_setting"
-		    android:layout_width="50dp"
-		    android:layout_height="50dp"
-		    android:background="@drawable/ic_reorder_black_24dp"
-		    android:onClick="onClick"
-		    android:layout_alignParentLeft="true"
-		    android:layout_centerVertical="true"
-		    android:layout_marginLeft="30dp"
-		    />
+        <LinearLayout 
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+			android:layout_alignParentLeft="true"
+			android:layout_centerVertical="true"            
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            >
+            <ImageView 
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_keyboard_arrow_left_cyan_24dp"
+                />
+			<Button 
+			    android:id="@+id/btn_setting"
+			    android:layout_width="50dp"
+			    android:layout_height="50dp"
+			    android:background="@null"
+			    android:text="@string/title_setting"
+			    android:textColor="@color/CYAN"
+			    android:onClick="onClick"
+
+			    />            
+        </LinearLayout>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -57,33 +72,13 @@
         android:orientation="horizontal"
         android:paddingLeft="20dp" >
 
-        <LinearLayout
-            android:id="@+id/layout_sync"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:visibility="gone" >
 
-            <ImageView
-                android:id="@+id/img_sync"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:background="@drawable/ic_sync_black_24dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Loading New Exams..."
-                android:gravity="center_vertical"
-                android:textColor="@color/BLACK" />
-        </LinearLayout>
         <LinearLayout
             android:id="@+id/layout_sample_test"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="right|center_vertical"
+            android:gravity="center_vertical"
             android:visibility="visible" >
 
             <TextView
@@ -100,7 +95,22 @@
                 android:background="@drawable/sample_test"
                 
                 />
-        </LinearLayout>        
+        </LinearLayout>  
+        <LinearLayout
+            android:id="@+id/layout_sync"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:visibility="gone" >
+
+            <ImageView
+                android:id="@+id/img_sync"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/ic_sync_black_24dp" />
+
+        </LinearLayout>              
     </LinearLayout>
 
     <ListView

@@ -74,8 +74,13 @@ public class SelectionActivity extends Activity {
 			intent.putExtra(Constants.QUESTION_MODE, Constants.QUESTION_MODE_SAMPLE_INTERMEDIATE);
 			startActivity(intent);			
 			break;
+		case R.id.btn_home:
+			startActivity(new Intent(mContext, MainActivity.class)
+					.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+			break;			
 		default:
 			break;
 		}
 	}
+		
 }

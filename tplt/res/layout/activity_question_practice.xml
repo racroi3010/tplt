@@ -10,7 +10,22 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:orientation="vertical" >
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+			
+            android:gravity="center_vertical"
+            android:orientation="horizontal" >
 
+            <Button
+                android:id="@+id/btn_home"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:background="@null"
+                android:onClick="onClick"
+                android:text="@string/title_home"
+                android:textColor="@color/CYAN" />
+        </LinearLayout>
         <FrameLayout
             android:id="@+id/layout_audio"
             android:layout_width="match_parent"
@@ -54,21 +69,25 @@
 
         <Button
             android:id="@+id/btn_previous"
-            android:layout_width="40dp"
+            android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="10dp"
             android:onClick="onClick"
-            android:background="@drawable/ic_keyboard_arrow_left_black_24dp" />
+            android:background="@null"
+            android:text="Previous"
+            android:textColor="@color/CYAN"/>
 
         <Button
             android:id="@+id/btn_next"
-            android:layout_width="40dp"
+            android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_alignParentRight="true"
             android:layout_marginRight="10dp"
             android:onClick="onClick"
-            android:background="@drawable/ic_keyboard_arrow_right_black_24dp" />
+            android:background="@null"
+            android:text="Next"
+            android:textColor="@color/CYAN" />
     </RelativeLayout>
 
     <android.support.v4.view.ViewPager

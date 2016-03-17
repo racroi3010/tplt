@@ -66,10 +66,26 @@ public class QuestionSlideFragment extends Fragment {
 			TextView txtSectionHint = (TextView) sectionView.findViewById(R.id.txt_section_hint);
 			LinearLayout layoutQuestions = (LinearLayout) sectionView.findViewById(R.id.layout_questions);
 			
-			txtSectionQuestion.setText(section.getText());
-			txtSectionHint.setText(section.getHint());
+
+			
+			if(section.getHint() == null || section.getHint().isEmpty()){
+				txtSectionHint.setVisibility(TextView.GONE);
+			} else {
+				txtSectionHint.setText(section.getHint());
+				txtSectionHint.setVisibility(TextView.VISIBLE);
+			}
+			
 			
 			List<QuestionDataSet> questions = section.getQuestions();
+			String txt = "";
+			if(questions != null && !questions.isEmpty()){
+				txt += "#[" + questions.get(0).getNumber() + "~" + questions.get(questions.size() - 1).getNumber() + "] ";
+			}
+			txt += section.getText();
+			
+			
+			txtSectionQuestion.setText(txt);			
+			
 			if(questions != null){
 				for(final QuestionDataSet question: questions){
 					ViewGroup questionView = (ViewGroup) inflater.inflate(R.layout.layout_question_question, layoutQuestions, false);
@@ -89,22 +105,29 @@ public class QuestionSlideFragment extends Fragment {
 					ImageView img3 = (ImageView) questionView.findViewById(R.id.img_question_choice_3);
 					ImageView img4 = (ImageView) questionView.findViewById(R.id.img_question_choice_4);
 					
-					
 					Button btnQuestionHint = (Button) questionView.findViewById(R.id.btn_question_hint);
-					final LinearLayout layoutQuestionHint = (LinearLayout) questionView.findViewById(R.id.layout_question_hint);
-					btnQuestionHint.setOnClickListener(new OnClickListener() {
-						
-						@Override
-						public void onClick(View v) {
-							if(layoutQuestionHint.getVisibility() == LinearLayout.VISIBLE){
-								layoutQuestionHint.setVisibility(LinearLayout.GONE);
-							} else {
-								layoutQuestionHint.setVisibility(LinearLayout.VISIBLE);
+					if(question.getHint() == null || question.getHint().isEmpty()){
+						btnQuestionHint.setVisibility(Button.GONE);
+					} else {
+						btnQuestionHint.setVisibility(Button.VISIBLE);
+						final LinearLayout layoutQuestionHint = (LinearLayout) questionView.findViewById(R.id.layout_question_hint);
+						btnQuestionHint.setOnClickListener(new OnClickListener() {
+							
+							@Override
+							public void onClick(View v) {
+								if(layoutQuestionHint.getVisibility() == LinearLayout.VISIBLE){
+									layoutQuestionHint.setVisibility(LinearLayout.GONE);
+								} else {
+									layoutQuestionHint.setVisibility(LinearLayout.VISIBLE);
+								}
 							}
-						}
-					});
+						});
+												
+					}
 					
-					txtQuestionTxt.setText(" 2점");
+					
+
+					txtQuestionTxt.setText("(" + question.getMark() + "점)");
 					
 					txtNumber.setText(question.getNumber() + ". ");
 					txtQuestionHint.setText(question.getHint());
@@ -116,6 +139,7 @@ public class QuestionSlideFragment extends Fragment {
 							rd2.setText("");
 							rd3.setText("");
 							rd4.setText("");
+
 							
 							img1.setImageBitmap(ImageUtils.decodeSampledBitmapFromFile(choices.get(0).getText(), 200, 200));
 							img2.setImageBitmap(ImageUtils.decodeSampledBitmapFromFile(choices.get(1).getText(), 200, 200));
@@ -130,7 +154,12 @@ public class QuestionSlideFragment extends Fragment {
 							rd1.setText(choices.get(0).getText());
 							rd2.setText(choices.get(1).getText());
 							rd3.setText(choices.get(2).getText());
-							rd4.setText(choices.get(3).getText());							
+							rd4.setText(choices.get(3).getText());		
+							
+							img1.setVisibility(ImageView.GONE);
+							img2.setVisibility(ImageView.GONE);
+							img3.setVisibility(ImageView.GONE);
+							img4.setVisibility(ImageView.GONE);							
 						}
 						
 					}

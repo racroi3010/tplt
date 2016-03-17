@@ -1,15 +1,36 @@
 package com.hanaone.tplt.adapter;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
+
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.xml.sax.SAXException;
+
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.res.Resources;
+import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Message;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.hanaone.http.DownloadHelper;
 import com.hanaone.http.JsonReaderHelper;
@@ -20,35 +41,7 @@ import com.hanaone.tplt.db.ExamDataSet;
 import com.hanaone.tplt.db.LevelDataSet;
 import com.hanaone.tplt.db.QuestionDataSet;
 import com.hanaone.tplt.db.SectionDataSet;
-import com.hanaone.tplt.db.model.Section;
 import com.hanaone.tplt.util.ColorUtils;
-import com.hanaone.tplt.util.DatabaseUtils;
-
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.graphics.Color;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.Window;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.view.WindowManager.LayoutParams;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 public class ListExamAdapter extends BaseAdapter {
 	private Context mContext;
@@ -67,6 +60,19 @@ public class ListExamAdapter extends BaseAdapter {
 
 	public void setExams(List<ExamDataSet> exams) {
 		this.exams = exams;
+		Collections.sort(exams, new Comparator<ExamDataSet>() {
+
+			@Override
+			public int compare(ExamDataSet arg0, ExamDataSet arg1) {
+				if(arg0.getNumber() > arg1.getNumber()){
+					return -1;
+				} else if(arg0.getNumber() < arg1.getNumber()){
+					return 1;
+				}
+				return 0;
+			}
+			
+		});		
 		this.notifyDataSetChanged();
 	}
 	
@@ -105,43 +111,61 @@ public class ListExamAdapter extends BaseAdapter {
 			holder = new ViewHolder();
 			holder.txtTitle = (TextView) convertView.findViewById(R.id.txt_title);
 			holder.btnView = (Button) convertView.findViewById(R.id.btn_down);
-			holder.layoutLevel3 = (LinearLayout) convertView.findViewById(R.id.layout_level3);
-			holder.layoutLevel2 = (LinearLayout) convertView.findViewById(R.id.layout_level2);
-			holder.layoutLevel1 = (LinearLayout) convertView.findViewById(R.id.layout_level1);
 
+			holder.layoutLevel1 = (LinearLayout) convertView.findViewById(R.id.layout_level1);
+			holder.layoutLevel2 = (LinearLayout) convertView.findViewById(R.id.layout_level2);
+			holder.layoutLevel3 = (LinearLayout) convertView.findViewById(R.id.layout_level3);
+			
+			holder.prgBar1 = (ProgressBar) convertView.findViewById(R.id.prg_level_1);
+			holder.prgBar2 = (ProgressBar) convertView.findViewById(R.id.prg_level_2);
+			holder.prgBar3 = (ProgressBar) convertView.findViewById(R.id.prg_level_3);
+			holder.txtScore1 = (TextView) convertView.findViewById(R.id.txt_score_1);
+			holder.txtScore2 = (TextView) convertView.findViewById(R.id.txt_score_2);
+			holder.txtScore3 = (TextView) convertView.findViewById(R.id.txt_score_3);
+			
+
+			
 			holder.info = info;
 			
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();	
 			
+			holder.info.setLayoutLevel1(null);
+			holder.info.setLayoutLevel2(null);
+			holder.info.setLayoutLevel3(null);
+			
 			holder.info.setPrgBar1(null);
 			holder.info.setPrgBar2(null);
 			holder.info.setPrgBar3(null);
-			holder.info.setTxtView1(null);
-			holder.info.setTxtView2(null);
-			holder.info.setTxtView3(null);	
+			holder.info.setTxtScore1(null);
+			holder.info.setTxtScore2(null);
+			holder.info.setTxtScore3(null);	
 			
 			holder.info = info;
 			
-//			holder.info.setPrgBar1((ProgressBar)holder.layoutLevel1.findViewById(R.id.prg_level_1));
-//			holder.info.setPrgBar2((ProgressBar)holder.layoutLevel2.findViewById(R.id.prg_level_2));
-//			holder.info.setPrgBar3((ProgressBar)holder.layoutLevel3.findViewById(R.id.prg_level_3));
-//			
-//			holder.info.setTxtView1((TextView)holder.layoutLevel1.findViewById(R.id.txt_score_1));
-//			holder.info.setTxtView2((TextView)holder.layoutLevel2.findViewById(R.id.txt_score_2));
-//			holder.info.setTxtView3((TextView)holder.layoutLevel3.findViewById(R.id.txt_score_3));
+			info.setPrgBar1(holder.prgBar1);
+			info.setPrgBar2(holder.prgBar2);
+			info.setPrgBar3(holder.prgBar3);
+			info.setTxtScore1(holder.txtScore1);
+			info.setTxtScore2(holder.txtScore2);
+			info.setTxtScore3(holder.txtScore3);
+			info.setLayoutLevel1(holder.layoutLevel1);
+			info.setLayoutLevel2(holder.layoutLevel2);
+			info.setLayoutLevel3(holder.layoutLevel3);
 			
 			
 		} 		
 
-		info.setPrgBar1((ProgressBar)holder.layoutLevel1.findViewById(R.id.prg_level_1));
-		info.setPrgBar2((ProgressBar)holder.layoutLevel2.findViewById(R.id.prg_level_2));
-		info.setPrgBar3((ProgressBar)holder.layoutLevel3.findViewById(R.id.prg_level_3));
-		
-		info.setTxtView1((TextView)holder.layoutLevel1.findViewById(R.id.txt_score_1));
-		info.setTxtView2((TextView)holder.layoutLevel2.findViewById(R.id.txt_score_2));
-		info.setTxtView3((TextView)holder.layoutLevel3.findViewById(R.id.txt_score_3));
+		info.setPrgBar1(holder.prgBar1);
+		info.setPrgBar2(holder.prgBar2);
+		info.setPrgBar3(holder.prgBar3);
+		info.setTxtScore1(holder.txtScore1);
+		info.setTxtScore2(holder.txtScore2);
+		info.setTxtScore3(holder.txtScore3);
+		info.setLayoutLevel1(holder.layoutLevel1);
+		info.setLayoutLevel2(holder.layoutLevel2);
+		info.setLayoutLevel3(holder.layoutLevel3);
 		
 		holder.btnView.setOnClickListener(new OnClickListener() {
 			
@@ -164,7 +188,7 @@ public class ListExamAdapter extends BaseAdapter {
 			}
 		});	
 		
-		int color = ColorUtils.randomColor();
+		int color = data.getColor();
 		
 		((ImageView)holder.layoutLevel3.findViewById(R.id.img_new_lesson_3)).setBackgroundColor(color);
 		((ImageView)holder.layoutLevel2.findViewById(R.id.img_new_lesson_2)).setBackgroundColor(color);
@@ -182,7 +206,9 @@ public class ListExamAdapter extends BaseAdapter {
 			if(levels != null){
 				for(final LevelDataSet level: levels){
 					int number = level.getNumber();
+
 					if(number == 1){
+
 						holder.layoutLevel1.setVisibility(RelativeLayout.VISIBLE);
 						((TextView)holder.layoutLevel1.findViewById(R.id.txt_label_1)).setText(level.getLabel() + "");
 						holder.layoutLevel1.setOnClickListener(new OnClickListener() {
@@ -193,6 +219,7 @@ public class ListExamAdapter extends BaseAdapter {
 									String examLevelName = examName + " - " + level.getLabel();
 									mListener.onSelect(level.getId(), examLevelName);
 								} else {
+									
 									onclick(level, info);
 								}
 								
@@ -203,7 +230,16 @@ public class ListExamAdapter extends BaseAdapter {
 							holder.layoutLevel1.setAlpha(0.5f);
 						} else {
 							holder.layoutLevel1.setAlpha(1f);
-						}				
+						}	
+						if(info.getStatus1() != DownloadInfo.DOWNLOADING && info.getStatus1() != DownloadInfo.QUEUED){
+							info.getPrgBar1().setProgress(level.getScore());
+							info.getTxtScore1().setText(level.getScore() + "/100");									
+						} else{
+							info.getPrgBar1().setProgress(info.getProgress2());
+							info.getTxtScore1().setText(info.getProgress2() + "%");
+							info.getLayoutLevel1().setAlpha(1f);
+						}
+										
 					} else if(number == 2){
 						holder.layoutLevel2.setVisibility(RelativeLayout.VISIBLE);
 						((TextView)holder.layoutLevel2.findViewById(R.id.txt_label_2)).setText(level.getLabel() + "");
@@ -225,8 +261,17 @@ public class ListExamAdapter extends BaseAdapter {
 							holder.layoutLevel2.setAlpha(0.5f);
 						} else {
 							holder.layoutLevel2.setAlpha(1f);
-						}							
+						}	
+						if(info.getStatus2() != DownloadInfo.DOWNLOADING && info.getStatus2() != DownloadInfo.QUEUED){
+							info.getPrgBar2().setProgress(level.getScore());
+							info.getTxtScore2().setText(level.getScore() + "/100");							
+						} else{
+							info.getPrgBar2().setProgress(info.getProgress2());
+							info.getTxtScore2().setText(info.getProgress2() + "%");
+							info.getLayoutLevel2().setAlpha(1f);
+						}						
 					} else if(number == 3){
+
 						holder.layoutLevel3.setVisibility(RelativeLayout.VISIBLE);
 						((TextView)holder.layoutLevel3.findViewById(R.id.txt_label_3)).setText(level.getLabel() + "");
 						holder.layoutLevel3.setOnClickListener(new OnClickListener() {
@@ -247,7 +292,15 @@ public class ListExamAdapter extends BaseAdapter {
 							holder.layoutLevel3.setAlpha(0.5f);
 						} else {
 							holder.layoutLevel3.setAlpha(1f);
-						}							
+						}	
+						if(info.getStatus3() != DownloadInfo.DOWNLOADING && info.getStatus3() != DownloadInfo.QUEUED){
+							info.getPrgBar3().setProgress(level.getScore());
+							info.getTxtScore3().setText(level.getScore() + "/100");							
+						} else{
+							info.getPrgBar3().setProgress(info.getProgress3());
+							info.getTxtScore3().setText(info.getProgress3() + "%");							
+							info.getLayoutLevel3().setAlpha(1f);
+						}						
 					}
 				}
 			
@@ -260,34 +313,85 @@ public class ListExamAdapter extends BaseAdapter {
 	}
 	
 	public void onclick(final LevelDataSet level, final DownloadInfo info){
-		new AlertDialog.Builder(mContext)
-		.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-			
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				
-//				final Dialog mDialog = new Dialog(mContext);
-//				RelativeLayout layout = (RelativeLayout) mInflater.inflate(R.layout.dialog_download, null);
-//
-//				mDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-//				mDialog.setContentView(layout);
-//				
-//				WindowManager.LayoutParams params = mDialog.getWindow().getAttributes();
-//				params.height = 400;
-//				params.width = LayoutParams.MATCH_PARENT;				
-//				mDialog.getWindow().setAttributes(params);
-//				
-//				mDialog.setCanceledOnTouchOutside(false);
-//				mDialog.show();
-				
-
-				
-				new Downloading(level, info).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-				
+		Resources resouces = mContext.getResources();
+		AlertDialog.Builder dialog = new AlertDialog.Builder(mContext)	
+										.setTitle(resouces.getString(R.string.dialog_caution));
+		boolean download = false;
+		String msg = null;
+		switch (level.getNumber()) {
+		case 1:
+			if(info.getStatus1() == DownloadInfo.NOT_START){
+				msg = resouces.getString(R.string.dialog_ask_download);
+				download = true;
+			} else if(info.getStatus1() == DownloadInfo.DOWNLOADING) {
+				msg = resouces.getString(R.string.dialog_ask_downloading);
+			} else if(info.getStatus1() == DownloadInfo.QUEUED){
+				msg = resouces.getString(R.string.dialog_ask_queued);
 			}
-		})
-		.setNegativeButton("NO", null)
-		.show();
+			break;
+		case 2:
+			if(info.getStatus2() == DownloadInfo.NOT_START){
+				msg = resouces.getString(R.string.dialog_ask_download);
+				download = true;
+			} else if(info.getStatus2() == DownloadInfo.DOWNLOADING) {
+				msg = resouces.getString(R.string.dialog_ask_downloading);
+			} else if(info.getStatus2() == DownloadInfo.QUEUED){
+				msg = resouces.getString(R.string.dialog_ask_queued);
+			}		
+			break;
+		case 3:
+			if(info.getStatus3() == DownloadInfo.NOT_START){
+				msg = resouces.getString(R.string.dialog_ask_download);
+				download = true;
+			} else if(info.getStatus3() == DownloadInfo.DOWNLOADING) {
+				msg = resouces.getString(R.string.dialog_ask_downloading);
+			} else if(info.getStatus3() == DownloadInfo.QUEUED){
+				msg = resouces.getString(R.string.dialog_ask_queued);
+			}
+			break;					
+		default:
+			break;
+		}
+
+		dialog.setMessage(msg);
+		
+		if(download){			
+			dialog.setPositiveButton(resouces.getString(R.string.dialog_yes), new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {	
+						switch (level.getNumber()) {
+						case 1:
+							info.setStatus1(DownloadInfo.QUEUED);
+							break;
+						case 2:
+							info.setStatus2(DownloadInfo.QUEUED);
+							break;
+						case 3:
+							info.setStatus3(DownloadInfo.QUEUED);
+							break;					
+						default:
+							break;
+						}						
+						new Downloading(level, info).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+						
+					}
+			})
+			.setNegativeButton(resouces.getString(R.string.dialog_no), null)
+			.show();			
+		} else {
+			dialog.setPositiveButton(resouces.getString(R.string.dialog_yes), new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {				
+					dialog.dismiss();
+					
+				}
+			})
+			.show();			
+		}
+
+		
 
 	}
 	private class Downloading extends AsyncTask<Void, Integer, Boolean>{
@@ -313,24 +417,32 @@ public class ListExamAdapter extends BaseAdapter {
 		protected void onPreExecute() {
 			ProgressBar prgBar = null;
 			TextView txtPer = null;
+			LinearLayout layout = null;
 			switch (this.level.getNumber()) {
 			case 1:
 				prgBar = this.info.getPrgBar1();
-				txtPer = this.info.getTxtView1();
+				txtPer = this.info.getTxtScore1();
+				layout = this.info.getLayoutLevel1();
 				break;
 			case 2:
 				prgBar = this.info.getPrgBar2();
-				txtPer = this.info.getTxtView2();				
+				txtPer = this.info.getTxtScore2();		
+				layout = this.info.getLayoutLevel2();
 				break;
 			case 3:
 				prgBar = this.info.getPrgBar3();
-				txtPer = this.info.getTxtView3();				
+				txtPer = this.info.getTxtScore3();			
+				layout = this.info.getLayoutLevel3();
 				break;				
 			default:
 				break;
 			}		
 			if(prgBar != null) prgBar.setProgress(0);
 			if(txtPer != null) txtPer.setText("0%");
+			if(layout != null){
+				layout.setClickable(false);
+				layout.setAlpha(1f);
+			}
 			//this.layout.setAlpha(1f);
 			
 			super.onPreExecute();
@@ -338,6 +450,19 @@ public class ListExamAdapter extends BaseAdapter {
 
 		@Override
 		protected void onPostExecute(Boolean result) {
+			switch (level.getNumber()) {
+			case 1:
+				info.setStatus1(DownloadInfo.NOT_START);
+				break;
+			case 2:
+				info.setStatus2(DownloadInfo.NOT_START);
+				break;
+			case 3:
+				info.setStatus3(DownloadInfo.NOT_START);
+				break;					
+			default:
+				break;
+			}				
 			if(!result){
 				mHandler.obtainMessage(HANDLE_ACTIVE_LEVEL, false).sendToTarget();
 				
@@ -351,7 +476,19 @@ public class ListExamAdapter extends BaseAdapter {
 		@Override
 		protected Boolean doInBackground(Void... params) {
 			//level = params[0];
-			
+			switch (level.getNumber()) {
+			case 1:
+				info.setStatus1(DownloadInfo.DOWNLOADING);
+				break;
+			case 2:
+				info.setStatus2(DownloadInfo.DOWNLOADING);
+				break;
+			case 3:
+				info.setStatus3(DownloadInfo.DOWNLOADING);
+				break;					
+			default:
+				break;
+			}
 			DownloadHelper dlHelper = new DownloadHelper(mContext);
 			
 			// download audio
@@ -365,7 +502,9 @@ public class ListExamAdapter extends BaseAdapter {
 			long size = 0;
 			try {
 				size += dlHelper.getSize(urlTxt);
-				size += dlHelper.getSize(urlAudio);
+				long audioSize= dlHelper.getSize(urlAudio);
+				audioSize = audioSize == 0 ? 50000000 : audioSize;
+				size += audioSize;
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -390,7 +529,7 @@ public class ListExamAdapter extends BaseAdapter {
 						while((read = is.read(buf)) > 0){
 							os.write(buf, 0, read);	
 							sum += read;		
-							publishProgress((int)((sum * 100l)/size));							
+							if(size > 0) publishProgress((int)((sum * 100l)/size));							
 						}
 						os.close();
 						is.close();		
@@ -399,8 +538,56 @@ public class ListExamAdapter extends BaseAdapter {
 				} catch (IOException e) {
 //					showMsg(e.getMessage());
 					e.printStackTrace();
+				} catch (SAXException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ParserConfigurationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}					
 			}
+			
+
+			
+			String audioPath = rootPath + "/" + Constants.FILE_TYPE_MP3 + "_" + level.getId() + ".mp3";
+			
+			if(urlAudio.contains("http")){
+				try {
+					
+					InputStream is = dlHelper.parseUrl(urlAudio);
+					if(is != null){
+						file = new File(audioPath);
+						FileOutputStream os = new FileOutputStream(file);
+						
+						byte[] buf = new byte[1024];
+						int read = 0;
+												
+						while((read = is.read(buf)) > 0){
+							os.write(buf, 0, read);	
+							
+							sum += read;		
+							if(size > 0) publishProgress((int)((sum * 100l)/size));
+						}
+						os.close();
+						is.close();	
+						
+						// update audio
+						
+											
+					}						
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					//showMsg(e.getMessage());
+				} catch (SAXException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ParserConfigurationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}				
+			}			
+			
 			
 			file = new File(txtPath);
 			List<SectionDataSet> sections = null;
@@ -444,7 +631,7 @@ public class ListExamAdapter extends BaseAdapter {
 										while((read = is.read(buf)) > 0){
 											os.write(buf, 0, read);	
 											sum += read;		
-											publishProgress((int)((sum * 100l)/size));						
+											if(size > 0) publishProgress((int)((sum * 100l)/size));						
 										}
 										os.close();
 										is.close();		
@@ -454,13 +641,18 @@ public class ListExamAdapter extends BaseAdapter {
 								} catch (IOException e) {
 //									showMsg(e.getMessage());
 									e.printStackTrace();
+								} catch (SAXException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								} catch (ParserConfigurationException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
 								}	
 								
 							}							
 						}
 
-			}
-			
+			}			
 			// update
 			
 			if(sections != null){
@@ -476,36 +668,7 @@ public class ListExamAdapter extends BaseAdapter {
 		
 			
 			
-			String audioPath = rootPath + "/" + Constants.FILE_TYPE_MP3 + "_" + level.getId() + ".mp3";
-			if(urlAudio.contains("http")){
-				try {				
-					InputStream is = dlHelper.parseUrl(urlAudio);
-					if(is != null){
 
-						FileOutputStream os = new FileOutputStream(file);
-						
-						byte[] buf = new byte[1024];
-						int read = 0;
-												
-						while((read = is.read(buf)) > 0){
-							os.write(buf, 0, read);	
-							
-							sum += read;		
-							publishProgress((int)((sum * 100l)/size));
-						}
-						os.close();
-						is.close();	
-						
-						// update audio
-						
-											
-					}						
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-					//showMsg(e.getMessage());
-				}				
-			}
 			// update level
 			file = new File(audioPath);
 			if(file.exists()){
@@ -517,7 +680,19 @@ public class ListExamAdapter extends BaseAdapter {
 			}
 			
 
-			
+			switch (level.getNumber()) {
+			case 1:
+				info.setStatus1(DownloadInfo.COMPLETED);
+				break;
+			case 2:
+				info.setStatus2(DownloadInfo.COMPLETED);
+				break;
+			case 3:
+				info.setStatus3(DownloadInfo.COMPLETED);
+				break;					
+			default:
+				break;
+			}
 			return txtFlag && audioFlag;
 		}
 		
@@ -532,22 +707,39 @@ public class ListExamAdapter extends BaseAdapter {
 			switch (this.level.getNumber()) {
 			case 1:
 				prgBar = this.info.getPrgBar1();
-				txtPer = this.info.getTxtView1();
+				txtPer = this.info.getTxtScore1();
 				break;
 			case 2:
 				prgBar = this.info.getPrgBar2();
-				txtPer = this.info.getTxtView2();				
+				txtPer = this.info.getTxtScore2();				
 				break;
 			case 3:
 				prgBar = this.info.getPrgBar3();
-				txtPer = this.info.getTxtView3();				
-				break;				
+				txtPer = this.info.getTxtScore3();				
+				break;					
 			default:
 				break;
 			}		
 			if(p < 99){
-				if(prgBar != null) prgBar.setProgress(p);
-				if(txtPer != null) txtPer.setText(p + "%");				
+				switch (level.getNumber()) {
+				case 1:
+					info.setProgress1(p);
+					break;
+				case 2:
+					info.setProgress2(p);
+					break;
+				case 3:
+					info.setProgress3(p);
+					break;					
+				default:
+					break;
+				}
+				if(prgBar != null){
+					prgBar.setProgress(p);
+				}
+				if(txtPer != null){
+					txtPer.setText(p + "%");				
+				}
 			}
 
 		}
@@ -582,35 +774,62 @@ public class ListExamAdapter extends BaseAdapter {
 					break;					
 				case HANDLE_ACTIVE_LEVEL:
 					boolean result = (Boolean) msg.obj;
+					ProgressBar prgBar = null;
+					TextView txtPer = null;
+					LinearLayout layout = null;
+					switch (level.getNumber()) {
+					case 1:
+						prgBar = info.getPrgBar1();
+						txtPer = info.getTxtScore1();
+						layout = info.getLayoutLevel1();
+						break;
+					case 2:
+						prgBar = info.getPrgBar2();
+						txtPer = info.getTxtScore2();
+						layout = info.getLayoutLevel2();
+						break;
+					case 3:
+						prgBar = info.getPrgBar3();
+						txtPer = info.getTxtScore3();	
+						layout = info.getLayoutLevel3();
+						break;							
+					default:
+						break;
+					}		
+					switch (level.getNumber()) {
+					case 1:
+						info.setProgress1(100);
+						break;
+					case 2:
+						info.setProgress2(100);
+						break;
+					case 3:
+						info.setProgress3(100);
+						break;					
+					default:
+						break;
+					}					
 					if(result){
 										
-						ProgressBar prgBar = null;
-						TextView txtPer = null;
-						switch (level.getNumber()) {
-						case 1:
-							prgBar = info.getPrgBar1();
-							txtPer = info.getTxtView1();
-							break;
-						case 2:
-							prgBar = info.getPrgBar2();
-							txtPer = info.getTxtView2();				
-							break;
-						case 3:
-							prgBar = info.getPrgBar3();
-							txtPer = info.getTxtView3();				
-							break;				
-						default:
-							break;
-						}		
+
 						if(prgBar != null) prgBar.setProgress(100);
 						if(txtPer != null) txtPer.setText("100%");
+						if(layout != null){
+							layout.setClickable(true);
+							layout.setAlpha(1f);
+						}						
 						level.setActive(Constants.STATUS_ACTIVE);
 						//layout.setAlpha(1f);
 						int updatedActive = dbAdapter.updateLevelActive(level.getId(), true);
 						
 						showMsg("download finish! " + updatedActive);			
 					} else {
-						//layout.setAlpha(0.5f);
+						if(prgBar != null) prgBar.setProgress(0);
+						if(txtPer != null) txtPer.setText("0/100");
+						if(layout != null){
+							layout.setClickable(true);
+							layout.setAlpha(0.5f);
+						}	
 						showMsg("download failed!");
 					}						
 					break;
@@ -636,6 +855,13 @@ public class ListExamAdapter extends BaseAdapter {
 		LinearLayout layoutLevel2;
 		LinearLayout layoutLevel1;
 		
+		ProgressBar prgBar1;	
+		ProgressBar prgBar2;	
+		ProgressBar prgBar3;
+		
+		TextView txtScore1;
+		TextView txtScore2;
+		TextView txtScore3;
 		DownloadInfo info;
 	}
 

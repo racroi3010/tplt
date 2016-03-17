@@ -3,14 +3,19 @@ package com.hanaone.tplt.util;
 import java.util.Random;
 
 public class ColorUtils {
-	public static int randomColor(){
+	public static int randomColor(int Hmin, int Hmax, int offset, float S, float V){
+		int size = (Hmax - Hmin)/offset + 1;
+		float temp[] = new float[size];
+		temp[0] = Hmin;
+		for(int i = 1; i < size - 1; i ++){
+			temp[i] = temp[i - 1] + offset;
+		}
 		Random r = new Random();
-		int temp = r.nextInt(360);
-
+		int n = r.nextInt(size);
 		
-		float H = (float)temp;
-		float S = 0.25f;
-		float V = 0.5f;
+		float H = temp[n];
+//		float S = 0.25f;
+//		float V = 0.5f;
 		
 		float C = V * S;
 		float X = C * (1 - (float)Math.abs(((int)H/60)%2 - 1));

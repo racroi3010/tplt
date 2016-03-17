@@ -8,6 +8,7 @@ public class FileDataSet implements Parcelable {
 	private String type;
 	private String name;
 	private String path;
+	private long size;
 	public FileDataSet() {
 
 	}		
@@ -35,6 +36,13 @@ public class FileDataSet implements Parcelable {
 	public void setPath(String path) {
 		this.path = path;
 	}
+	
+	public long getSize() {
+		return size;
+	}
+	public void setSize(long size) {
+		this.size = size;
+	}
 	@Override
 	public int describeContents() {
 		// TODO Auto-generated method stub
@@ -46,6 +54,7 @@ public class FileDataSet implements Parcelable {
 		dest.writeString(type);
 		dest.writeString(name);
 		dest.writeString(path);
+		dest.writeLong(size);
 		
 	}
 	public static final Parcelable.Creator<FileDataSet> CREATOR
@@ -69,6 +78,7 @@ public class FileDataSet implements Parcelable {
 		type = in.readString();
 		name = in.readString();
 		path = in.readString();
+		size = in.readLong();
 	}	
 	
 }

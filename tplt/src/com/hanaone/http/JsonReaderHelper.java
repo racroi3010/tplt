@@ -2,8 +2,10 @@ package com.hanaone.http;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +39,30 @@ public class JsonReaderHelper {
 		}
 		
 	}	
+	
+	// read google json
+	public static FileDataSet readFileDataset(File file) throws IOException{
+		FileInputStream is = new FileInputStream(file);
+		JsonReader reader = new JsonReader(new InputStreamReader(is, "UTF-8"));
+		
+		reader.beginObject();
+		FileDataSet rs = new FileDataSet();
+		while(reader.hasNext()){
+			String name = reader.nextName();
+			if(name.equals("downloadUrl")){
+				rs.setPath(reader.nextString());
+			} else if(name.equals("fileName")){
+				rs.setName(reader.nextString());
+			} else if(name.equals("sizeBytes")){
+				rs.setSize(reader.nextLong());
+			} else {
+				reader.skipValue();
+			}
+		}
+		reader.endObject();
+		return rs;
+		
+	}
 	
 	// read question
 	public static List<SectionDataSet> readSections(JsonReader reader) throws IOException{

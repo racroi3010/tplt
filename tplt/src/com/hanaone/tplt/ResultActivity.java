@@ -10,7 +10,9 @@ import com.hanaone.tplt.db.SectionDataSet;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ListView;
 
 public class ResultActivity extends Activity {
@@ -47,5 +49,16 @@ public class ResultActivity extends Activity {
 		
 		
 	}
-	
+    public void onClick(View v){
+    	switch (v.getId()) {
+		case R.id.btn_home:
+			finish();
+			startActivity(new Intent(mContext, MainActivity.class)
+				.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+			break;
+
+		default:
+			break;
+		}
+    }		
 }

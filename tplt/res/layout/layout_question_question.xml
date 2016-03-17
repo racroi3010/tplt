@@ -16,7 +16,7 @@
             android:layout_marginTop="10dp"
             android:text="1.(2점)"
             android:textColor="@color/BLACK"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/txt_question_txt"
@@ -25,7 +25,7 @@
             android:layout_marginTop="10dp"
             android:text="(2점)"
             android:textColor="@color/BLACK"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
         <ImageView
             android:id="@+id/img_question"
@@ -34,7 +34,26 @@
      		android:visibility="gone"
             />
     </LinearLayout>
+    <LinearLayout
+        android:id="@+id/layout_question_hint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone" >
 
+        <TextView
+            android:id="@+id/txt_question_hint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/hint_txt_border"
+            android:padding="2dp"
+            android:text="여자 : 영수 씨, 발표회 잘 끝났어요 못 가서 미안해요.\n남자 : 아니에요. 급한 일이 있었다면서요.\n여자 : _______________________"
+            android:textColor="@color/GRAY_HINT"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+    
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -65,15 +84,17 @@
 
                     <ImageView
                         android:id="@+id/img_question_choice_1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="300dp"
-                        android:scaleType="fitCenter"
+                        android:layout_width="300dp"
+                        android:layout_height="150dp"
+                        android:scaleType="fitStart"
+                        
                         android:visibility="gone" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
                     android:orientation="horizontal" >
 
                     <RadioButton
@@ -86,36 +107,37 @@
 
                     <ImageView
                         android:id="@+id/img_question_choice_2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="300dp"
-                        android:scaleType="fitCenter"
+                        android:layout_width="300dp"
+                        android:layout_height="150dp"
+                        android:scaleType="fitStart"
                         android:visibility="gone" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
                     android:orientation="horizontal" >
 
                     <RadioButton
                         android:id="@+id/rd_question_choice_3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
- 
                         android:text="발표하는 언제 시작해요?"
                         android:textColor="@color/BLACK" />
 
                     <ImageView
                         android:id="@+id/img_question_choice_3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="300dp"
-                        android:scaleType="fitCenter"
+                        android:layout_width="300dp"
+                        android:layout_height="150dp"
+                        android:scaleType="fitStart"
                         android:visibility="gone" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
                     android:orientation="horizontal" >
 
                     <RadioButton
@@ -128,9 +150,9 @@
 
                     <ImageView
                         android:id="@+id/img_question_choice_4"
-                        android:layout_width="wrap_content"
-                        android:layout_height="300dp"
-                        android:scaleType="fitCenter"
+                        android:layout_width="300dp"
+                        android:layout_height="150dp"
+                        android:scaleType="fitStart"
                         android:visibility="gone" />
                 </LinearLayout>
             </RadioGroup>
@@ -150,30 +172,5 @@
         </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/layout_question_hint"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:visibility="gone" >
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="Hint:"
-            android:textColor="@color/BLACK"
-            android:textSize="18sp" />
-
-        <TextView
-            android:id="@+id/txt_question_hint"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="여자 : 영수 씨, 발표회 잘 끝났어요 못 가서 미안해요.\n남자 : 아니에요. 급한 일이 있었다면서요.\n여자 : _______________________"
-            android:textColor="@color/GRAY_HINT"
-            android:textSize="18sp"
-             />
-    </LinearLayout>
 
 </LinearLayout>

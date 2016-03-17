@@ -90,5 +90,6 @@ public class ExamLevel {
 		public static final String COLUMN_NAME_SCORE = "score";
 		public static final String COLUMN_NAME_ACTIVE = "active";
 		
+		
 	}	
 }

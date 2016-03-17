@@ -11,6 +11,8 @@
     <color name="RED">#ff0000</color>
     <color name="GREEN">#00ff00</color>
     <color name="BLUE">#0000ff</color>
+    <color name="CYAN">#0297ff</color>
+    <color name="CYAN_BRIGHT">#97d3fc</color>
 
     <!-- Switch -->
     <color name="ksw_md_ripple_normal">#1E000000</color>
