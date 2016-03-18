@@ -36,6 +36,7 @@ import com.hanaone.tplt.adapter.ListSectionAdapter;
 import com.hanaone.tplt.adapter.QuestionSlideAdapter;
 import com.hanaone.tplt.db.FileDataSet;
 import com.hanaone.tplt.db.LevelDataSet;
+import com.hanaone.tplt.db.ResultDataSet;
 import com.hanaone.tplt.db.SectionDataSet;
 import com.hanaone.tplt.util.PreferenceHandler;
 
@@ -51,10 +52,14 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 	private String mMode;
 	private int currentItem;
 	private DatabaseAdapter dbAdapter;
+	private int sectionIndex;
 	
 	// list
 	private ListView mList;
 	private ListSectionAdapter mListAdapter;
+	
+	// list result
+	private ArrayList<ResultDataSet> listResult;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -76,7 +81,7 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 		mMode = getIntent().getStringExtra(Constants.QUESTION_MODE);
 		mControllerView = new AudioControllerView(this);		
 		mPlayer = new MediaPlayer();		
-		if(mMode.equals(Constants.QUESTION_MODE_EXAM) || mMode.equals(Constants.QUESTION_MODE_PRACTICE)){
+		if(Constants.QUESTION_MODE_EXAM.equals(mMode) || Constants.QUESTION_MODE_PRACTICE.equals(mMode)){
 			int levelId = getIntent().getIntExtra(Constants.LEVEL_ID, -1);
 			level = dbAdapter.getLevel(levelId);			
 			
@@ -102,15 +107,19 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}			
-		} else if(mMode.equals(Constants.QUESTION_MODE_SAMPLE_BEGINNER)){
+		} else if(Constants.QUESTION_MODE_SAMPLE_BEGINNER.equals(mMode)){
 			level = dbAdapter.generateSampleTest(1);
 			currentItem = 0;
 			mHander.obtainMessage(HANDLE_PLAY_LIST).sendToTarget();
 			
-		} else if(mMode.equals(Constants.QUESTION_MODE_SAMPLE_INTERMEDIATE)){
+		} else if(Constants.QUESTION_MODE_SAMPLE_INTERMEDIATE.equals(mMode)){
 			level = dbAdapter.generateSampleTest(2);
 			currentItem = 0;
 			mHander.obtainMessage(HANDLE_PLAY_LIST).sendToTarget();
+		} else if(Constants.QUESTION_MODE_REVIEW.equals(mMode)){
+			level = getIntent().getParcelableExtra(Constants.LEVEL);
+			listResult = getIntent().getParcelableArrayListExtra(Constants.LIST_RESULT);
+			sectionIndex = getIntent().getIntExtra(Constants.SECTION_INDEX, 0);
 		}
 		
 	}
@@ -127,7 +136,20 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 			
 			mPagerAdapter = new QuestionSlideAdapter(getSupportFragmentManager(), level, mMode);
 			mPager.setAdapter(mPagerAdapter);			
-		} else {
+		} else if(Constants.QUESTION_MODE_REVIEW.equals(mMode)){
+			findViewById(R.id.btn_previous).setVisibility(Button.GONE);
+			findViewById(R.id.btn_next).setVisibility(Button.GONE);
+			findViewById(R.id.btn_submit).setVisibility(Button.VISIBLE);	
+			mPager.setVisibility(ViewPager.GONE);
+			mList.setVisibility(ListView.VISIBLE);
+
+			mListAdapter = new ListSectionAdapter(mContext, null);
+			mList.setAdapter(mListAdapter);
+			mListAdapter.setmDataSet(level.getSections());
+			mListAdapter.setResults(listResult);
+			mList.setSelection(sectionIndex);
+			mList.requestFocus();
+		}else {
 			findViewById(R.id.btn_previous).setVisibility(Button.GONE);
 			findViewById(R.id.btn_next).setVisibility(Button.GONE);
 			findViewById(R.id.btn_submit).setVisibility(Button.VISIBLE);	
@@ -175,7 +197,7 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 				}				
 			} else {
 				Intent intent = new Intent(mContext, ResultActivity.class);
-				intent.putParcelableArrayListExtra(Constants.LIST_SECTIONS, (ArrayList<? extends Parcelable>) level.getSections());
+				intent.putExtra(Constants.LEVEL, level);
 				startActivity(intent);
 			}
 			break;

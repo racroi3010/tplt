@@ -624,6 +624,33 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			
 		return list;		
 	}
+	public Question selectQuestionById(long questionId){
+		String query = "SELECT * FROM " + QuestionEntry.TABLE_NAME 
+				+ " WHERE " + QuestionEntry._ID + " = " + questionId
+				+ " ORDER BY " + QuestionEntry.COLUMN_NAME_NUMBER + " ASC";		
+		SQLiteDatabase db = getReadableDatabaseFix();
+		Cursor c = db.rawQuery(query, null);
+		
+		if(!c.moveToFirst()){
+			c.close();
+			closeFix();
+			return null;
+		}		
+		Question question = new Question();
+		question.setId(c.getInt(0));
+		question.setNumber(c.getInt(1));
+		question.setMark(c.getInt(2));
+		question.setText(c.getString(3));
+		question.setAnswer(c.getInt(4));
+		question.setType(c.getString(5));
+		question.setChoiceType(c.getString(6));
+		question.setHint(c.getString(7));
+		question.setStartAudio(c.getFloat(8));
+		question.setEndAudio(c.getFloat(9));
+		question.setSection_id(c.getInt(10));
+		
+		return question;
+	}
 	public List<Choice> selectChoiceByQuestionId(int questionId){
 		String query = "SELECT * FROM " + ChoiceEntry.TABLE_NAME 
 				+ " WHERE " + ChoiceEntry.COLUMN_QUESTION_ID + " = " + questionId

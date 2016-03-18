@@ -92,10 +92,10 @@ public class LevelDataSet implements Parcelable {
 		dest.writeString(label);
 		dest.writeTypedList(sections);
 		dest.writeInt(active);
-		dest.writeParcelable(txt, 1);
+		dest.writeParcelable(txt, flags);
 		dest.writeTypedList(audio);
 
-		dest.writeParcelable(pdf, 1);
+		dest.writeParcelable(pdf, flags);
 		dest.writeInt(score);
 		
 	}
@@ -125,10 +125,10 @@ public class LevelDataSet implements Parcelable {
 		
 		active = in.readInt();
 		
-		txt = in.readParcelable((ClassLoader) FileDataSet.CREATOR);
+		txt = in.readParcelable(FileDataSet.class.getClassLoader());
 		audio = new ArrayList<FileDataSet>();
 		in.readTypedList(audio, FileDataSet.CREATOR);
-		pdf = in.readParcelable((ClassLoader) FileDataSet.CREATOR);
+		pdf = in.readParcelable(FileDataSet.class.getClassLoader());
 		
 		score = in.readInt();
 	}	

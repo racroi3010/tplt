@@ -6,9 +6,11 @@ import java.util.List;
 
 import com.hanaone.tplt.db.ChoiceDataSet;
 import com.hanaone.tplt.db.QuestionDataSet;
+import com.hanaone.tplt.db.ResultDataSet;
 import com.hanaone.tplt.db.SectionDataSet;
 import com.hanaone.tplt.util.ImageUtils;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -27,7 +29,6 @@ public class QuestionSlideFragment extends Fragment {
 	private static final String ARG_PAGE = "page";
 	
 	private ArrayList<SectionDataSet> mSections;
-
 
 	public QuestionSlideFragment() {
 		
@@ -92,10 +93,15 @@ public class QuestionSlideFragment extends Fragment {
 					
 					TextView txtNumber = (TextView) questionView.findViewById(R.id.txt_question_number);
 					TextView txtQuestionHint = (TextView) questionView.findViewById(R.id.txt_question_hint);
-					final RadioButton rd1 = (RadioButton) questionView.findViewById(R.id.rd_question_choice_1);
-					final RadioButton rd2 = (RadioButton) questionView.findViewById(R.id.rd_question_choice_2);
-					final RadioButton rd3 = (RadioButton) questionView.findViewById(R.id.rd_question_choice_3);
-					final RadioButton rd4 = (RadioButton) questionView.findViewById(R.id.rd_question_choice_4);
+					final Button btn1 = (Button) questionView.findViewById(R.id.btn_question_choice_1);
+					final Button btn2 = (Button) questionView.findViewById(R.id.btn_question_choice_2);
+					final Button btn3 = (Button) questionView.findViewById(R.id.btn_question_choice_3);
+					final Button btn4 = (Button) questionView.findViewById(R.id.btn_question_choice_4);
+					
+					final TextView txt1 = (TextView) questionView.findViewById(R.id.txt_question_choice_1);
+					final TextView txt2 = (TextView) questionView.findViewById(R.id.txt_question_choice_2);
+					final TextView txt3 = (TextView) questionView.findViewById(R.id.txt_question_choice_3);
+					final TextView txt4 = (TextView) questionView.findViewById(R.id.txt_question_choice_4);					
 					
 					TextView txtQuestionTxt = (TextView) questionView.findViewById(R.id.txt_question_txt);
 					ImageView imgQuestion = (ImageView) questionView.findViewById(R.id.img_question);
@@ -105,7 +111,7 @@ public class QuestionSlideFragment extends Fragment {
 					ImageView img3 = (ImageView) questionView.findViewById(R.id.img_question_choice_3);
 					ImageView img4 = (ImageView) questionView.findViewById(R.id.img_question_choice_4);
 					
-					Button btnQuestionHint = (Button) questionView.findViewById(R.id.btn_question_hint);
+					final Button btnQuestionHint = (Button) questionView.findViewById(R.id.btn_question_hint);
 					if(question.getHint() == null || question.getHint().isEmpty()){
 						btnQuestionHint.setVisibility(Button.GONE);
 					} else {
@@ -115,10 +121,13 @@ public class QuestionSlideFragment extends Fragment {
 							
 							@Override
 							public void onClick(View v) {
+								
 								if(layoutQuestionHint.getVisibility() == LinearLayout.VISIBLE){
 									layoutQuestionHint.setVisibility(LinearLayout.GONE);
+									btnQuestionHint.setBackgroundResource(R.drawable.ic_wb_sunny_black_24dp);
 								} else {
 									layoutQuestionHint.setVisibility(LinearLayout.VISIBLE);
+									btnQuestionHint.setBackgroundResource(R.drawable.hint_cyan);
 								}
 							}
 						});
@@ -135,10 +144,10 @@ public class QuestionSlideFragment extends Fragment {
 					List<ChoiceDataSet> choices = question.getChoices();
 					if(choices != null){
 						if(Constants.FILE_TYPE_IMG.equals(question.getChoiceType())){
-							rd1.setText("");
-							rd2.setText("");
-							rd3.setText("");
-							rd4.setText("");
+							txt1.setVisibility(TextView.GONE);
+							txt2.setVisibility(TextView.GONE);
+							txt3.setVisibility(TextView.GONE);
+							txt4.setVisibility(TextView.GONE);
 
 							
 							img1.setImageBitmap(ImageUtils.decodeSampledBitmapFromFile(choices.get(0).getText(), 200, 200));
@@ -151,10 +160,15 @@ public class QuestionSlideFragment extends Fragment {
 							img3.setVisibility(ImageView.VISIBLE);
 							img4.setVisibility(ImageView.VISIBLE);
 						} else {
-							rd1.setText(choices.get(0).getText());
-							rd2.setText(choices.get(1).getText());
-							rd3.setText(choices.get(2).getText());
-							rd4.setText(choices.get(3).getText());		
+							txt1.setVisibility(TextView.VISIBLE);
+							txt2.setVisibility(TextView.VISIBLE);
+							txt3.setVisibility(TextView.VISIBLE);
+							txt4.setVisibility(TextView.VISIBLE);	
+							
+							txt1.setText(choices.get(0).getText());
+							txt2.setText(choices.get(1).getText());
+							txt3.setText(choices.get(2).getText());
+							txt4.setText(choices.get(3).getText());
 							
 							img1.setVisibility(ImageView.GONE);
 							img2.setVisibility(ImageView.GONE);
@@ -163,38 +177,41 @@ public class QuestionSlideFragment extends Fragment {
 						}
 						
 					}
-					rd1.setOnClickListener(new OnClickListener() {
+					btn1.setOnClickListener(new OnClickListener() {
 						
 						@Override
 						public void onClick(View v) {
-							onChoose(question, 1, rd1, rd2, rd3, rd4);
+							onChoose(question, 1, btn1, btn2, btn3, btn4);
 						}
 					});
-					rd2.setOnClickListener(new OnClickListener() {
+					btn2.setOnClickListener(new OnClickListener() {
 						
 						@Override
 						public void onClick(View v) {
-							onChoose(question, 2, rd1, rd2, rd3, rd4);
+							onChoose(question, 2, btn1, btn2, btn3, btn4);
 						}
 					});
-					rd3.setOnClickListener(new OnClickListener() {
+					btn3.setOnClickListener(new OnClickListener() {
 						
 						@Override
 						public void onClick(View v) {
-							onChoose(question, 3, rd1, rd2, rd3, rd4);
+							onChoose(question, 3, btn1, btn2, btn3, btn4);
 						}
 					});
-					rd4.setOnClickListener(new OnClickListener() {
+					btn4.setOnClickListener(new OnClickListener() {
 						
 						@Override
 						public void onClick(View v) {
-							onChoose(question, 4, rd1, rd2, rd3, rd4);
+							onChoose(question, 4, btn1, btn2, btn3, btn4);
 						}
 					});				
+									
 					
 					layoutQuestions.addView(questionView);
 				}
 			}
+			
+			
 			layoutSections.addView(sectionView);
 		}
 		
@@ -203,36 +220,58 @@ public class QuestionSlideFragment extends Fragment {
 		return sectionsView;
 	}
 	
-	private void onChoose(QuestionDataSet question, int rd
-			, RadioButton rd1, RadioButton rd2
-			, RadioButton rd3, RadioButton rd4){
-		switch (rd) {
+	private void onChoose(QuestionDataSet question, int btn
+			, Button btn1, Button btn2
+			, Button btn3, Button btn4){
+		Context mContext = getActivity();
+		switch (btn) {
 		case 1:
-			rd1.setChecked(true);
-			rd2.setChecked(false);
-			rd3.setChecked(false);
-			rd4.setChecked(false);
+			btn1.setBackgroundResource(R.drawable.num_black);						
+			btn2.setBackgroundResource(R.drawable.num_trans);
+			btn3.setBackgroundResource(R.drawable.num_trans);
+			btn4.setBackgroundResource(R.drawable.num_trans);
+			
+			
+			btn1.setTextColor(mContext.getResources().getColor(R.color.WHITE));
+			btn2.setTextColor(mContext.getResources().getColor(R.color.BLACK));
+			btn3.setTextColor(mContext.getResources().getColor(R.color.BLACK));
+			btn4.setTextColor(mContext.getResources().getColor(R.color.BLACK));
 			question.setChoice(1);			
 			break;
 		case 2:
-			rd1.setChecked(false);
-			rd2.setChecked(true);
-			rd3.setChecked(false);
-			rd4.setChecked(false);
+			btn1.setBackgroundResource(R.drawable.num_trans);
+			btn2.setBackgroundResource(R.drawable.num_black);
+			btn3.setBackgroundResource(R.drawable.num_trans);
+			btn4.setBackgroundResource(R.drawable.num_trans);
+			
+			btn1.setTextColor(mContext.getResources().getColor(R.color.BLACK));
+			btn2.setTextColor(mContext.getResources().getColor(R.color.WHITE));
+			btn3.setTextColor(mContext.getResources().getColor(R.color.BLACK));
+			btn4.setTextColor(mContext.getResources().getColor(R.color.BLACK));			
 			question.setChoice(2);			
 			break;
 		case 3:
-			rd1.setChecked(false);
-			rd2.setChecked(false);
-			rd3.setChecked(true);
-			rd4.setChecked(false);
+			btn1.setBackgroundResource(R.drawable.num_trans);
+			btn2.setBackgroundResource(R.drawable.num_trans);
+			btn3.setBackgroundResource(R.drawable.num_black);
+			btn4.setBackgroundResource(R.drawable.num_trans);
+			
+			btn1.setTextColor(mContext.getResources().getColor(R.color.BLACK));
+			btn2.setTextColor(mContext.getResources().getColor(R.color.BLACK));
+			btn3.setTextColor(mContext.getResources().getColor(R.color.WHITE));
+			btn4.setTextColor(mContext.getResources().getColor(R.color.BLACK));	
 			question.setChoice(3);			
 			break;
 		case 4:
-			rd1.setChecked(false);
-			rd2.setChecked(false);
-			rd3.setChecked(false);
-			rd4.setChecked(true);
+			btn1.setBackgroundResource(R.drawable.num_trans);
+			btn2.setBackgroundResource(R.drawable.num_trans);
+			btn3.setBackgroundResource(R.drawable.num_trans);		
+			btn4.setBackgroundResource(R.drawable.num_black);
+			
+			btn1.setTextColor(mContext.getResources().getColor(R.color.BLACK));
+			btn2.setTextColor(mContext.getResources().getColor(R.color.BLACK));
+			btn3.setTextColor(mContext.getResources().getColor(R.color.BLACK));
+			btn4.setTextColor(mContext.getResources().getColor(R.color.WHITE));	
 			question.setChoice(4);			
 			break;			
 		default:

@@ -62,7 +62,7 @@ public class ListResultAdapter extends BaseAdapter {
 			convertView = mInflater.inflate(R.layout.layout_result, parent, false);
 			
 			holder = new ViewHolder();
-			holder.txtQuestion = (TextView) convertView.findViewById(R.id.txt_result_question);
+			holder.btnNumber = (Button) convertView.findViewById(R.id.btn_result_number);
 			holder.txtChoice = (TextView) convertView.findViewById(R.id.txt_result_choice);
 			holder.txtScore = (TextView) convertView.findViewById(R.id.txt_result_score);
 			holder.btnReview = (Button) convertView.findViewById(R.id.btn_result_review);
@@ -74,25 +74,32 @@ public class ListResultAdapter extends BaseAdapter {
 		
 		final ResultDataSet data = dataSets.get(position);
 		if(data != null){
-			holder.txtQuestion.setText(data.getChoice() + "");
+			holder.btnNumber.setText(data.getNumber() + "");
 			holder.txtScore.setText("0");
 			if(data.getChoice() == data.getAnswer()){
 				holder.txtChoice.setText(data.getChoice() + "");
-				holder.txtChoice.setTextColor(mContext.getResources().getColor(R.color.GREEN));
+				//holder.txtChoice.setTextColor(mContext.getResources().getColor(R.color.GREEN));
+				holder.btnNumber.setBackgroundResource(R.drawable.num_green);
 				
 				holder.txtScore.setText(data.getScore() + "");
 			} else if(data.getChoice() != -1) {
 				holder.txtChoice.setText(data.getChoice() + "");
-				holder.txtChoice.setTextColor(mContext.getResources().getColor(R.color.RED));				
+				//holder.txtChoice.setTextColor(mContext.getResources().getColor(R.color.RED));	
+				holder.btnNumber.setBackgroundResource(R.drawable.num_red);
+				holder.txtScore.setText("0");	
+			} else {
+				holder.txtChoice.setText("");
+				//holder.txtChoice.setTextColor(mContext.getResources().getColor(R.color.GREEN));
+				holder.btnNumber.setBackgroundResource(R.drawable.num_trans);
+				
+				holder.txtScore.setText("0");				
 			}
+			final int mP = position;
 			holder.btnReview.setOnClickListener(new OnClickListener() {
 				
 				@Override
 				public void onClick(View v) {
-					Intent intent = new Intent(mContext, QuestionActivity.class);
-					intent.putExtra(Constants.QUESTION_MODE, Constants.QUESTION_MODE_REVIEW);
-					intent.putExtra(Constants.RESULT, data);
-					mContext.startActivity(intent);					
+					mListener.onSelect(mP);
 					
 				}
 			});
@@ -103,7 +110,7 @@ public class ListResultAdapter extends BaseAdapter {
 	}
 	
 	private class ViewHolder{
-		TextView txtQuestion;
+		Button btnNumber;
 		TextView txtChoice;
 		TextView txtScore;
 		Button btnReview;

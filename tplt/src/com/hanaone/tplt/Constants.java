@@ -18,6 +18,7 @@ public class Constants {
 	
 	public static final String LEVEL_ID = "level_id";
 	public static final String LEVEL_NAME = "level_name";
+	public static final String LEVEL = "level";
 	
 	public static final String SELECTION_MODE = "selection_mode";
 	public static final String SELECTION_MODE_EXAM = "selection_mode_exam";
@@ -38,6 +39,9 @@ public class Constants {
 	public static final String LIST_SECTIONS = "list_sections";
 	
 	public static final String RESULT = "RESULT";
+	public static final String LIST_RESULT = "LIST_RESULT";
+	
+	public static final String SECTION_INDEX = "section_index";
 	
 	
 	public static final String PATH_ROOT = "tplt";
