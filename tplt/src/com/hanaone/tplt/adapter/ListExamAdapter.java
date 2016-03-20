@@ -19,6 +19,7 @@ import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -612,7 +613,7 @@ public class ListExamAdapter extends BaseAdapter {
 							for(ChoiceDataSet choice: question.getChoices()){
 								String urlChoice = choice.getText();
 								try {
-									size += dlHelper.getSize(urlAudio);
+									size += dlHelper.getSize(urlChoice);
 								} catch (IOException e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
@@ -700,8 +701,7 @@ public class ListExamAdapter extends BaseAdapter {
 		@Override
 		protected void onProgressUpdate(Integer... values) {
 			super.onProgressUpdate(values);
-			
-			int p = values[0];
+			int p = values[0];		
 			ProgressBar prgBar = null;
 			TextView txtPer = null;
 			switch (this.level.getNumber()) {
@@ -719,7 +719,8 @@ public class ListExamAdapter extends BaseAdapter {
 				break;					
 			default:
 				break;
-			}		
+			}	
+			Log.w("download", p + "");
 			if(p < 99){
 				switch (level.getNumber()) {
 				case 1:

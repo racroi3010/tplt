@@ -75,6 +75,7 @@ public class SelectionActivity extends Activity {
 			startActivity(intent);			
 			break;
 		case R.id.btn_home:
+			finish();
 			startActivity(new Intent(mContext, MainActivity.class)
 					.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
 			break;			

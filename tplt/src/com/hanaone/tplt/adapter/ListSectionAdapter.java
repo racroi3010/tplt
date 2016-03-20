@@ -10,6 +10,7 @@ import com.hanaone.tplt.db.QuestionDataSet;
 import com.hanaone.tplt.db.ResultDataSet;
 import com.hanaone.tplt.db.SectionDataSet;
 import com.hanaone.tplt.util.ImageUtils;
+import com.hanaone.tplt.util.PreferenceHandler;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -29,11 +30,17 @@ public class ListSectionAdapter extends BaseAdapter {
 	private ListAdapterListener mListener;
 	private List<SectionDataSet> mDataSet;
 	private ArrayList<ResultDataSet> mResults;
-	
+	private boolean isShowHint;
 	public ListSectionAdapter(Context mContext, ListAdapterListener mListener) {
 		this.mContext = mContext;
 		this.mListener = mListener;
 		this.mInflater = LayoutInflater.from(mContext);
+		
+		String mode = PreferenceHandler.getQuestionModePreference(mContext);
+		if(Constants.QUESTION_MODE_PRACTICE.equals(mode) 
+				|| Constants.QUESTION_MODE_REVIEW.equals(mode)){
+			isShowHint = PreferenceHandler.getHintDisplayPreference(mContext);
+		}
 	}
 
 	public void setmDataSet(List<SectionDataSet> mDataSet) {
@@ -73,6 +80,7 @@ public class ListSectionAdapter extends BaseAdapter {
 			holder = new ViewHolder();
 			holder.txtQuestion = (TextView) convertView.findViewById(R.id.txt_section_question);
 			holder.txtHint = (TextView) convertView.findViewById(R.id.txt_section_hint);
+			holder.btnHint = (Button) convertView.findViewById(R.id.btn_section_hint);
 			holder.layoutQuestion = (LinearLayout) convertView.findViewById(R.id.layout_questions);
 			
 			convertView.setTag(holder);
@@ -81,21 +89,44 @@ public class ListSectionAdapter extends BaseAdapter {
 		}
 		
 		final SectionDataSet section = mDataSet.get(position);
-
+	
 		if(section.getHint() == null || section.getHint().isEmpty()){
 			holder.txtHint.setVisibility(TextView.GONE);
+			holder.btnHint.setVisibility(Button.GONE);
 		} else {
 			holder.txtHint.setText(section.getHint());
-			holder.txtHint.setVisibility(TextView.VISIBLE);
+			holder.btnHint.setVisibility(Button.VISIBLE);
+			holder.btnHint.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					if(holder.txtHint.getVisibility() == TextView.VISIBLE){
+						holder.txtHint.setVisibility(TextView.GONE);
+						holder.btnHint.setBackgroundResource(R.drawable.ic_wb_sunny_black_24dp);
+					} else {
+						holder.txtHint.setVisibility(TextView.VISIBLE);
+						holder.btnHint.setBackgroundResource(R.drawable.hint_cyan);
+					}
+				}
+			});
+			if(isShowHint){
+				holder.txtHint.setVisibility(LinearLayout.VISIBLE);
+				holder.btnHint.setBackgroundResource(R.drawable.hint_cyan);					
+			} else {
+				holder.txtHint.setVisibility(LinearLayout.GONE);
+				holder.btnHint.setBackgroundResource(R.drawable.ic_wb_sunny_black_24dp);
+			}				
+			
 		}		
-		
 			
 		holder.layoutQuestion.removeAllViews();
 		List<QuestionDataSet> questions = section.getQuestions();
 
 		String txt = "";
-		if(questions != null && !questions.isEmpty()){
-			txt += "#[" + questions.get(0).getNumber() + "~" + questions.get(questions.size() - 1).getNumber() + "] ";
+		if(questions != null && questions.size() > 1){
+			txt += " # [" + questions.get(0).getNumber() + "~" + questions.get(questions.size() - 1).getNumber() + "] ";
+		} else {
+			txt += " # [" + questions.get(0).getNumber() + "]";
 		}
 		txt += section.getText();	
 		holder.txtQuestion.setText(txt);
@@ -134,30 +165,47 @@ public class ListSectionAdapter extends BaseAdapter {
 				
 				final Button btnQuestionHint = (Button) questionView.findViewById(R.id.btn_question_hint);
 				final LinearLayout layoutQuestionHint = (LinearLayout) questionView.findViewById(R.id.layout_question_hint);
-				btnQuestionHint.setOnClickListener(new OnClickListener() {
-					
-					@Override
-					public void onClick(View v) {
-						if(layoutQuestionHint.getVisibility() == LinearLayout.VISIBLE){
-							layoutQuestionHint.setVisibility(LinearLayout.GONE);
-							btnQuestionHint.setBackgroundResource(R.drawable.ic_wb_sunny_black_24dp);
-						} else {
-							layoutQuestionHint.setVisibility(LinearLayout.VISIBLE);
-							btnQuestionHint.setBackgroundResource(R.drawable.hint_cyan);
-						}
+				
+				if(question.getHint() == null || question.getHint().isEmpty()){
+					btnQuestionHint.setVisibility(Button.GONE);
+					layoutQuestionHint.setVisibility(LinearLayout.GONE);
+				} else {
+					txtQuestionHint.setText(question.getHint());
+					btnQuestionHint.setVisibility(Button.VISIBLE);
+					if(isShowHint){
+						layoutQuestionHint.setVisibility(LinearLayout.VISIBLE);
+						btnQuestionHint.setBackgroundResource(R.drawable.hint_cyan);					
+					} else {
+						layoutQuestionHint.setVisibility(LinearLayout.GONE);
+						btnQuestionHint.setBackgroundResource(R.drawable.ic_wb_sunny_black_24dp);
 					}
-				});
+					btnQuestionHint.setOnClickListener(new OnClickListener() {
+						
+						@Override
+						public void onClick(View v) {
+							
+							if(layoutQuestionHint.getVisibility() == LinearLayout.VISIBLE){
+								layoutQuestionHint.setVisibility(LinearLayout.GONE);
+								btnQuestionHint.setBackgroundResource(R.drawable.ic_wb_sunny_black_24dp);
+							} else {
+								layoutQuestionHint.setVisibility(LinearLayout.VISIBLE);
+								btnQuestionHint.setBackgroundResource(R.drawable.hint_cyan);
+							}
+						}
+					});
+											
+				}
 				
 				String questionTxt = question.getText(); 
 				if(questionTxt != null && !questionTxt.isEmpty()){
-					txtQuestionTxt.setText(questionTxt);
+					txtQuestionTxt.setText(questionTxt + " (" + question.getMark() + "점)");
 				} else {
 					txtQuestionTxt.setText("(" + question.getMark() + "점)");
 				}
 				
 				
 				txtNumber.setText(question.getNumber() + ". ");
-				txtQuestionHint.setText(question.getHint());
+				
 				
 				List<ChoiceDataSet> choices = question.getChoices();
 				if(choices != null){
@@ -254,8 +302,7 @@ public class ListSectionAdapter extends BaseAdapter {
 				if(mResults != null){
 
 					
-					ResultDataSet result = mResults.get(i);
-
+					ResultDataSet result = mResults.get(question.getNumber() - 1);
 					
 					Button rBtn = null;
 					switch (result.getAnswer()) {
@@ -300,10 +347,8 @@ public class ListSectionAdapter extends BaseAdapter {
 							rBtn.setBackgroundResource(R.drawable.num_red);
 						}
 						
-					}										
-				
-					
-		
+					}														
+						
 				}
 				//	
 				
@@ -317,6 +362,7 @@ public class ListSectionAdapter extends BaseAdapter {
 	
 	private class ViewHolder{
 		TextView txtQuestion;
+		Button btnHint;
 		TextView txtHint;
 		LinearLayout layoutQuestion;
 	}

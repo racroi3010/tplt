@@ -11,29 +11,27 @@
         android:layout_height="70dp"
         android:layout_alignParentTop="true" >
 
-        <LinearLayout 
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-			android:layout_alignParentLeft="true"
-			android:layout_centerVertical="true"            
-            android:orientation="horizontal"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
             android:gravity="center_vertical"
-            >
-            <ImageView 
+            android:orientation="horizontal" >
+
+            <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:src="@drawable/ic_keyboard_arrow_left_cyan_24dp"
-                />
-			<Button 
-			    android:id="@+id/btn_home"
-			    android:layout_width="50dp"
-			    android:layout_height="50dp"
-			    android:background="@null"
-			    android:text="@string/title_home"
-			    android:textColor="@color/CYAN"
-			    android:onClick="onClick"
+                android:src="@drawable/ic_keyboard_arrow_left_cyan_24dp" />
 
-			    />            
+            <Button
+                android:id="@+id/btn_home"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@null"
+                android:onClick="onClick"
+                android:text="@string/title_home"
+                android:textColor="@color/CYAN" />
         </LinearLayout>
 
         <TextView
@@ -73,15 +71,14 @@
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingLeft="20dp"
-         >
+        android:visibility="gone" >
 
         <LinearLayout
             android:id="@+id/layout_sync"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:visibility="gone" >
+            android:orientation="horizontal" >
 
             <ImageView
                 android:id="@+id/img_sync"
@@ -98,13 +95,11 @@
         </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/layout_bot"
-        android:layout_below="@id/layout_top_under"
-        android:orientation="vertical"
-        android:padding="10dp" >
+        android:layout_below="@id/layout_top_under" >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -114,56 +109,229 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal" >
-
-                <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:background="@drawable/ic_pause_circle_filled_black_24dp" />
+                android:background="@color/GRAY_TITLE"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="5dp" >
 
                 <TextView
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_weight="2"
-                    android:text="@string/setting_play_audio"
-                    android:textColor="@color/BLACK"
-                    android:textSize="16sp" />
-
-                <com.kyleduo.switchbutton.SwitchButton
-                    android:id="@+id/sw_help_audio"
-                    style="@style/SwitchButtonStyle"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    app:kswTintColor="#D02E21" />
+                    android:gravity="center_vertical|left"
+                    android:text="Practice"
+                    android:textColor="@color/BLACK" />
             </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal" >
+
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:background="@drawable/ic_pause_circle_filled_black_24dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:gravity="center"
+                        android:text="@string/setting_play_audio"
+                        android:textColor="@color/BLACK"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true" >
+
+                    <com.kyleduo.switchbutton.SwitchButton
+                        android:id="@+id/sw_help_audio"
+                        style="@style/SwitchButtonStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:kswTintColor="#D02E21" />
+                </LinearLayout>
+            </RelativeLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="50dp"
+                android:background="@color/GRAY_UNDER_BAR" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal" >
+
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:background="@drawable/ic_wb_sunny_black_24dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:gravity="center"
+                        android:text="Display Hint Phrase"
+                        android:textColor="@color/BLACK"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true" >
+
+                    <com.kyleduo.switchbutton.SwitchButton
+                        android:id="@+id/sw_help_hint"
+                        style="@style/SwitchButtonStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:kswTintColor="#D02E21" />
+                </LinearLayout>
+            </RelativeLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal" >
-
-                <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:background="@drawable/ic_star_rate_black_18dp" />
+                android:background="@color/GRAY_TITLE"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="5dp" >
 
                 <TextView
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_weight="2"
-                    android:text="@string/setting_rate"
+                    android:gravity="center_vertical|left"
+                    android:text="App"
+                    android:textColor="@color/BLACK" />
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="50dp"
+                android:background="@color/GRAY_UNDER_BAR" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal" >
+
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:background="@drawable/ic_wb_sunny_black_24dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:gravity="center"
+                        android:text="Language"
+                        android:textColor="@color/BLACK"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true" >
+
+                    <com.kyleduo.switchbutton.SwitchButton
+                        android:id="@+id/sw_help_target"
+                        style="@style/SwitchButtonStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:kswTintColor="#D02E21" />
+                </LinearLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal" >
+
+                    <Button
+                        android:id="@+id/btn_rate"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:background="@drawable/ic_star_rate_black_18dp"
+                        android:onClick="onClick" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:gravity="center"
+                        android:text="@string/setting_rate"
+                        android:textColor="@color/BLACK"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true" >
+
+                    <Button
+                        android:id="@id/btn_rate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/ic_keyboard_arrow_right_black_24dp"
+                        android:onClick="onClick" />
+                </LinearLayout>
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="fill_horizontal"
+                android:orientation="vertical"
+                android:padding="10dp" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="fill_horizontal"
+                    android:text="@string/setting_message"
                     android:textColor="@color/BLACK"
                     android:textSize="16sp" />
-
-
             </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
+    </ScrollView>
 
 </RelativeLayout>

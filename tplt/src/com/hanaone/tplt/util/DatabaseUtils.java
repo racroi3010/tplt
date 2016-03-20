@@ -3,21 +3,6 @@ package com.hanaone.tplt.util;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
-
-import com.hanaone.tplt.db.ChoiceDataSet;
-import com.hanaone.tplt.db.ExamDataSet;
-import com.hanaone.tplt.db.FileDataSet;
-import com.hanaone.tplt.db.LevelDataSet;
-import com.hanaone.tplt.db.QuestionDataSet;
-import com.hanaone.tplt.db.SectionDataSet;
-import com.hanaone.tplt.db.model.Choice;
-import com.hanaone.tplt.db.model.Examination;
-import com.hanaone.tplt.db.model.FileExtra;
-import com.hanaone.tplt.db.model.Level;
-import com.hanaone.tplt.db.model.Question;
-import com.hanaone.tplt.db.model.Section;
 
 public class DatabaseUtils {
 //	public static List<ExamDataSet> examModels2Pojos(List<Examination> list){

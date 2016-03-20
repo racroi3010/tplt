@@ -71,17 +71,20 @@ public class MainActivity extends Activity {
     @Override
 	protected void onResume() {
 		super.onResume();
+		//list = dbAdapter.getAllExam();
 		new LoadingNewData().execute();
 	}
  
     public void onClick(View v){
     	switch (v.getId()) {
 		case R.id.btn_setting:
-			startActivity(new Intent(mContext, HelpActivity.class));
+			Intent intent = new Intent(mContext, HelpActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
 			break;
 		case R.id.btn_sample_test:
-			Intent intent = new Intent(mContext, SelectionActivity.class);
-			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+			intent = new Intent(mContext, SelectionActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			intent.putExtra(Constants.SELECTION_MODE, Constants.SELECTION_MODE_SAMPLE);
 
 			startActivity(intent);
@@ -108,59 +111,55 @@ public class MainActivity extends Activity {
 		new LoadingNewData().execute();
 		
 	}
-	private List<ExamDataSet> onReadConf(){
-		DownloadHelper dHelper = new DownloadHelper(mContext);
-		String confPath = Constants.getRootPath(mContext) + "/config.txt";
-		//confPath = Environment.getExternalStorageDirectory().getPath() + "/config.txt";
-		boolean loaded = false;
-		try {		
-			loaded = dHelper.downloadFile(Constants.REMOTE_CONFIG_FILE_JSON, confPath);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SAXException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		if(loaded){
-			File file = new File(confPath);
-			if(file.exists()){
-				try {
-					List<ExamDataSet> exams = JsonReaderHelper.readExams(file);
-					int colorOld = 0;
-					int colorNew = 0;
-					for(ExamDataSet exam: exams){
-						if(!dbAdapter.checkExam(exam.getNumber())){
-							
-							do{
-								colorOld = colorNew;
-								colorNew = ColorUtils.randomColor(50, 250, 20, 0.9f, 0.5f);
-							} while(colorNew == colorOld);
-							exam.setColor(colorNew);
-							dbAdapter.addExam(exam);
-							
-							list.add(exam);	
-							infos.add(new DownloadInfo());
-						}
-					}
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}
-
-		return list;
-	}
 	private class LoadingNewData extends AsyncTask<Void, Void, Void> {
 
 		@Override
 		protected Void doInBackground(Void... params) {
-			onReadConf();
+			DownloadHelper dHelper = new DownloadHelper(mContext);
+			String confPath = Constants.getRootPath(mContext) + "/config.txt";
+			//confPath = Environment.getExternalStorageDirectory().getPath() + "/config.txt";
+			boolean loaded = false;
+			try {		
+				loaded = dHelper.downloadFile(Constants.REMOTE_CONFIG_FILE_JSON, confPath);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SAXException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ParserConfigurationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			if(loaded){
+				File file = new File(confPath);
+				if(file.exists()){
+					try {
+						List<ExamDataSet> exams = JsonReaderHelper.readExams(file);
+						int colorOld = 0;
+						int colorNew = 0;
+						for(ExamDataSet exam: exams){
+							if(!dbAdapter.checkExam(exam.getNumber())){
+								
+								do{
+									colorOld = colorNew;
+									colorNew = ColorUtils.randomColor(50, 250, 20, 0.9f, 0.5f);
+								} while(colorNew == colorOld);
+								exam.setColor(colorNew);
+								dbAdapter.addExam(exam);
+								
+								list.add(exam);	
+								infos.add(new DownloadInfo());
+								publishProgress();
+							}
+						}
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
 			return null;
 		}
 
@@ -180,6 +179,12 @@ public class MainActivity extends Activity {
 			imgSync.startAnimation(rotation);
 			super.onPreExecute();
 		}
+
+		@Override
+		protected void onProgressUpdate(Void... values) {
+			adapter.notifyDataSetChanged();
+			super.onProgressUpdate(values);
+		}
 		
 	}
 	
@@ -198,6 +203,11 @@ public class MainActivity extends Activity {
 			overridePendingTransition(R.anim.fadein, R.anim.fadeout);
 		}
 	};
+
+	@Override
+	public void onBackPressed() {
+		
+	}
 
 	
 }

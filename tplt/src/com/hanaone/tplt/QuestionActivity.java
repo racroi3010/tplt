@@ -1,6 +1,5 @@
 package com.hanaone.tplt;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -13,16 +12,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.os.Parcelable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -43,8 +40,8 @@ import com.hanaone.tplt.util.PreferenceHandler;
 public class QuestionActivity extends FragmentActivity implements OnPreparedListener, MediaPlayerControl{
 	private AudioControllerView mControllerView;
 	private Context mContext;
-	private MediaPlayer mPlayer;
-	
+	private static MediaPlayer mPlayer;
+	private Timer timer;
 	// view pager
 	private ViewPager mPager;
 	private PagerAdapter mPagerAdapter;
@@ -79,8 +76,9 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 	
 	private void onInit(){
 		mMode = getIntent().getStringExtra(Constants.QUESTION_MODE);
+		PreferenceHandler.setQuestionModePreference(mContext, mMode);
 		mControllerView = new AudioControllerView(this);		
-		mPlayer = new MediaPlayer();		
+		mPlayer = getMediaPlayer();		
 		if(Constants.QUESTION_MODE_EXAM.equals(mMode) || Constants.QUESTION_MODE_PRACTICE.equals(mMode)){
 			int levelId = getIntent().getIntExtra(Constants.LEVEL_ID, -1);
 			level = dbAdapter.getLevel(levelId);			
@@ -135,11 +133,46 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 			mList.setVisibility(ListView.GONE);
 			
 			mPagerAdapter = new QuestionSlideAdapter(getSupportFragmentManager(), level, mMode);
-			mPager.setAdapter(mPagerAdapter);			
+			mPager.setAdapter(mPagerAdapter);	
+			mPager.setOnPageChangeListener(new OnPageChangeListener() {
+				
+				@Override
+				public void onPageSelected(int position) {
+					currentItem = position;
+					if(currentItem >= level.getSections().size() - 1) {
+						Intent intent = new Intent(mContext, ResultActivity.class);
+						intent.putExtra(Constants.LEVEL, level);
+						startActivity(intent);
+					} else {
+						seekTo(0);
+						mControllerView.show();	
+						if(PreferenceHandler.getAudioPlayPreference(mContext)){
+							start();
+						}	
+												
+					}
+
+					
+				}
+				
+				@Override
+				public void onPageScrolled(int arg0, float arg1, int arg2) {
+					// TODO Auto-generated method stub
+					
+				}
+				
+				@Override
+				public void onPageScrollStateChanged(int arg0) {
+					// TODO Auto-generated method stub
+					
+				}
+			});
+
 		} else if(Constants.QUESTION_MODE_REVIEW.equals(mMode)){
 			findViewById(R.id.btn_previous).setVisibility(Button.GONE);
 			findViewById(R.id.btn_next).setVisibility(Button.GONE);
-			findViewById(R.id.btn_submit).setVisibility(Button.VISIBLE);	
+			findViewById(R.id.btn_submit).setVisibility(Button.GONE);	
+			findViewById(R.id.btn_result).setVisibility(Button.VISIBLE);	
 			mPager.setVisibility(ViewPager.GONE);
 			mList.setVisibility(ListView.VISIBLE);
 
@@ -149,6 +182,7 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 			mListAdapter.setResults(listResult);
 			mList.setSelection(sectionIndex);
 			mList.requestFocus();
+
 		}else {
 			findViewById(R.id.btn_previous).setVisibility(Button.GONE);
 			findViewById(R.id.btn_next).setVisibility(Button.GONE);
@@ -159,7 +193,7 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 			mListAdapter = new ListSectionAdapter(mContext, null);
 			mList.setAdapter(mListAdapter);
 			mListAdapter.setmDataSet(level.getSections());
-			
+
 		}
 	}
 	public void onClick(View v){
@@ -170,11 +204,8 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 			if(currentItem > 0){
 				currentItem --;
 				mPager.setCurrentItem(currentItem);
-				
-				// re calculate
-				SectionDataSet section = level.getSections().get(currentItem);
-				int start = (int)(section.getStartAudio() * 1000);
-				seekTo(start);
+
+				seekTo(0);
 				mControllerView.show();	
 				if(PreferenceHandler.getAudioPlayPreference(mContext)){
 					start();
@@ -186,11 +217,8 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 			if(currentItem < sectionSize - 1){
 				currentItem ++;
 				mPager.setCurrentItem(currentItem);
-				
-				// re calculate
-				SectionDataSet section = level.getSections().get(currentItem);
-				int start = (int)(section.getStartAudio() * 1000);
-				seekTo(start);				
+
+				seekTo(0);				
 				mControllerView.show();
 				if(PreferenceHandler.getAudioPlayPreference(mContext)){
 					start();
@@ -201,15 +229,24 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 				startActivity(intent);
 			}
 			break;
+		case R.id.btn_result:
 		case R.id.btn_submit:
 			Intent intent = new Intent(mContext, ResultActivity.class);
-			intent.putParcelableArrayListExtra(Constants.LIST_SECTIONS, (ArrayList<? extends Parcelable>) level.getSections());
-			startActivity(intent);		
+			intent.putExtra(Constants.LEVEL, level);
+			startActivity(intent);	
 			break;
 		case R.id.btn_home:
+			if(mPlayer != null){
+				mPlayer.pause();
+			}	
+			if(timer != null){
+				timer.cancel();
+				timer = null;
+			}			
+			finish();
 			startActivity(new Intent(mContext, MainActivity.class)
 						.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-			break;			
+			break;	
 		default:
 			break;
 		}
@@ -224,6 +261,10 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 	@Override
 	protected void onPause() {
 		if(mPlayer != null) mPlayer.pause();
+		if(timer != null){
+			timer.cancel();
+			timer = null;
+		}		
 		super.onPause();
 	}
 
@@ -237,7 +278,9 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 		mControllerView.setMediaPlayer(this);
 		mControllerView.setAnchorView((FrameLayout) findViewById(R.id.layout_audio));		
 //		mPlayer.start();
+		
 		if(Constants.QUESTION_MODE_PRACTICE.equals(mMode)){
+			seekTo(0);
 			mControllerView.show();
 			if(PreferenceHandler.getAudioPlayPreference(mContext)){
 				start();
@@ -251,12 +294,12 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 	}
 	
 	public void start() {
-		SectionDataSet section = level.getSections().get(currentItem);
-		int start = (int)(section.getStartAudio() * 1000);
-		seekTo(start);				
+//		SectionDataSet section = level.getSections().get(currentItem);
+//		int start = (int)(section.getStartAudio() * 1000);
+		seekTo(0);				
 		mPlayer.start();
 
-		Timer timer = new Timer(true);
+		timer = new Timer(true);
 		timer.schedule(new Sleeper(), getDuration());
 		
 	}
@@ -276,11 +319,17 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 		SectionDataSet section = level.getSections().get(currentItem);
 		int start = (int)(section.getStartAudio() * 1000);
 		int current = mPlayer.getCurrentPosition();
-		return (current - start);
+		int duration = current - start;
+		if(duration >= getDuration()){
+			mPlayer.pause();
+		}
+		return duration;
 //		return mPlayer.getCurrentPosition();
 	}
 	public void seekTo(int pos) {
-		mPlayer.seekTo(pos);
+		SectionDataSet section = level.getSections().get(currentItem);
+		int start = (int)(section.getStartAudio() * 1000);	
+		mPlayer.seekTo(pos + start);
 	}
 	public boolean isPlaying() {
 		return mPlayer.isPlaying();
@@ -301,7 +350,6 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 		return true;
 	}
 	public void toggleFullScreen() {
-
 		
 	}
 
@@ -314,7 +362,7 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case HANDLE_STOP_AUDIO:
-				mPlayer.pause();
+				if(mPlayer != null && mPlayer.isPlaying()) mPlayer.pause();
 				break;
 			case HANDLE_PLAY_AUDIO:
 				String path = (String) msg.obj;
@@ -370,5 +418,24 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 		}
 		
 	}
-	
+	@Override
+	public void onBackPressed() {
+		if(mPlayer != null){
+			mPlayer.pause();	
+		}
+		if(timer != null){
+			timer.cancel();
+			timer = null;
+		}
+		super.onBackPressed();
+	}
+	private static MediaPlayer getMediaPlayer(){
+		if(mPlayer == null){
+			mPlayer = new MediaPlayer();
+		} else {
+			mPlayer.reset();
+		}
+		
+		return mPlayer;		
+	}
 }

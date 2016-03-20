@@ -1,9 +1,9 @@
 package com.hanaone.tplt.adapter;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.logging.Level;
 
 import android.content.Context;
 
@@ -19,7 +19,6 @@ import com.hanaone.tplt.db.model.Choice;
 import com.hanaone.tplt.db.model.ExamLevel;
 import com.hanaone.tplt.db.model.Examination;
 import com.hanaone.tplt.db.model.FileExtra;
-import com.hanaone.tplt.db.model.Level;
 import com.hanaone.tplt.db.model.Question;
 import com.hanaone.tplt.db.model.Section;
 import com.hanaone.tplt.db.sample.QuestionSample;
@@ -48,12 +47,8 @@ public class DatabaseAdapter{
 				for(ExamLevel lmodel: levelModels){
 					LevelDataSet l = new LevelDataSet();
 					l.setId(lmodel.getId());
-					
-					Level levelModel = dbHelper.selectLevelById(lmodel.getLevel_id());
-					if(levelModel != null){
-						l.setNumber(levelModel.getNumber());
-						l.setLabel(levelModel.getLabel());					
-					}
+					l.setNumber(lmodel.getNumber());
+					l.setLabel(lmodel.getLabel());
 
 					l.setActive(lmodel.getActive());
 					
@@ -96,18 +91,11 @@ public class DatabaseAdapter{
 		List<LevelDataSet> levels = examDataSet.getLevels();
 		if(levels != null){
 			for(LevelDataSet data: levels){
-				Level level = dbHelper.selectLevelByNumber(data.getNumber());
-				if(level == null){
-					level = new Level();
-					level.setNumber(data.getNumber());
-					level.setLabel(data.getLabel());
-					
-					level.setId((int)dbHelper.insert(level));
-				}
 				
 				ExamLevel examLevel = new ExamLevel();
 				examLevel.setExam_id(exam.getNumber());
-				examLevel.setLevel_id(level.getId());
+				examLevel.setNumber(data.getNumber());
+				examLevel.setLabel(data.getLabel());
 
 				
 				examLevel.setAudio_id((int)dbHelper.insert(DatabaseUtils.convertObject(data.getAudio().get(0), FileExtra.class)));
@@ -123,23 +111,21 @@ public class DatabaseAdapter{
 		
 		
 	}
-	public String getLevelLabel(int levelId){
-		ExamLevel examLevelModel = dbHelper.selectExamLevelById(levelId);
-		Level levelModel = dbHelper.selectLevelById(examLevelModel.getLevel_id());
-		if(levelModel != null){
-			return levelModel.getLabel();					
-		}		
-		return null;
-	}
+//	public String getLevelLabel(int levelId){
+//		ExamLevel examLevelModel = dbHelper.selectExamLevelById(levelId);
+//		Level levelModel = dbHelper.selectLevelById(examLevelModel.getLevel_id());
+//		if(levelModel != null){
+//			return levelModel.getLabel();					
+//		}		
+//		return null;
+//	}
 	public LevelDataSet getLevel(int levelId){
 		LevelDataSet levelDataSet = new LevelDataSet();
 		
 		ExamLevel examLevelModel = dbHelper.selectExamLevelById(levelId);
-		Level levelModel = dbHelper.selectLevelById(examLevelModel.getLevel_id());
-		if(levelModel != null){
-			levelDataSet.setNumber(levelModel.getNumber());
-			levelDataSet.setLabel(levelModel.getLabel());					
-		}
+		levelDataSet.setNumber(examLevelModel.getNumber());
+		levelDataSet.setLabel(examLevelModel.getLabel());
+		
 		levelDataSet.setActive(examLevelModel.getActive());
 		
 		FileExtra audio = dbHelper.selectFileById(examLevelModel.getAudio_id());
@@ -225,6 +211,15 @@ public class DatabaseAdapter{
 		
 		return -1;
 	}
+	public int updateLevelScore(int levelId, int score){
+		ExamLevel levelModel = this.dbHelper.selectExamLevelById(levelId);
+		if(levelModel != null){
+			levelModel.setScore(score);
+			return this.dbHelper.update(levelModel);
+		}
+		
+		return -1;		
+	}
 	public void addSection(SectionDataSet data, int levelId){
 		Section model = DatabaseUtils.convertObject(data, Section.class);
 		model.setExam_level_id(levelId);	
@@ -298,9 +293,11 @@ public class DatabaseAdapter{
 				for(Choice choiceModel: choiceModels){
 					choiceDataset.add(DatabaseUtils.convertObject(choiceModel, ChoiceDataSet.class));
 				}
-				
+				Section sectionModel = this.dbHelper.selectSectionByQuestionId(questionModel.getId());
 				questionDataset.setChoices(choiceDataset);				
 				questionDatasets.add(questionDataset);
+				
+				section = DatabaseUtils.convertObject(sectionModel, SectionDataSet.class);
 				
 				section.setQuestions(questionDatasets);	
 				section.setStartAudio(questionDataset.getStartAudio());

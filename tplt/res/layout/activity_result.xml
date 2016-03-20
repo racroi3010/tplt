@@ -40,7 +40,8 @@
             android:text="@string/title_result"
             android:textColor="@color/BLACK"
             android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textStyle="bold" /> 
+        
     </RelativeLayout>
 
     <LinearLayout

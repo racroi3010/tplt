@@ -8,6 +8,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginRight="50dp"
         android:layout_marginLeft="10dp"
         android:orientation="horizontal" >
 
@@ -92,6 +93,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:gravity="center_vertical"
             android:orientation="horizontal" >
 
             <Button
@@ -108,6 +110,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
+                android:gravity="center_vertical"
                 android:text="발표하는 언제 시작해요?"
                 android:textColor="@color/BLACK"
                 android:textSize="16sp" />
@@ -125,6 +128,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:gravity="center_vertical"
             android:orientation="horizontal" >
 
             <Button
@@ -142,6 +146,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:text="발표하는 언제 시작해요?"
+                android:gravity="center_vertical"
                 android:textColor="@color/BLACK"
                 android:textSize="16sp" />
 
@@ -158,6 +163,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:gravity="center_vertical"
             android:orientation="horizontal" >
 
             <Button
@@ -175,6 +181,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:text="발표하는 언제 시작해요?"
+                android:gravity="center_vertical"
                 android:textColor="@color/BLACK"
                 android:textSize="16sp" />
 
@@ -191,6 +198,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:gravity="center_vertical"
             android:orientation="horizontal" >
 
             <Button
@@ -208,6 +216,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:text="발표하는 언제 시작해요?"
+                android:gravity="center_vertical"
                 android:textColor="@color/BLACK"
                 android:textSize="16sp" />
 
