@@ -24,6 +24,8 @@ public class ResultActivity extends Activity {
 	private Context mContext;
 	private LevelDataSet level;
 	private ArrayList<ResultDataSet> listResult;
+	private int score;
+	private String mode;
 	private ListAdapterListener mListener = new ListAdapterListener() {
 		
 		@Override
@@ -57,7 +59,7 @@ public class ResultActivity extends Activity {
 		mContext = this;
 		
 		level = getIntent().getParcelableExtra(Constants.LEVEL);
-		int score = 0;
+		score = 0;
 		int maxScore = 0;
 		int right = 0;
 		if(level != null){
@@ -77,7 +79,7 @@ public class ResultActivity extends Activity {
 							score += data.getScore();
 							right ++;
 						}
-						maxScore = question.getMark();
+						maxScore += question.getMark();
 					}
 			}			
 		}
@@ -106,23 +108,37 @@ public class ResultActivity extends Activity {
 			txtGrade.setText("FAILED");
 			txtGrade.setTextColor(getResources().getColor(R.color.RED));
 		}
-		
-		String mode = PreferenceHandler.getQuestionModePreference(mContext);
+	
+		mode = PreferenceHandler.getQuestionModePreference(mContext);
 		if(Constants.QUESTION_MODE_EXAM.equals(mode)){
-			new DatabaseAdapter(mContext).updateLevelScore(level.getId(), (score * 100)/maxScore);
-		}
+			new DatabaseAdapter(mContext).updateLevelScore(level.getId(), (score * 100)/maxScore);	
+		}	
 		
 	}
     public void onClick(View v){
     	switch (v.getId()) {
 		case R.id.btn_home:
-			finish();
-			startActivity(new Intent(mContext, MainActivity.class)
-				.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+			goHome();
 			break;
 
 		default:
 			break;
 		}
-    }		
+    }
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		goHome();
+	}	
+    
+	private void goHome(){
+		Intent intent = new Intent(mContext, MainActivity.class)
+		.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);			
+		if(Constants.QUESTION_MODE_EXAM.equals(mode)){
+			intent.putExtra(Constants.UPDATE_SCORE_LEVEL_ID, level.getId());
+			intent.putExtra(Constants.UPDATE_SCORE, score);
+		}			
+		finish();
+		startActivity(intent);		
+	}
 }

@@ -101,6 +101,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			+ ExamLevelEntry.COLUMN_NAME_PDF_ID + INTEGER_TYPE + COMMA_STEP
 			+ ExamLevelEntry.COLUMN_NAME_TXT_ID + INTEGER_TYPE + COMMA_STEP
 			+ ExamLevelEntry.COLUMN_NAME_SCORE + INTEGER_TYPE + COMMA_STEP
+			+ ExamLevelEntry.COLUMN_NAME_MAXSCORE + INTEGER_TYPE + COMMA_STEP
 			+ ExamLevelEntry.COLUMN_NAME_ACTIVE + INTEGER_TYPE + COMMA_STEP
 			+ FOREIGN_KEY + " (" + ExamLevelEntry.COLUMN_NAME_EXAM_ID + ") REFERENCES " + ExamEntry.TABLE_NAME + "(" + ExamEntry.COLUMN_NAME_NUMBER + ")" + COMMA_STEP
 			+ FOREIGN_KEY + " (" + ExamLevelEntry.COLUMN_NAME_AUDIO_ID + ") REFERENCES " + FileExtraEntry.TABLE_NAME + "(" + FileExtraEntry._ID + ")" + COMMA_STEP
@@ -190,6 +191,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			values.put(ExamLevelEntry.COLUMN_NAME_PDF_ID, examLevel.getPdf_id());
 			values.put(ExamLevelEntry.COLUMN_NAME_TXT_ID, examLevel.getTxt_id());
 			values.put(ExamLevelEntry.COLUMN_NAME_SCORE, examLevel.getScore());
+			values.put(ExamLevelEntry.COLUMN_NAME_MAXSCORE, examLevel.getMaxScore());
 			values.put(ExamLevelEntry.COLUMN_NAME_ACTIVE, examLevel.getActive());
 			
 			
@@ -281,6 +283,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			values.put(ExamLevelEntry.COLUMN_NAME_PDF_ID, examLevel.getPdf_id());
 			values.put(ExamLevelEntry.COLUMN_NAME_TXT_ID, examLevel.getTxt_id());
 			values.put(ExamLevelEntry.COLUMN_NAME_SCORE, examLevel.getScore());
+			values.put(ExamLevelEntry.COLUMN_NAME_MAXSCORE, examLevel.getMaxScore());
 			values.put(ExamLevelEntry.COLUMN_NAME_ACTIVE, examLevel.getActive());
 		} else if(obj instanceof Section){
 			Section section = (Section) obj;
@@ -423,7 +426,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			examLevel.setPdf_id(c.getInt(5));
 			examLevel.setTxt_id(c.getInt(6));
 			examLevel.setScore(c.getInt(7));
-			examLevel.setActive(c.getInt(8));
+			examLevel.setMaxScore(c.getInt(8));
+			examLevel.setActive(c.getInt(9));
 			
 			list.add(examLevel);
 		} while(c.moveToNext());
@@ -481,7 +485,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		examLevel.setPdf_id(c.getInt(5));
 		examLevel.setTxt_id(c.getInt(6));
 		examLevel.setScore(c.getInt(7));
-		examLevel.setActive(c.getInt(8));
+		examLevel.setMaxScore(c.getInt(8));
+		examLevel.setActive(c.getInt(9));
 			
 		c.close();
 		closeFix();

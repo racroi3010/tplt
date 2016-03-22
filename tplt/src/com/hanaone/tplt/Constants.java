@@ -53,6 +53,9 @@ public class Constants {
 	public static final int STATUS_ACTIVE = 1;
 	public static final int STATUS_DOWNLOADING = 2;
 	
+	public static final String UPDATE_SCORE_LEVEL_ID = "UPDATE_SCORE_LEVEL_ID";
+	public static final String UPDATE_SCORE = "UPDATE_SCORE";
+	
 	
 	
 	

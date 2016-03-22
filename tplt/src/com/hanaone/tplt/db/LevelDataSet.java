@@ -16,6 +16,7 @@ public class LevelDataSet implements Parcelable {
 	private List<FileDataSet> audio;	
 	private FileDataSet pdf;
 	private int score;
+	private int maxScore;
 	
 
 	public LevelDataSet() {
@@ -78,6 +79,13 @@ public class LevelDataSet implements Parcelable {
 	public void setScore(int score) {
 		this.score = score;
 	}
+	
+	public int getMaxScore() {
+		return maxScore;
+	}
+	public void setMaxScore(int maxScore) {
+		this.maxScore = maxScore;
+	}
 	@Override
 	public int describeContents() {
 		// TODO Auto-generated method stub
@@ -97,6 +105,7 @@ public class LevelDataSet implements Parcelable {
 
 		dest.writeParcelable(pdf, flags);
 		dest.writeInt(score);
+		dest.writeInt(maxScore);
 		
 	}
 	public static final Parcelable.Creator<LevelDataSet> CREATOR
@@ -131,6 +140,7 @@ public class LevelDataSet implements Parcelable {
 		pdf = in.readParcelable(FileDataSet.class.getClassLoader());
 		
 		score = in.readInt();
+		maxScore = in.readInt();
 	}	
 	
 }

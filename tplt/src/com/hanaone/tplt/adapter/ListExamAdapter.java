@@ -43,6 +43,7 @@ import com.hanaone.tplt.db.LevelDataSet;
 import com.hanaone.tplt.db.QuestionDataSet;
 import com.hanaone.tplt.db.SectionDataSet;
 import com.hanaone.tplt.util.ColorUtils;
+import com.hanaone.tplt.util.Config;
 
 public class ListExamAdapter extends BaseAdapter {
 	private Context mContext;
@@ -207,7 +208,10 @@ public class ListExamAdapter extends BaseAdapter {
 			if(levels != null){
 				for(final LevelDataSet level: levels){
 					int number = level.getNumber();
-
+					int maxScore = level.getMaxScore();
+					int score = level.getScore();
+					int progress = maxScore == 0 ? 0 : (score * 100)/maxScore;
+					String scoreLabel = score + "/"+ maxScore;
 					if(number == 1){
 
 						holder.layoutLevel1.setVisibility(RelativeLayout.VISIBLE);
@@ -233,8 +237,8 @@ public class ListExamAdapter extends BaseAdapter {
 							holder.layoutLevel1.setAlpha(1f);
 						}	
 						if(info.getStatus1() != DownloadInfo.DOWNLOADING && info.getStatus1() != DownloadInfo.QUEUED){
-							info.getPrgBar1().setProgress(level.getScore());
-							info.getTxtScore1().setText(level.getScore() + "/100");									
+							info.getPrgBar1().setProgress(progress);
+							info.getTxtScore1().setText(scoreLabel);									
 						} else{
 							info.getPrgBar1().setProgress(info.getProgress2());
 							info.getTxtScore1().setText(info.getProgress2() + "%");
@@ -264,8 +268,8 @@ public class ListExamAdapter extends BaseAdapter {
 							holder.layoutLevel2.setAlpha(1f);
 						}	
 						if(info.getStatus2() != DownloadInfo.DOWNLOADING && info.getStatus2() != DownloadInfo.QUEUED){
-							info.getPrgBar2().setProgress(level.getScore());
-							info.getTxtScore2().setText(level.getScore() + "/100");							
+							info.getPrgBar2().setProgress(progress);
+							info.getTxtScore2().setText(scoreLabel);							
 						} else{
 							info.getPrgBar2().setProgress(info.getProgress2());
 							info.getTxtScore2().setText(info.getProgress2() + "%");
@@ -295,8 +299,8 @@ public class ListExamAdapter extends BaseAdapter {
 							holder.layoutLevel3.setAlpha(1f);
 						}	
 						if(info.getStatus3() != DownloadInfo.DOWNLOADING && info.getStatus3() != DownloadInfo.QUEUED){
-							info.getPrgBar3().setProgress(level.getScore());
-							info.getTxtScore3().setText(level.getScore() + "/100");							
+							info.getPrgBar3().setProgress(progress);
+							info.getTxtScore3().setText(scoreLabel);							
 						} else{
 							info.getPrgBar3().setProgress(info.getProgress3());
 							info.getTxtScore3().setText(info.getProgress3() + "%");							
@@ -477,6 +481,7 @@ public class ListExamAdapter extends BaseAdapter {
 		@Override
 		protected Boolean doInBackground(Void... params) {
 			//level = params[0];
+			
 			switch (level.getNumber()) {
 			case 1:
 				info.setStatus1(DownloadInfo.DOWNLOADING);
@@ -720,7 +725,10 @@ public class ListExamAdapter extends BaseAdapter {
 			default:
 				break;
 			}	
-			Log.w("download", p + "");
+			if(Config.LOGGING){
+				Log.d("download", p + "");
+			}
+			
 			if(p < 99){
 				switch (level.getNumber()) {
 				case 1:

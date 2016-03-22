@@ -20,6 +20,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -35,6 +36,7 @@ import com.hanaone.tplt.db.FileDataSet;
 import com.hanaone.tplt.db.LevelDataSet;
 import com.hanaone.tplt.db.ResultDataSet;
 import com.hanaone.tplt.db.SectionDataSet;
+import com.hanaone.tplt.util.Config;
 import com.hanaone.tplt.util.PreferenceHandler;
 
 public class QuestionActivity extends FragmentActivity implements OnPreparedListener, MediaPlayerControl{
@@ -60,7 +62,7 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+	
 		setContentView(R.layout.activity_question_practice);
 		mContext = this;
 		dbAdapter = new DatabaseAdapter(mContext);
@@ -82,15 +84,24 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 		if(Constants.QUESTION_MODE_EXAM.equals(mMode) || Constants.QUESTION_MODE_PRACTICE.equals(mMode)){
 			int levelId = getIntent().getIntExtra(Constants.LEVEL_ID, -1);
 			level = dbAdapter.getLevel(levelId);			
-			
+
 			String path = level.getAudio().get(0).getPath();
+		
 			try {
+			
 				mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+				if(Config.LOGGING){
+					Log.w("mystring", "before " + level.getAudio().get(0).toString());
+				}						
 				FileInputStream is = new FileInputStream(path);
+				if(Config.LOGGING){
+					Log.w("mystring", "after");
+				}					
 				mPlayer.setDataSource(is.getFD());
 				is.close();
 				mPlayer.prepareAsync();
 				mPlayer.setOnPreparedListener(this);
+				
 				//mControllerView.show(0);
 			} catch (IllegalArgumentException e) {
 				// TODO Auto-generated catch block

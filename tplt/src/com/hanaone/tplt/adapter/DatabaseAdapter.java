@@ -6,6 +6,7 @@ import java.util.Random;
 import java.util.logging.Level;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.hanaone.http.DownloadHelper;
 import com.hanaone.tplt.Constants;
@@ -23,6 +24,7 @@ import com.hanaone.tplt.db.model.Question;
 import com.hanaone.tplt.db.model.Section;
 import com.hanaone.tplt.db.sample.QuestionSample;
 import com.hanaone.tplt.db.sample.SectionSample;
+import com.hanaone.tplt.util.Config;
 import com.hanaone.tplt.util.DatabaseUtils;
 
 public class DatabaseAdapter{
@@ -37,6 +39,9 @@ public class DatabaseAdapter{
 	
 	public List<ExamDataSet> getAllExam(){
 		List<Examination> examModels = dbHelper.selectAllExam();
+		if(Config.LOGGING){
+			Log.w("size of exam", examModels.size() + "");
+		}
 		List<ExamDataSet> list = new ArrayList<ExamDataSet>();
 		for(Examination exam: examModels){
 			ExamDataSet data = DatabaseUtils.convertObject(exam, ExamDataSet.class);
@@ -45,7 +50,8 @@ public class DatabaseAdapter{
 			List<ExamLevel> levelModels = dbHelper.selectExamLevelByExamNumber(exam.getNumber());
 			if(levelModels != null){
 				for(ExamLevel lmodel: levelModels){
-					LevelDataSet l = new LevelDataSet();
+					LevelDataSet l = DatabaseUtils.convertObject(lmodel, LevelDataSet.class);
+					
 					l.setId(lmodel.getId());
 					l.setNumber(lmodel.getNumber());
 					l.setLabel(lmodel.getLabel());
@@ -92,7 +98,7 @@ public class DatabaseAdapter{
 		if(levels != null){
 			for(LevelDataSet data: levels){
 				
-				ExamLevel examLevel = new ExamLevel();
+				ExamLevel examLevel = DatabaseUtils.convertObject(data, ExamLevel.class);
 				examLevel.setExam_id(exam.getNumber());
 				examLevel.setNumber(data.getNumber());
 				examLevel.setLabel(data.getLabel());
@@ -120,9 +126,11 @@ public class DatabaseAdapter{
 //		return null;
 //	}
 	public LevelDataSet getLevel(int levelId){
-		LevelDataSet levelDataSet = new LevelDataSet();
+		
 		
 		ExamLevel examLevelModel = dbHelper.selectExamLevelById(levelId);
+		LevelDataSet levelDataSet = DatabaseUtils.convertObject(examLevelModel, LevelDataSet.class);
+		
 		levelDataSet.setNumber(examLevelModel.getNumber());
 		levelDataSet.setLabel(examLevelModel.getLabel());
 		

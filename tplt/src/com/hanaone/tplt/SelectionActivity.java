@@ -38,7 +38,9 @@ public class SelectionActivity extends Activity {
 			findViewById(R.id.layout_sample_test).setVisibility(LinearLayout.GONE);
 		} else if(mode.equals(Constants.SELECTION_MODE_SAMPLE)){
 			findViewById(R.id.layout_exam).setVisibility(LinearLayout.GONE);
-			findViewById(R.id.layout_sample_test).setVisibility(LinearLayout.VISIBLE);			
+			findViewById(R.id.layout_sample_test).setVisibility(LinearLayout.VISIBLE);		
+			
+			txtName.setText(R.string.selection_sample);
 		}
 		
 		

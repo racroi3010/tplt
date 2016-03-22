@@ -11,6 +11,7 @@ public class ExamLevel {
 	private int pdf_id;	
 	private int txt_id;
 	private int score;
+	private int maxScore;	
 	private int active;
 	
 	
@@ -87,6 +88,16 @@ public class ExamLevel {
 
 
 
+	public int getMaxScore() {
+		return maxScore;
+	}
+	public void setMaxScore(int maxScore) {
+		this.maxScore = maxScore;
+	}
+
+
+
+
 	public abstract class ExamLevelEntry implements BaseColumns{
 		public static final String TABLE_NAME = "examlevel";
 		public static final String COLUMN_NAME_EXAM_ID = "exam_id";
@@ -96,6 +107,7 @@ public class ExamLevel {
 		public static final String COLUMN_NAME_PDF_ID = "pdf_id";	
 		public static final String COLUMN_NAME_TXT_ID = "txt_id";	
 		public static final String COLUMN_NAME_SCORE = "score";
+		public static final String COLUMN_NAME_MAXSCORE = "maxscore";
 		public static final String COLUMN_NAME_ACTIVE = "active";
 		
 		

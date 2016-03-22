@@ -246,7 +246,9 @@ public class JsonReaderHelper {
 				audio.setPath(reader.nextString());
 				List<FileDataSet> audios = new ArrayList<FileDataSet>();
 				audios.add(audio);
-				data.setAudio(audios);				
+				data.setAudio(audios);		
+			} else if(name.equals("max_score")){
+				data.setMaxScore(reader.nextInt());
 			} else {
 				reader.skipValue();
 			}

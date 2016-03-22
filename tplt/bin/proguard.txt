@@ -1,0 +1,41 @@
+# view res/layout/activity_question_practice.xml #generated:115
+-keep class android.support.v4.view.ViewPager { <init>(...); }
+
+# view AndroidManifest.xml #generated:32
+-keep class com.hanaone.tplt.HelpActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:18
+-keep class com.hanaone.tplt.MainActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:30
+-keep class com.hanaone.tplt.QuestionActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:31
+-keep class com.hanaone.tplt.ResultActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:29
+-keep class com.hanaone.tplt.SelectionActivity { <init>(...); }
+
+# view res/layout/activity_help.xml #generated:157
+# view res/layout/activity_help.xml #generated:204
+# view res/layout/activity_help.xml #generated:267
+-keep class com.kyleduo.switchbutton.SwitchButton { <init>(...); }
+
+# onClick res/layout/activity_help.xml #generated:27
+# onClick res/layout/activity_help.xml #generated:287
+# onClick res/layout/activity_help.xml #generated:310
+# onClick res/layout/activity_main.xml #generated:25
+# onClick res/layout/activity_main.xml #generated:90
+# onClick res/layout/activity_question_practice.xml #generated:102
+# onClick res/layout/activity_question_practice.xml #generated:20
+# onClick res/layout/activity_question_practice.xml #generated:71
+# onClick res/layout/activity_question_practice.xml #generated:82
+# onClick res/layout/activity_question_practice.xml #generated:92
+# onClick res/layout/activity_result.xml #generated:26
+# onClick res/layout/activity_selection.xml #generated:108
+# onClick res/layout/activity_selection.xml #generated:27
+# onClick res/layout/activity_selection.xml #generated:56
+# onClick res/layout/activity_selection.xml #generated:67
+# onClick res/layout/activity_selection.xml #generated:97
+-keepclassmembers class * { *** onClick(...); }
+

@@ -66,16 +66,43 @@ public class MainActivity extends Activity {
 		
 		imgSync = (ImageView) findViewById(R.id.img_sync);
 		layoutSync = (LinearLayout) findViewById(R.id.layout_sync);	
+		
+		adapter = new ListExamAdapter(mContext, mListener);	
+		listExam.setAdapter(adapter);
+		
 		init();
 	}
     @Override
 	protected void onResume() {
 		super.onResume();
-		//list = dbAdapter.getAllExam();
+		Intent intent = getIntent();
+		if(intent != null){
+			int levelId = intent.getIntExtra(Constants.UPDATE_SCORE_LEVEL_ID, -1);
+			if(levelId > -1){
+				int score = intent.getIntExtra(Constants.UPDATE_SCORE, -1);
+				if(score > -1){
+					for(ExamDataSet exam: list)
+						for(LevelDataSet level: exam.getLevels())
+							if(level.getId() == levelId){
+								level.setScore(score);
+								
+								break;
+							}
+					adapter.notifyDataSetChanged();			
+				}
+
+			}			
+		}
+
 		new LoadingNewData().execute();
 	}
  
-    public void onClick(View v){
+    @Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		setIntent(intent);
+	}
+	public void onClick(View v){
     	switch (v.getId()) {
 		case R.id.btn_setting:
 			Intent intent = new Intent(mContext, HelpActivity.class);
@@ -95,19 +122,13 @@ public class MainActivity extends Activity {
 		}
     }
 	private void init(){		
-		list = dbAdapter.getAllExam();
-		adapter = new ListExamAdapter(mContext, mListener);	
-		
+		list = dbAdapter.getAllExam();		
 		infos = new ArrayList<DownloadInfo>();
 		for(int i = 0; i < list.size(); i ++){
 			infos.add(new DownloadInfo());
 		}
 		adapter.setDownloadInfos(infos);
-
-		adapter.setExams(list);
-		
-		listExam.setAdapter(adapter);
-		
+		adapter.setExams(list);		
 		new LoadingNewData().execute();
 		
 	}
