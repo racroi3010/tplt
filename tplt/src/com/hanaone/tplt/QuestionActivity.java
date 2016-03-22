@@ -25,11 +25,13 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.hanaone.media.AudioControllerView;
 import com.hanaone.media.AudioControllerView.MediaPlayerControl;
 import com.hanaone.tplt.adapter.DatabaseAdapter;
+import com.hanaone.tplt.adapter.ListAdapterListener;
 import com.hanaone.tplt.adapter.ListSectionAdapter;
 import com.hanaone.tplt.adapter.QuestionSlideAdapter;
 import com.hanaone.tplt.db.FileDataSet;
@@ -57,8 +59,78 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 	private ListView mList;
 	private ListSectionAdapter mListAdapter;
 	
+	// audio
+	private Button replayButton;
+	
 	// list result
-	private ArrayList<ResultDataSet> listResult;
+	//private ArrayList<ResultDataSet> listResult;
+	
+	
+	private ListAdapterListener mListener = new ListAdapterListener() {
+		
+		@Override
+		public void onSelect(int number) {
+			
+		}
+		
+		@Override
+		public void onPlayAudioSection(final Button audioButton, int sectionNumber) {
+			if(replayButton != null){
+				replayButton.setEnabled(true);
+				replayButton.setBackgroundResource(R.drawable.ic_av_volume_down_black);
+			}
+			if(Constants.QUESTION_MODE_REVIEW.equals(mMode)){
+				replayButton = audioButton;
+				replayButton.setBackgroundResource(R.drawable.ic_av_volume_down_cyan);
+				replayButton.setEnabled(false);
+				currentItem = sectionNumber;
+				FileDataSet audio = null;
+				if(level.getAudio().size() > sectionNumber){
+					audio = level.getAudio().get(sectionNumber);
+				} else {
+					audio = level.getAudio().get(0);
+				}
+				mPlayer = getMediaPlayer();	
+				String path = audio.getPath();
+				try {
+					
+					mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);					
+					FileInputStream is = new FileInputStream(path);				
+					mPlayer.setDataSource(is.getFD());
+					is.close();
+					mPlayer.prepareAsync();
+					mPlayer.setOnPreparedListener(QuestionActivity.this);
+					
+					//mControllerView.show(0);
+				} catch (IllegalArgumentException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (SecurityException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IllegalStateException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}					
+			}
+		}
+
+		@Override
+		public void onPlayAudioQuestion(Button audioButton, int sectionNumber,
+				int questionNumber) {
+			if(replayButton != null){
+				replayButton.setEnabled(true);
+				replayButton.setBackgroundResource(R.drawable.ic_av_volume_down_black);
+			}
+			if(Constants.QUESTION_MODE_REVIEW.equals(mMode)){
+				
+			}			
+		}
+
+	};
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -127,7 +199,7 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 			mHander.obtainMessage(HANDLE_PLAY_LIST).sendToTarget();
 		} else if(Constants.QUESTION_MODE_REVIEW.equals(mMode)){
 			level = getIntent().getParcelableExtra(Constants.LEVEL);
-			listResult = getIntent().getParcelableArrayListExtra(Constants.LIST_RESULT);
+			//listResult = getIntent().getParcelableArrayListExtra(Constants.LIST_RESULT);
 			sectionIndex = getIntent().getIntExtra(Constants.SECTION_INDEX, 0);
 		}
 		
@@ -137,8 +209,8 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 		mPager = (ViewPager) findViewById(R.id.viewpager_question_vp);
 		mList = (ListView) findViewById(R.id.list_sections);
 		if(Constants.QUESTION_MODE_PRACTICE.equals(mMode)){
-			findViewById(R.id.btn_previous).setVisibility(Button.VISIBLE);
-			findViewById(R.id.btn_next).setVisibility(Button.VISIBLE);	
+			findViewById(R.id.layout_previous).setVisibility(LinearLayout.VISIBLE);
+			findViewById(R.id.layout_next).setVisibility(LinearLayout.VISIBLE);
 			findViewById(R.id.btn_submit).setVisibility(Button.GONE);	
 			mPager.setVisibility(ViewPager.VISIBLE);
 			mList.setVisibility(ListView.GONE);
@@ -180,28 +252,28 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 			});
 
 		} else if(Constants.QUESTION_MODE_REVIEW.equals(mMode)){
-			findViewById(R.id.btn_previous).setVisibility(Button.GONE);
-			findViewById(R.id.btn_next).setVisibility(Button.GONE);
+			findViewById(R.id.layout_previous).setVisibility(LinearLayout.GONE);
+			findViewById(R.id.layout_next).setVisibility(LinearLayout.GONE);
 			findViewById(R.id.btn_submit).setVisibility(Button.GONE);	
 			findViewById(R.id.btn_result).setVisibility(Button.VISIBLE);	
 			mPager.setVisibility(ViewPager.GONE);
 			mList.setVisibility(ListView.VISIBLE);
 
-			mListAdapter = new ListSectionAdapter(mContext, null);
+			mListAdapter = new ListSectionAdapter(mContext, mListener);
 			mList.setAdapter(mListAdapter);
 			mListAdapter.setmDataSet(level.getSections());
-			mListAdapter.setResults(listResult);
+			//mListAdapter.setResults(listResult);
 			mList.setSelection(sectionIndex);
 			mList.requestFocus();
 
 		}else {
-			findViewById(R.id.btn_previous).setVisibility(Button.GONE);
-			findViewById(R.id.btn_next).setVisibility(Button.GONE);
+			findViewById(R.id.layout_previous).setVisibility(LinearLayout.GONE);
+			findViewById(R.id.layout_next).setVisibility(LinearLayout.GONE);
 			findViewById(R.id.btn_submit).setVisibility(Button.VISIBLE);	
 			mPager.setVisibility(ViewPager.GONE);
 			mList.setVisibility(ListView.VISIBLE);
 			
-			mListAdapter = new ListSectionAdapter(mContext, null);
+			mListAdapter = new ListSectionAdapter(mContext, mListener);
 			mList.setAdapter(mListAdapter);
 			mListAdapter.setmDataSet(level.getSections());
 
@@ -298,6 +370,9 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 			}
 		} else if(Constants.QUESTION_MODE_EXAM.equals(mMode)) {
 			mPlayer.start();
+		} else if(Constants.QUESTION_MODE_REVIEW.equals(mMode)) {
+			start();
+			mControllerView.show();
 		} else {
 			start();
 		}
@@ -333,6 +408,11 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 		int duration = current - start;
 		if(duration >= getDuration()){
 			mPlayer.pause();
+			if(replayButton != null){
+				replayButton.setBackgroundResource(R.drawable.ic_av_volume_down_black);
+				replayButton.setEnabled(true);
+				replayButton = null;
+			}
 		}
 		return duration;
 //		return mPlayer.getCurrentPosition();

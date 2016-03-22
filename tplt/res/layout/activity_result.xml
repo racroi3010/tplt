@@ -18,10 +18,11 @@
             android:gravity="center_vertical"
             android:orientation="horizontal" >
 
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/ic_keyboard_arrow_left_cyan_24dp" />
+            <ImageView 
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_hardware_keyboard_arrow_left_cyan"
+                />
 
             <Button
                 android:id="@+id/btn_home"
@@ -29,6 +30,7 @@
                 android:layout_height="50dp"
                 android:background="@null"
                 android:onClick="onClick"
+                android:layout_marginLeft="-15dp"
                 android:text="@string/title_home"
                 android:textColor="@color/CYAN" />
         </LinearLayout>

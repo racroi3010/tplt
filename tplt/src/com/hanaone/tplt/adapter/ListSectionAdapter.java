@@ -29,8 +29,9 @@ public class ListSectionAdapter extends BaseAdapter {
 	private LayoutInflater mInflater;
 	private ListAdapterListener mListener;
 	private List<SectionDataSet> mDataSet;
-	private ArrayList<ResultDataSet> mResults;
+	//private ArrayList<ResultDataSet> mResults;
 	private boolean isShowHint;
+	private boolean isShowAudio;
 	public ListSectionAdapter(Context mContext, ListAdapterListener mListener) {
 		this.mContext = mContext;
 		this.mListener = mListener;
@@ -40,6 +41,11 @@ public class ListSectionAdapter extends BaseAdapter {
 		if(Constants.QUESTION_MODE_PRACTICE.equals(mode) 
 				|| Constants.QUESTION_MODE_REVIEW.equals(mode)){
 			isShowHint = PreferenceHandler.getHintDisplayPreference(mContext);
+			
+		}
+		
+		if(Constants.QUESTION_MODE_REVIEW.equals(mode)){
+			isShowAudio = true;
 		}
 	}
 
@@ -47,9 +53,9 @@ public class ListSectionAdapter extends BaseAdapter {
 		this.mDataSet = mDataSet;
 		this.notifyDataSetChanged();
 	}
-	public void setResults(ArrayList<ResultDataSet> results){
-		this.mResults = results;
-	}
+//	public void setResults(ArrayList<ResultDataSet> results){
+//		this.mResults = results;
+//	}
 	@Override
 	public int getCount() {
 		if(mDataSet != null){
@@ -82,6 +88,7 @@ public class ListSectionAdapter extends BaseAdapter {
 			holder.txtHint = (TextView) convertView.findViewById(R.id.txt_section_hint);
 			holder.btnHint = (Button) convertView.findViewById(R.id.btn_section_hint);
 			holder.layoutQuestion = (LinearLayout) convertView.findViewById(R.id.layout_questions);
+			holder.btnAudio = (Button) convertView.findViewById(R.id.btn_section_audio);
 			
 			convertView.setTag(holder);
 		} else {
@@ -93,6 +100,7 @@ public class ListSectionAdapter extends BaseAdapter {
 		if(section.getHint() == null || section.getHint().isEmpty()){
 			holder.txtHint.setVisibility(TextView.GONE);
 			holder.btnHint.setVisibility(Button.GONE);
+			holder.btnAudio.setVisibility(Button.GONE);
 		} else {
 			holder.txtHint.setText(section.getHint());
 			holder.btnHint.setVisibility(Button.VISIBLE);
@@ -102,21 +110,33 @@ public class ListSectionAdapter extends BaseAdapter {
 				public void onClick(View v) {
 					if(holder.txtHint.getVisibility() == TextView.VISIBLE){
 						holder.txtHint.setVisibility(TextView.GONE);
-						holder.btnHint.setBackgroundResource(R.drawable.ic_wb_sunny_black_24dp);
+						holder.btnHint.setBackgroundResource(R.drawable.ic_image_wb_sunny_black);
 					} else {
 						holder.txtHint.setVisibility(TextView.VISIBLE);
-						holder.btnHint.setBackgroundResource(R.drawable.hint_cyan);
+						holder.btnHint.setBackgroundResource(R.drawable.ic_image_wb_sunny_cyan);
 					}
 				}
 			});
 			if(isShowHint){
 				holder.txtHint.setVisibility(LinearLayout.VISIBLE);
-				holder.btnHint.setBackgroundResource(R.drawable.hint_cyan);					
+				holder.btnHint.setBackgroundResource(R.drawable.ic_image_wb_sunny_cyan);					
 			} else {
 				holder.txtHint.setVisibility(LinearLayout.GONE);
-				holder.btnHint.setBackgroundResource(R.drawable.ic_wb_sunny_black_24dp);
+				holder.btnHint.setBackgroundResource(R.drawable.ic_image_wb_sunny_black);
 			}				
 			
+			
+			if(isShowAudio){
+				holder.btnAudio.setVisibility(Button.VISIBLE);
+				final int pos = position;
+				holder.btnAudio.setOnClickListener(new OnClickListener() {
+					
+					@Override
+					public void onClick(View arg0) {
+						mListener.onPlayAudioSection(holder.btnAudio, pos);
+					}
+				});						
+			}			
 		}		
 			
 		holder.layoutQuestion.removeAllViews();
@@ -166,18 +186,23 @@ public class ListSectionAdapter extends BaseAdapter {
 				final Button btnQuestionHint = (Button) questionView.findViewById(R.id.btn_question_hint);
 				final LinearLayout layoutQuestionHint = (LinearLayout) questionView.findViewById(R.id.layout_question_hint);
 				
+				final Button btnQuestionAudio = (Button) questionView.findViewById(R.id.btn_question_audio);
+				
 				if(question.getHint() == null || question.getHint().isEmpty()){
 					btnQuestionHint.setVisibility(Button.GONE);
+					btnQuestionAudio.setVisibility(Button.GONE);
 					layoutQuestionHint.setVisibility(LinearLayout.GONE);
 				} else {
 					txtQuestionHint.setText(question.getHint());
 					btnQuestionHint.setVisibility(Button.VISIBLE);
+					
 					if(isShowHint){
 						layoutQuestionHint.setVisibility(LinearLayout.VISIBLE);
-						btnQuestionHint.setBackgroundResource(R.drawable.hint_cyan);					
+						btnQuestionHint.setBackgroundResource(R.drawable.ic_image_wb_sunny_cyan);	
+						
 					} else {
 						layoutQuestionHint.setVisibility(LinearLayout.GONE);
-						btnQuestionHint.setBackgroundResource(R.drawable.ic_wb_sunny_black_24dp);
+						btnQuestionHint.setBackgroundResource(R.drawable.ic_image_wb_sunny_black);
 					}
 					btnQuestionHint.setOnClickListener(new OnClickListener() {
 						
@@ -186,13 +211,26 @@ public class ListSectionAdapter extends BaseAdapter {
 							
 							if(layoutQuestionHint.getVisibility() == LinearLayout.VISIBLE){
 								layoutQuestionHint.setVisibility(LinearLayout.GONE);
-								btnQuestionHint.setBackgroundResource(R.drawable.ic_wb_sunny_black_24dp);
+								btnQuestionHint.setBackgroundResource(R.drawable.ic_image_wb_sunny_black);
 							} else {
 								layoutQuestionHint.setVisibility(LinearLayout.VISIBLE);
-								btnQuestionHint.setBackgroundResource(R.drawable.hint_cyan);
+								btnQuestionHint.setBackgroundResource(R.drawable.ic_image_wb_sunny_cyan);
 							}
 						}
 					});
+					
+					if(isShowAudio){
+						btnQuestionAudio.setVisibility(Button.VISIBLE);
+						final int pos = position;
+						btnQuestionAudio.setOnClickListener(new OnClickListener() {
+							
+							@Override
+							public void onClick(View arg0) {
+								
+							}
+						});						
+					}
+
 											
 				}
 				
@@ -299,13 +337,13 @@ public class ListSectionAdapter extends BaseAdapter {
 				
 				// check result
 				
-				if(mResults != null){
+				if(Constants.QUESTION_MODE_REVIEW.equals(PreferenceHandler.getQuestionModePreference(mContext)) ){
 
 					
-					ResultDataSet result = mResults.get(question.getNumber() - 1);
+					//ResultDataSet result = mResults.get(question.getNumber() - 1);
 					
 					Button rBtn = null;
-					switch (result.getAnswer()) {
+					switch (question.getAnswer()) {
 					case 1:
 						rBtn = btn1;
 						break;
@@ -326,7 +364,7 @@ public class ListSectionAdapter extends BaseAdapter {
 					}			
 					
 					rBtn = null;
-					switch (result.getChoice()) {
+					switch (question.getChoice()) {
 					case 1:
 						rBtn = btn1;
 						break;
@@ -343,7 +381,7 @@ public class ListSectionAdapter extends BaseAdapter {
 						break;
 					}
 					if(rBtn != null){
-						if(result.getChoice() != result.getAnswer()){
+						if(question.getChoice() != question.getAnswer()){
 							rBtn.setBackgroundResource(R.drawable.num_red);
 						}
 						
@@ -363,6 +401,7 @@ public class ListSectionAdapter extends BaseAdapter {
 	private class ViewHolder{
 		TextView txtQuestion;
 		Button btnHint;
+		Button btnAudio;
 		TextView txtHint;
 		LinearLayout layoutQuestion;
 	}

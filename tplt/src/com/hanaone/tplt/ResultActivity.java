@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -34,7 +35,7 @@ public class ResultActivity extends Activity {
 			intent.putExtra(Constants.QUESTION_MODE, Constants.QUESTION_MODE_REVIEW);
 			
 			intent.putExtra(Constants.LEVEL, level);
-			intent.putParcelableArrayListExtra(Constants.LIST_RESULT, listResult);
+			//intent.putParcelableArrayListExtra(Constants.LIST_RESULT, listResult);
 			
 			int sectionIndex = 0;
 			List<SectionDataSet> sections = level.getSections();
@@ -49,6 +50,19 @@ public class ResultActivity extends Activity {
 			
 			intent.putExtra(Constants.SECTION_INDEX, sectionIndex);
 			mContext.startActivity(intent);					
+		}
+
+		@Override
+		public void onPlayAudioSection(final Button audioButton, int sectionNumber) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onPlayAudioQuestion(Button audioButton, int sectionNumber,
+				int questionNumber) {
+			// TODO Auto-generated method stub
+			
 		}
 	};
 

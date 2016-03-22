@@ -59,7 +59,14 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:gravity="center"
-                android:background="@drawable/ic_wb_sunny_black_24dp" />
+                android:background="@drawable/ic_image_wb_sunny_black" />
+            <Button
+                android:id="@+id/btn_question_audio"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/ic_av_volume_down_black"
+                android:gravity="center"
+                android:visibility="gone" />               
         </LinearLayout>
     </RelativeLayout>
 

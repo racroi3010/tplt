@@ -87,19 +87,19 @@ public class QuestionSlideFragment extends Fragment {
 					public void onClick(View v) {
 						if(txtSectionHint.getVisibility() == TextView.VISIBLE){
 							txtSectionHint.setVisibility(TextView.GONE);
-							btnSectionHint.setBackgroundResource(R.drawable.ic_wb_sunny_black_24dp);
+							btnSectionHint.setBackgroundResource(R.drawable.ic_image_wb_sunny_black);
 						} else {
 							txtSectionHint.setVisibility(TextView.VISIBLE);
-							btnSectionHint.setBackgroundResource(R.drawable.hint_cyan);
+							btnSectionHint.setBackgroundResource(R.drawable.ic_image_wb_sunny_cyan);
 						}
 					}
 				});
 				if(isShowHint){
 					txtSectionHint.setVisibility(LinearLayout.VISIBLE);
-					btnSectionHint.setBackgroundResource(R.drawable.hint_cyan);					
+					btnSectionHint.setBackgroundResource(R.drawable.ic_image_wb_sunny_cyan);					
 				} else {
 					txtSectionHint.setVisibility(LinearLayout.GONE);
-					btnSectionHint.setBackgroundResource(R.drawable.ic_wb_sunny_black_24dp);
+					btnSectionHint.setBackgroundResource(R.drawable.ic_image_wb_sunny_black);
 				}				
 				
 			}
@@ -149,10 +149,10 @@ public class QuestionSlideFragment extends Fragment {
 						btnQuestionHint.setVisibility(Button.VISIBLE);
 						if(isShowHint){
 							layoutQuestionHint.setVisibility(LinearLayout.VISIBLE);
-							btnQuestionHint.setBackgroundResource(R.drawable.hint_cyan);					
+							btnQuestionHint.setBackgroundResource(R.drawable.ic_image_wb_sunny_cyan);					
 						} else {
 							layoutQuestionHint.setVisibility(LinearLayout.GONE);
-							btnQuestionHint.setBackgroundResource(R.drawable.ic_wb_sunny_black_24dp);
+							btnQuestionHint.setBackgroundResource(R.drawable.ic_image_wb_sunny_black);
 						}
 						btnQuestionHint.setOnClickListener(new OnClickListener() {
 							
@@ -161,10 +161,10 @@ public class QuestionSlideFragment extends Fragment {
 								
 								if(layoutQuestionHint.getVisibility() == LinearLayout.VISIBLE){
 									layoutQuestionHint.setVisibility(LinearLayout.GONE);
-									btnQuestionHint.setBackgroundResource(R.drawable.ic_wb_sunny_black_24dp);
+									btnQuestionHint.setBackgroundResource(R.drawable.ic_image_wb_sunny_black);
 								} else {
 									layoutQuestionHint.setVisibility(LinearLayout.VISIBLE);
-									btnQuestionHint.setBackgroundResource(R.drawable.hint_cyan);
+									btnQuestionHint.setBackgroundResource(R.drawable.ic_image_wb_sunny_cyan);
 								}
 							}
 						});
