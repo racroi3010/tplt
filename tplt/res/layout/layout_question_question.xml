@@ -33,7 +33,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="(2점)"
-                android:gravity="center"
+                android:gravity="center_vertical"
                 android:textColor="@color/BLACK"
                 android:textSize="16sp" />
 

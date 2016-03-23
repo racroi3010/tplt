@@ -32,6 +32,7 @@ import android.widget.Toast;
 
 import com.hanaone.http.DownloadHelper;
 import com.hanaone.http.JsonReaderHelper;
+import com.hanaone.jni.JNIHanaone;
 import com.hanaone.tplt.adapter.DatabaseAdapter;
 import com.hanaone.tplt.adapter.DownloadInfo;
 import com.hanaone.tplt.adapter.ListExamAdapter;
@@ -137,11 +138,16 @@ public class MainActivity extends Activity {
 		@Override
 		protected Void doInBackground(Void... params) {
 			DownloadHelper dHelper = new DownloadHelper(mContext);
-			String confPath = Constants.getRootPath(mContext) + "/config.txt";
+			String confPath = Constants.getInternalRootPath(mContext) + "/config.txt";
 			//confPath = Environment.getExternalStorageDirectory().getPath() + "/config.txt";
+			
+			String url = Constants.REMOTE_CONFIG_FILE_JSON;
+			
+			// test
+			url = new JNIHanaone().stringFromJNI();
 			boolean loaded = false;
-			try {		
-				loaded = dHelper.downloadFile(Constants.REMOTE_CONFIG_FILE_JSON, confPath);
+			try {						
+				loaded = dHelper.downloadFile(url, confPath);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

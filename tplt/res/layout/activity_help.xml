@@ -22,15 +22,17 @@
             <ImageView 
                 android:layout_width="40dp"
                 android:layout_height="40dp"
+                android:gravity="center_vertical"
                 android:src="@drawable/ic_hardware_keyboard_arrow_left_cyan"
                 />
 
             <Button
                 android:id="@+id/btn_home"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
                 android:background="@null"
                 android:onClick="onClick"
+                android:gravity="center_vertical"
                 android:layout_marginLeft="-15dp"
                 android:text="@string/title_home"
                 android:textColor="@color/CYAN" />
@@ -92,7 +94,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:text="Loading New Exams..."
+                android:text="@string/loading_exam"
                 android:textColor="@color/BLACK" />
         </LinearLayout>
     </LinearLayout>
@@ -119,8 +121,8 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical|left"
-                    android:text="Practice"
+                    android:gravity="center_vertical"
+                    android:text="@string/setting_practice"
                     android:textColor="@color/BLACK" />
             </LinearLayout>
 
@@ -138,7 +140,7 @@
                     <ImageView
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:background="@drawable/ic_pause_circle_filled_black_24dp" />
+                        android:background="@drawable/ic_av_volume_down_cyan" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -161,7 +163,7 @@
                         style="@style/SwitchButtonStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:kswTintColor="#D02E21" />
+                        app:kswTintColor="@color/CYAN" />
                 </LinearLayout>
             </RelativeLayout>
 
@@ -185,14 +187,14 @@
                     <ImageView
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:background="@drawable/ic_wb_sunny_black_24dp" />
+                        android:background="@drawable/ic_image_wb_sunny_cyan" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
                         android:gravity="center"
-                        android:text="Display Hint Phrase"
+                        android:text="@string/setting_display_hint"
                         android:textColor="@color/BLACK"
                         android:textSize="16sp" />
                 </LinearLayout>
@@ -208,7 +210,7 @@
                         style="@style/SwitchButtonStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:kswTintColor="#D02E21" />
+                        app:kswTintColor="@color/CYAN" />
                 </LinearLayout>
             </RelativeLayout>
 
@@ -223,16 +225,12 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical|left"
-                    android:text="App"
+                    android:gravity="center_vertical"
+                    android:text="@string/setting_app"
                     android:textColor="@color/BLACK" />
             </LinearLayout>
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginLeft="50dp"
-                android:background="@color/GRAY_UNDER_BAR" />
+
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -248,14 +246,14 @@
                     <ImageView
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:background="@drawable/ic_wb_sunny_black_24dp" />
+                        android:background="@drawable/ic_action_language_cyan" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
                         android:gravity="center"
-                        android:text="Language"
+                        android:text="@string/setting_language"
                         android:textColor="@color/BLACK"
                         android:textSize="16sp" />
                 </LinearLayout>
@@ -266,15 +264,71 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true" >
 
-                    <com.kyleduo.switchbutton.SwitchButton
-                        android:id="@+id/sw_help_target"
-                        style="@style/SwitchButtonStyle"
+                    <Spinner 
+                        android:id="@+id/sp_language"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:kswTintColor="#D02E21" />
+                       	android:background="@android:color/transparent"
+                       	android:gravity="center"
+                       	android:spinnerMode="dropdown"
+                       	android:layout_marginRight="10dp"
+                        android:entries="@array/array_language"
+                        />
                 </LinearLayout>
             </RelativeLayout>
+           <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="50dp"
+                android:background="@color/GRAY_UNDER_BAR" />
+            <RelativeLayout
+                android:id="@+id/layout_share"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
 
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal" >
+
+                    <Button
+                        android:id="@+id/btn_share"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:background="@drawable/ic_social_group_cyan"
+                        android:onClick="onClick" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:gravity="center"
+                        android:text="@string/setting_share"
+                        android:textColor="@color/BLACK"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true" >
+
+                    <Button
+                        android:id="@id/btn_share"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/ic_hardware_keyboard_arrow_right"
+                        android:onClick="onClick" />
+                </LinearLayout>
+            </RelativeLayout>            
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="50dp"
+                android:background="@color/GRAY_UNDER_BAR" />
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" >
@@ -290,7 +344,7 @@
                         android:id="@+id/btn_rate"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:background="@drawable/ic_star_rate_black_18dp"
+                        android:background="@drawable/ic_toggle_star_cyan"
                         android:onClick="onClick" />
 
                     <TextView
@@ -313,7 +367,7 @@
                         android:id="@id/btn_rate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/ic_keyboard_arrow_right_black_24dp"
+                        android:background="@drawable/ic_hardware_keyboard_arrow_right"
                         android:onClick="onClick" />
                 </LinearLayout>
             </RelativeLayout>
@@ -330,6 +384,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="fill_horizontal"
                     android:text="@string/setting_message"
+                    android:autoLink="email"
                     android:textColor="@color/BLACK"
                     android:textSize="16sp" />
             </LinearLayout>

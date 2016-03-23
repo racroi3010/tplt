@@ -48,3 +48,4 @@ public <init>(android.content.Context, android.util.AttributeSet);
 
 
 -keep class com.hanaone.tplt.util.DatabaseUtils {*;}
+-keep class com.hanaone.jni.stringFromJNI {*;}

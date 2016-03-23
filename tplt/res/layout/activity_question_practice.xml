@@ -23,11 +23,12 @@
                 />
             <Button
                 android:id="@+id/btn_home"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
                 android:background="@null"
                 android:layout_marginLeft="-15dp"
                 android:onClick="onClick"
+                android:gravity="center_vertical"
                 android:text="@string/title_home"
                 android:textColor="@color/CYAN" />
         </LinearLayout>
@@ -84,16 +85,18 @@
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
+                android:gravity="center_vertical"
                 android:src="@drawable/ic_hardware_keyboard_arrow_left_cyan" />
 
             <Button
                 android:id="@+id/btn_previous"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
                 android:layout_marginLeft="-15dp"
                 android:background="@null"
                 android:onClick="onClick"
-                android:text="Previous"
+                android:text="@string/question_previous"
+                android:gravity="center_vertical"
                 android:textColor="@color/CYAN" />
         </LinearLayout>
 
@@ -107,17 +110,19 @@
 
             <Button
                 android:id="@+id/btn_next"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
                 android:layout_marginRight="-15dp"
                 android:background="@null"
                 android:onClick="onClick"
-                android:text="Next"
+                android:text="@string/question_next"
+                android:gravity="center_vertical"
                 android:textColor="@color/CYAN" />
 
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
+                android:gravity="center_vertical"
                 android:src="@drawable/ic_hardware_keyboard_arrow_right" />
         </LinearLayout>
 
@@ -127,9 +132,9 @@
             android:layout_height="40dp"
             android:layout_alignParentRight="true"
             android:layout_marginRight="20dp"
-            android:background="@drawable/btn_save"
+            android:background="@drawable/selector_btn_select"
             android:onClick="onClick"
-            android:text="Submit"
+            android:text="@string/question_submit"
             android:textColor="@color/WHITE" />
 
         <Button
@@ -138,9 +143,9 @@
             android:layout_height="40dp"
             android:layout_alignParentRight="true"
             android:layout_marginRight="20dp"
-            android:background="@drawable/btn_save"
+            android:background="@drawable/selector_btn_select"
             android:onClick="onClick"
-            android:text="Result"
+            android:text="@string/question_result"
             android:textColor="@color/WHITE"
             android:visibility="gone" />
     </RelativeLayout>

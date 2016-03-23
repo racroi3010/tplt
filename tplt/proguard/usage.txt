@@ -1,5 +1,3 @@
-android.annotation.SuppressLint
-android.annotation.TargetApi
 android.support.annotation.AnimRes
 android.support.annotation.AnimatorRes
 android.support.annotation.AnyRes
@@ -344,12 +342,6 @@ android.support.v4.app.FragmentTransaction:
 android.support.v4.app.FragmentTransaction$Transit
 android.support.v4.app.FragmentTransitionCompat21:
     31:450:FragmentTransitionCompat21()
-    31:31:static synthetic android.graphics.Rect access$100(android.view.View)
-android.support.v4.app.FragmentTransitionCompat21$1:
-    77:77:public android.graphics.Rect onGetEpicenter(android.transition.Transition)
-android.support.v4.app.FragmentTransitionCompat21$3:
-    private android.graphics.Rect mEpicenter
-    287:290:public android.graphics.Rect onGetEpicenter(android.transition.Transition)
 android.support.v4.app.INotificationSideChannel
 android.support.v4.app.INotificationSideChannel$Stub
 android.support.v4.app.INotificationSideChannel$Stub$Proxy
@@ -619,21 +611,73 @@ android.support.v4.graphics.BitmapCompatHoneycombMr1
 android.support.v4.graphics.BitmapCompatJellybeanMR2
 android.support.v4.graphics.BitmapCompatKitKat
 android.support.v4.graphics.ColorUtils
-android.support.v4.graphics.drawable.DrawableCompat
-android.support.v4.graphics.drawable.DrawableCompat$BaseDrawableImpl
-android.support.v4.graphics.drawable.DrawableCompat$DrawableImpl
-android.support.v4.graphics.drawable.DrawableCompat$HoneycombDrawableImpl
-android.support.v4.graphics.drawable.DrawableCompat$JellybeanMr1DrawableImpl
-android.support.v4.graphics.drawable.DrawableCompat$KitKatDrawableImpl
-android.support.v4.graphics.drawable.DrawableCompat$LollipopDrawableImpl
-android.support.v4.graphics.drawable.DrawableCompat$LollipopMr1DrawableImpl
-android.support.v4.graphics.drawable.DrawableCompat$MDrawableImpl
+android.support.v4.graphics.drawable.DrawableCompat:
+    28:198:public DrawableCompat()
+    242:243:public static void jumpToCurrentState(android.graphics.drawable.Drawable)
+    258:259:public static void setAutoMirrored(android.graphics.drawable.Drawable,boolean)
+    284:285:public static void setHotspot(android.graphics.drawable.Drawable,float,float)
+    295:296:public static void setHotspotBounds(android.graphics.drawable.Drawable,int,int,int,int)
+    305:306:public static void setTint(android.graphics.drawable.Drawable,int)
+    315:316:public static void setTintList(android.graphics.drawable.Drawable,android.content.res.ColorStateList)
+    325:326:public static void setTintMode(android.graphics.drawable.Drawable,android.graphics.PorterDuff$Mode)
+    344:344:public static android.graphics.drawable.Drawable wrap(android.graphics.drawable.Drawable)
+    358:361:public static android.graphics.drawable.Drawable unwrap(android.graphics.drawable.Drawable)
+    386:386:public static int getLayoutDirection(android.graphics.drawable.Drawable)
+android.support.v4.graphics.drawable.DrawableCompat$BaseDrawableImpl:
+    52:52:public void jumpToCurrentState(android.graphics.drawable.Drawable)
+    56:56:public void setAutoMirrored(android.graphics.drawable.Drawable,boolean)
+    65:65:public void setHotspot(android.graphics.drawable.Drawable,float,float)
+    69:69:public void setHotspotBounds(android.graphics.drawable.Drawable,int,int,int,int)
+    73:74:public void setTint(android.graphics.drawable.Drawable,int)
+    78:79:public void setTintList(android.graphics.drawable.Drawable,android.content.res.ColorStateList)
+    83:84:public void setTintMode(android.graphics.drawable.Drawable,android.graphics.PorterDuff$Mode)
+    88:88:public android.graphics.drawable.Drawable wrap(android.graphics.drawable.Drawable)
+    98:98:public int getLayoutDirection(android.graphics.drawable.Drawable)
+android.support.v4.graphics.drawable.DrawableCompat$DrawableImpl:
+    public abstract void jumpToCurrentState(android.graphics.drawable.Drawable)
+    public abstract void setAutoMirrored(android.graphics.drawable.Drawable,boolean)
+    public abstract void setHotspot(android.graphics.drawable.Drawable,float,float)
+    public abstract void setHotspotBounds(android.graphics.drawable.Drawable,int,int,int,int)
+    public abstract void setTint(android.graphics.drawable.Drawable,int)
+    public abstract void setTintList(android.graphics.drawable.Drawable,android.content.res.ColorStateList)
+    public abstract void setTintMode(android.graphics.drawable.Drawable,android.graphics.PorterDuff$Mode)
+    public abstract android.graphics.drawable.Drawable wrap(android.graphics.drawable.Drawable)
+    public abstract int getLayoutDirection(android.graphics.drawable.Drawable)
+android.support.v4.graphics.drawable.DrawableCompat$HoneycombDrawableImpl:
+    108:109:public void jumpToCurrentState(android.graphics.drawable.Drawable)
+    113:113:public android.graphics.drawable.Drawable wrap(android.graphics.drawable.Drawable)
+android.support.v4.graphics.drawable.DrawableCompat$JellybeanMr1DrawableImpl:
+    125:126:public int getLayoutDirection(android.graphics.drawable.Drawable)
+android.support.v4.graphics.drawable.DrawableCompat$KitKatDrawableImpl:
+    136:137:public void setAutoMirrored(android.graphics.drawable.Drawable,boolean)
+    146:146:public android.graphics.drawable.Drawable wrap(android.graphics.drawable.Drawable)
+android.support.v4.graphics.drawable.DrawableCompat$LollipopDrawableImpl:
+    156:157:public void setHotspot(android.graphics.drawable.Drawable,float,float)
+    161:162:public void setHotspotBounds(android.graphics.drawable.Drawable,int,int,int,int)
+    166:167:public void setTint(android.graphics.drawable.Drawable,int)
+    171:172:public void setTintList(android.graphics.drawable.Drawable,android.content.res.ColorStateList)
+    176:177:public void setTintMode(android.graphics.drawable.Drawable,android.graphics.PorterDuff$Mode)
+    181:181:public android.graphics.drawable.Drawable wrap(android.graphics.drawable.Drawable)
+android.support.v4.graphics.drawable.DrawableCompat$LollipopMr1DrawableImpl:
+    191:191:public android.graphics.drawable.Drawable wrap(android.graphics.drawable.Drawable)
+android.support.v4.graphics.drawable.DrawableCompat$MDrawableImpl:
+    206:206:public int getLayoutDirection(android.graphics.drawable.Drawable)
 android.support.v4.graphics.drawable.DrawableCompatApi22
-android.support.v4.graphics.drawable.DrawableCompatApi23
+android.support.v4.graphics.drawable.DrawableCompatApi23:
+    24:24:DrawableCompatApi23()
+    30:30:public static int getLayoutDirection(android.graphics.drawable.Drawable)
 android.support.v4.graphics.drawable.DrawableCompatBase
 android.support.v4.graphics.drawable.DrawableCompatHoneycomb
-android.support.v4.graphics.drawable.DrawableCompatJellybeanMr1
-android.support.v4.graphics.drawable.DrawableCompatKitKat
+android.support.v4.graphics.drawable.DrawableCompatJellybeanMr1:
+    private static final java.lang.String TAG
+    private static java.lang.reflect.Method sGetLayoutDirectionMethod
+    private static boolean sGetLayoutDirectionMethodFetched
+    30:30:DrawableCompatJellybeanMr1()
+    63:81:public static int getLayoutDirection(android.graphics.drawable.Drawable)
+android.support.v4.graphics.drawable.DrawableCompatKitKat:
+    26:26:DrawableCompatKitKat()
+    28:29:public static void setAutoMirrored(android.graphics.drawable.Drawable,boolean)
+    36:39:public static android.graphics.drawable.Drawable wrapForTinting(android.graphics.drawable.Drawable)
 android.support.v4.graphics.drawable.DrawableCompatLollipop
 android.support.v4.graphics.drawable.DrawableWrapper
 android.support.v4.graphics.drawable.DrawableWrapperDonut
@@ -1262,33 +1306,10 @@ android.support.v4.util.SparseArrayCompat:
     294:302:public int indexOfValue(java.lang.Object)
     325:352:public void append(int,java.lang.Object)
 android.support.v4.util.TimeUtils
-android.support.v4.view.AccessibilityDelegateCompat:
-    480:480:public android.support.v4.view.accessibility.AccessibilityNodeProviderCompat getAccessibilityNodeProvider(android.view.View)
-    500:500:public boolean performAccessibilityAction(android.view.View,int,android.os.Bundle)
-android.support.v4.view.AccessibilityDelegateCompat$AccessibilityDelegateImpl:
-    public abstract android.support.v4.view.accessibility.AccessibilityNodeProviderCompat getAccessibilityNodeProvider(java.lang.Object,android.view.View)
-    public abstract boolean performAccessibilityAction(java.lang.Object,android.view.View,int,android.os.Bundle)
-android.support.v4.view.AccessibilityDelegateCompat$AccessibilityDelegateJellyBeanImpl:
-    275:280:public android.support.v4.view.accessibility.AccessibilityNodeProviderCompat getAccessibilityNodeProvider(java.lang.Object,android.view.View)
-    286:286:public boolean performAccessibilityAction(java.lang.Object,android.view.View,int,android.os.Bundle)
-android.support.v4.view.AccessibilityDelegateCompat$AccessibilityDelegateJellyBeanImpl$1:
-    260:262:public java.lang.Object getAccessibilityNodeProvider(android.view.View)
-    267:267:public boolean performAccessibilityAction(android.view.View,int,android.os.Bundle)
-android.support.v4.view.AccessibilityDelegateCompat$AccessibilityDelegateStubImpl:
-    109:109:public android.support.v4.view.accessibility.AccessibilityNodeProviderCompat getAccessibilityNodeProvider(java.lang.Object,android.view.View)
-    115:115:public boolean performAccessibilityAction(java.lang.Object,android.view.View,int,android.os.Bundle)
 android.support.v4.view.AccessibilityDelegateCompatIcs:
     28:30:AccessibilityDelegateCompatIcs()
 android.support.v4.view.AccessibilityDelegateCompatJellyBean:
     30:32:AccessibilityDelegateCompatJellyBean()
-    99:99:public static java.lang.Object getAccessibilityNodeProvider(java.lang.Object,android.view.View)
-    104:104:public static boolean performAccessibilityAction(java.lang.Object,android.view.View,int,android.os.Bundle)
-android.support.v4.view.AccessibilityDelegateCompatJellyBean$1:
-    87:87:public android.view.accessibility.AccessibilityNodeProvider getAccessibilityNodeProvider(android.view.View)
-    92:92:public boolean performAccessibilityAction(android.view.View,int,android.os.Bundle)
-android.support.v4.view.AccessibilityDelegateCompatJellyBean$AccessibilityDelegateBridgeJellyBean:
-    public abstract java.lang.Object getAccessibilityNodeProvider(android.view.View)
-    public abstract boolean performAccessibilityAction(android.view.View,int,android.os.Bundle)
 android.support.v4.view.ActionProvider
 android.support.v4.view.ActionProvider$SubUiVisibilityListener
 android.support.v4.view.ActionProvider$VisibilityListener
@@ -1447,10 +1468,17 @@ android.support.v4.view.MotionEventCompatGingerbread:
 android.support.v4.view.MotionEventCompatHoneycombMr1:
     24:24:MotionEventCompatHoneycombMr1()
     30:30:static float getAxisValue(android.view.MotionEvent,int,int)
-android.support.v4.view.NestedScrollingChild
+android.support.v4.view.NestedScrollingChild:
+    public abstract void setNestedScrollingEnabled(boolean)
+    public abstract boolean isNestedScrollingEnabled()
+    public abstract boolean startNestedScroll(int)
+    public abstract boolean hasNestedScrollingParent()
+    public abstract boolean dispatchNestedScroll(int,int,int,int,int[])
+    public abstract boolean dispatchNestedPreScroll(int,int,int[],int[])
+    public abstract boolean dispatchNestedFling(float,float,boolean)
+    public abstract boolean dispatchNestedPreFling(float,float)
 android.support.v4.view.NestedScrollingChildHelper:
     46:48:public NestedScrollingChildHelper(android.view.View)
-    60:64:public void setNestedScrollingEnabled(boolean)
     267:268:public void onDetachedFromWindow()
     280:281:public void onStopNestedScroll(android.view.View)
 android.support.v4.view.NestedScrollingParent:
@@ -1599,7 +1627,6 @@ android.support.v4.view.ViewCompat:
     2935:2936:public static void setNestedScrollingEnabled(android.view.View,boolean)
     2951:2951:public static boolean isNestedScrollingEnabled(android.view.View)
     2993:2993:public static boolean startNestedScroll(android.view.View,int)
-    3004:3005:public static void stopNestedScroll(android.view.View)
     3016:3016:public static boolean hasNestedScrollingParent(android.view.View)
     3044:3044:public static boolean dispatchNestedScroll(android.view.View,int,int,int,int,int[])
     3069:3069:public static boolean dispatchNestedPreScroll(android.view.View,int,int,int[],int[])
@@ -1700,7 +1727,6 @@ android.support.v4.view.ViewCompat$BaseViewCompatImpl:
     932:932:public android.graphics.PorterDuff$Mode getBackgroundTintMode(android.view.View)
     948:955:private boolean canScrollingViewScrollVertically(android.support.v4.view.ScrollingView,int)
     960:963:public boolean startNestedScroll(android.view.View,int)
-    968:971:public void stopNestedScroll(android.view.View)
     975:978:public boolean hasNestedScrollingParent(android.view.View)
     984:988:public boolean dispatchNestedScroll(android.view.View,int,int,int,int,int[])
     994:998:public boolean dispatchNestedPreScroll(android.view.View,int,int,int[],int[])
@@ -1801,7 +1827,6 @@ android.support.v4.view.ViewCompat$LollipopViewCompatImpl:
     1542:1543:public void setNestedScrollingEnabled(android.view.View,boolean)
     1547:1547:public boolean isNestedScrollingEnabled(android.view.View)
     1552:1552:public boolean startNestedScroll(android.view.View,int)
-    1557:1558:public void stopNestedScroll(android.view.View)
     1562:1562:public boolean hasNestedScrollingParent(android.view.View)
     1568:1568:public boolean dispatchNestedScroll(android.view.View,int,int,int,int,int[])
     1575:1575:public boolean dispatchNestedPreScroll(android.view.View,int,int,int[],int[])
@@ -1900,7 +1925,6 @@ android.support.v4.view.ViewCompat$ViewCompatImpl:
     public abstract void setNestedScrollingEnabled(android.view.View,boolean)
     public abstract boolean isNestedScrollingEnabled(android.view.View)
     public abstract boolean startNestedScroll(android.view.View,int)
-    public abstract void stopNestedScroll(android.view.View)
     public abstract boolean hasNestedScrollingParent(android.view.View)
     public abstract boolean dispatchNestedScroll(android.view.View,int,int,int,int,int[])
     public abstract boolean dispatchNestedPreScroll(android.view.View,int,int,int[],int[])
@@ -2005,7 +2029,6 @@ android.support.v4.view.ViewCompatLollipop:
     120:121:public static void setNestedScrollingEnabled(android.view.View,boolean)
     124:124:public static boolean isNestedScrollingEnabled(android.view.View)
     128:128:public static boolean startNestedScroll(android.view.View,int)
-    132:133:public static void stopNestedScroll(android.view.View)
     136:136:public static boolean hasNestedScrollingParent(android.view.View)
     141:141:public static boolean dispatchNestedScroll(android.view.View,int,int,int,int,int[])
     147:147:public static boolean dispatchNestedPreScroll(android.view.View,int,int,int[],int[])
@@ -2077,8 +2100,6 @@ android.support.v4.view.ViewPager:
     2390:2411:public void endFakeDrag()
     2421:2459:public void fakeDragBy(float)
     2471:2471:public boolean isFakeDragging()
-android.support.v4.view.ViewPager$MyAccessibilityDelegate:
-    2882:2899:public boolean performAccessibilityAction(android.view.View,int,android.os.Bundle)
 android.support.v4.view.ViewPager$SimpleOnPageChangeListener
 android.support.v4.view.ViewParentCompat:
     218:220:private ViewParentCompat()
@@ -2676,19 +2697,10 @@ android.support.v4.view.accessibility.AccessibilityNodeInfoCompatKitKat
 android.support.v4.view.accessibility.AccessibilityNodeInfoCompatKitKat$CollectionInfo
 android.support.v4.view.accessibility.AccessibilityNodeInfoCompatKitKat$CollectionItemInfo
 android.support.v4.view.accessibility.AccessibilityNodeInfoCompatKitKat$RangeInfo
-android.support.v4.view.accessibility.AccessibilityNodeProviderCompat
-android.support.v4.view.accessibility.AccessibilityNodeProviderCompat$AccessibilityNodeProviderImpl
-android.support.v4.view.accessibility.AccessibilityNodeProviderCompat$AccessibilityNodeProviderJellyBeanImpl
-android.support.v4.view.accessibility.AccessibilityNodeProviderCompat$AccessibilityNodeProviderJellyBeanImpl$1
-android.support.v4.view.accessibility.AccessibilityNodeProviderCompat$AccessibilityNodeProviderKitKatImpl
-android.support.v4.view.accessibility.AccessibilityNodeProviderCompat$AccessibilityNodeProviderKitKatImpl$1
-android.support.v4.view.accessibility.AccessibilityNodeProviderCompat$AccessibilityNodeProviderStubImpl
-android.support.v4.view.accessibility.AccessibilityNodeProviderCompatJellyBean
-android.support.v4.view.accessibility.AccessibilityNodeProviderCompatJellyBean$1
-android.support.v4.view.accessibility.AccessibilityNodeProviderCompatJellyBean$AccessibilityNodeInfoBridge
-android.support.v4.view.accessibility.AccessibilityNodeProviderCompatKitKat
-android.support.v4.view.accessibility.AccessibilityNodeProviderCompatKitKat$1
-android.support.v4.view.accessibility.AccessibilityNodeProviderCompatKitKat$AccessibilityNodeInfoBridge
+android.support.v4.view.accessibility.AccessibilityNodeProviderCompatJellyBean:
+    28:29:AccessibilityNodeProviderCompatJellyBean()
+android.support.v4.view.accessibility.AccessibilityNodeProviderCompatKitKat:
+    28:29:AccessibilityNodeProviderCompatKitKat()
 android.support.v4.view.accessibility.AccessibilityRecordCompat:
     539:539:public java.lang.Object getImpl()
     550:550:public static android.support.v4.view.accessibility.AccessibilityRecordCompat obtain(android.support.v4.view.accessibility.AccessibilityRecordCompat)
@@ -2940,10 +2952,6 @@ android.support.v4.widget.DrawerLayout:
     private static final float TOUCH_SLOP_SENSITIVITY
     private java.lang.CharSequence mTitleLeft
     private java.lang.CharSequence mTitleRight
-    private android.graphics.drawable.Drawable mShadowStart
-    private android.graphics.drawable.Drawable mShadowEnd
-    private android.graphics.drawable.Drawable mShadowLeft
-    private android.graphics.drawable.Drawable mShadowRight
     343:344:public DrawerLayout(android.content.Context)
     347:348:public DrawerLayout(android.content.Context,android.util.AttributeSet)
     351:386:public DrawerLayout(android.content.Context,android.util.AttributeSet,int)
@@ -2960,15 +2968,10 @@ android.support.v4.widget.DrawerLayout:
     649:656:public void setDrawerTitle(int,java.lang.CharSequence)
     668:675:public java.lang.CharSequence getDrawerTitle(int)
     817:826:void moveDrawerToOffset(android.view.View,float)
-    970:975:private void resolveShadowDrawables()
-    978:993:private android.graphics.drawable.Drawable resolveLeftShadow()
-    997:1011:private android.graphics.drawable.Drawable resolveRightShadow()
-    1020:1025:private boolean mirror(android.graphics.drawable.Drawable,int)
     1150:1152:public void setStatusBarBackground(android.graphics.drawable.Drawable)
     1160:1160:public android.graphics.drawable.Drawable getStatusBarBackgroundDrawable()
     1170:1172:public void setStatusBarBackground(int)
     1182:1184:public void setStatusBarBackgroundColor(int)
-    1187:1188:public void onRtlPropertiesChanged(int)
     1462:1468:public void openDrawer(int)
     1502:1508:public void closeDrawer(int)
     1537:1541:public boolean isDrawerOpen(int)
@@ -3034,17 +3037,12 @@ android.support.v4.widget.NestedScrollView:
     182:183:public NestedScrollView(android.content.Context)
     186:187:public NestedScrollView(android.content.Context,android.util.AttributeSet)
     190:207:public NestedScrollView(android.content.Context,android.util.AttributeSet,int)
-    213:214:public void setNestedScrollingEnabled(boolean)
-    218:218:public boolean isNestedScrollingEnabled()
     358:366:private void initScrollView()
     414:415:public void setOnScrollChangeListener(android.support.v4.widget.NestedScrollView$OnScrollChangeListener)
     437:437:public boolean isFillViewport()
     450:454:public void setFillViewport(boolean)
     460:460:public boolean isSmoothScrollingEnabled()
     468:469:public void setSmoothScrollingEnabled(boolean)
-    1331:1332:public final void smoothScrollTo(int,int)
-android.support.v4.widget.NestedScrollView$AccessibilityDelegate:
-    1877:1907:public boolean performAccessibilityAction(android.view.View,int,android.os.Bundle)
 android.support.v4.widget.PopupMenuCompat
 android.support.v4.widget.PopupMenuCompat$BasePopupMenuImpl
 android.support.v4.widget.PopupMenuCompat$KitKatPopupMenuImpl
@@ -3204,7 +3202,7 @@ android.support.v4.widget.ViewDragHelper$Callback:
 com.hanaone.http.ConnectionHelper:
     public static final int HOST_GOOGLE
     public static final int HOST_DROPBOX
-    183:206:private java.lang.String GetCookieFromURL(java.lang.String)
+    179:202:private java.lang.String GetCookieFromURL(java.lang.String)
 com.hanaone.http.JsonReaderHelper:
     21:21:public JsonReaderHelper()
 com.hanaone.media.AudioControllerView:
@@ -3247,6 +3245,9 @@ com.hanaone.tplt.Constants:
     public static final int STATUS_INACTIVE
     public static final int STATUS_ACTIVE
     public static final int STATUS_DOWNLOADING
+    public static final java.lang.String UPDATE_SCORE_LEVEL_ID
+    public static final java.lang.String UPDATE_SCORE
+    public static final java.lang.String LANGUAGE_POSITION
     8:8:public Constants()
 com.hanaone.tplt.MainActivity:
     private static final java.lang.String TAG
@@ -3259,6 +3260,7 @@ com.hanaone.tplt.QuestionSlideFragment:
 com.hanaone.tplt.R:
     10:10:public R()
 com.hanaone.tplt.R$anim
+com.hanaone.tplt.R$array
 com.hanaone.tplt.R$attr
 com.hanaone.tplt.R$color
 com.hanaone.tplt.R$dimen
@@ -3285,7 +3287,7 @@ com.hanaone.tplt.R$styleable:
     public static final int SwitchButton_kswThumbRadius
     public static final int SwitchButton_kswThumbWidth
     public static final int SwitchButton_kswTintColor
-    354:354:public R$styleable()
+    386:386:public R$styleable()
 com.hanaone.tplt.adapter.DatabaseHelper:
     public static final int DATABASE_VERSION
     public static final java.lang.String DATABASE_NAME
@@ -3308,8 +3310,8 @@ com.hanaone.tplt.adapter.DatabaseHelper:
     private static final java.lang.String DELETE_TABLE_QUESTION
     private static final java.lang.String DELETE_TABLE_SECTION
     private static final java.lang.String DELETE_TABLE_EXAM_LEVEL
-    137:139:public DatabaseHelper(android.content.Context,java.lang.String,android.database.sqlite.SQLiteDatabase$CursorFactory,int)
-    582:606:public com.hanaone.tplt.db.model.Question selectQuestionById(long)
+    138:140:public DatabaseHelper(android.content.Context,java.lang.String,android.database.sqlite.SQLiteDatabase$CursorFactory,int)
+    587:611:public com.hanaone.tplt.db.model.Question selectQuestionById(long)
 com.hanaone.tplt.adapter.DownloadInfo:
     public static final int COMPLETED
     public static final int DOWNLOADING
@@ -3335,8 +3337,9 @@ com.hanaone.tplt.util.PreferenceHandler:
     private static final java.lang.String PREFERENCE_NAME
     private static final java.lang.String AUDIO_AUTO_PLAY
     private static final java.lang.String HINT_DISPLAY
+    private static final java.lang.String LANGUAGE_POSITION
     8:8:public PreferenceHandler()
-    15:20:private static void removeAllPreference(android.content.Context)
+    17:22:private static void removeAllPreference(android.content.Context)
 com.kyleduo.switchbutton.ColorUtils:
     private static final int ENABLE_ATTR
     private static final int CHECKED_ATTR
@@ -3385,292 +3388,3 @@ com.kyleduo.switchbutton.SwitchButton:
     683:684:public void setFadeBack(boolean)
     687:687:public int getTintColor()
     691:699:public void setTintColor(int)
-org.jsoup.examples.HtmlToPlainText
-org.jsoup.examples.HtmlToPlainText$1
-org.jsoup.examples.HtmlToPlainText$FormattingVisitor
-org.jsoup.examples.ListLinks
-org.jsoup.helper.DataUtil:
-    static final java.lang.String defaultCharset
-    private static final int bufferSize
-    private static final int UNICODE_BOM
-    static final int boundaryLength
-    29:29:private DataUtil()
-org.jsoup.helper.DescendableLinkedList
-org.jsoup.helper.DescendableLinkedList$1
-org.jsoup.helper.DescendableLinkedList$DescendingIterator
-org.jsoup.helper.HttpConnection:
-    public static final java.lang.String CONTENT_ENCODING
-    private static final java.lang.String CONTENT_TYPE
-    private static final java.lang.String MULTIPART_FORM_DATA
-    private static final java.lang.String FORM_URL_ENCODED
-org.jsoup.helper.HttpConnection$Response:
-    private static final int MAX_REDIRECTS
-    private static final java.lang.String LOCATION
-org.jsoup.helper.StringUtil:
-    12:12:public StringUtil()
-    116:118:public static java.lang.String normaliseWhitespace(java.lang.String)
-org.jsoup.helper.Validate:
-    8:8:private Validate()
-org.jsoup.helper.W3CDom
-org.jsoup.helper.W3CDom$W3CBuilder
-org.jsoup.nodes.Attribute:
-    49:51:public void setKey(java.lang.String)
-    107:108:public static org.jsoup.nodes.Attribute createFromEncoded(java.lang.String,java.lang.String)
-    112:112:protected boolean isDataAttribute()
-org.jsoup.nodes.Attributes:
-    protected static final java.lang.String dataPrefix
-    58:62:public void put(java.lang.String,boolean)
-    80:84:public void remove(java.lang.String)
-    143:143:public java.util.Map dataset()
-    273:273:private static java.lang.String dataKey(java.lang.String)
-    19:19:static synthetic java.util.LinkedHashMap access$100(org.jsoup.nodes.Attributes)
-    19:19:static synthetic java.util.LinkedHashMap access$102(org.jsoup.nodes.Attributes,java.util.LinkedHashMap)
-    19:19:static synthetic java.lang.String access$300(java.lang.String)
-org.jsoup.nodes.Attributes$1
-org.jsoup.nodes.Attributes$Dataset
-org.jsoup.nodes.Attributes$Dataset$DatasetIterator
-org.jsoup.nodes.Attributes$Dataset$EntrySet
-org.jsoup.nodes.Comment:
-    private static final java.lang.String COMMENT_KEY
-org.jsoup.nodes.DataNode:
-    private static final java.lang.String DATA_KEY
-    38:39:public org.jsoup.nodes.DataNode setWholeData(java.lang.String)
-    60:61:public static org.jsoup.nodes.DataNode createFromEncoded(java.lang.String,java.lang.String)
-org.jsoup.nodes.Document:
-    56:56:public java.lang.String location()
-    64:64:public org.jsoup.nodes.Element head()
-    81:82:public java.lang.String title()
-    91:98:public void title(java.lang.String)
-    106:106:public org.jsoup.nodes.Element createElement(java.lang.String)
-    115:134:public org.jsoup.nodes.Document normalise()
-    139:154:private void normaliseTextNodes(org.jsoup.nodes.Element)
-    158:176:private void normaliseStructure(java.lang.String,org.jsoup.nodes.Element)
-    204:205:public org.jsoup.nodes.Element text(java.lang.String)
-    238:241:public void charset(java.nio.charset.Charset)
-    252:252:public java.nio.charset.Charset charset()
-    269:270:public void updateMetaCharsetElement(boolean)
-    281:281:public boolean updateMetaCharsetElement()
-    311:361:private void ensureMetaCharsetElement()
-org.jsoup.nodes.Document$OutputSettings:
-    402:403:public org.jsoup.nodes.Document$OutputSettings escapeMode(org.jsoup.nodes.Entities$EscapeMode)
-    477:478:public org.jsoup.nodes.Document$OutputSettings prettyPrint(boolean)
-    496:497:public org.jsoup.nodes.Document$OutputSettings outline(boolean)
-    514:516:public org.jsoup.nodes.Document$OutputSettings indentAmount(int)
-org.jsoup.nodes.DocumentType:
-    private static final java.lang.String NAME
-    private static final java.lang.String PUBLIC_ID
-    private static final java.lang.String SYSTEM_ID
-org.jsoup.nodes.Element:
-    76:78:public org.jsoup.nodes.Element tagName(java.lang.String)
-    131:132:public org.jsoup.nodes.Element attr(java.lang.String,boolean)
-    149:149:public java.util.Map dataset()
-    226:231:public java.util.List textNodes()
-    244:249:public java.util.List dataNodes()
-    300:303:public org.jsoup.nodes.Element prependChild(org.jsoup.nodes.Node)
-    317:325:public org.jsoup.nodes.Element insertChildren(int,java.util.Collection)
-    349:351:public org.jsoup.nodes.Element prependElement(java.lang.String)
-    361:363:public org.jsoup.nodes.Element appendText(java.lang.String)
-    373:375:public org.jsoup.nodes.Element prependText(java.lang.String)
-    385:389:public org.jsoup.nodes.Element append(java.lang.String)
-    399:403:public org.jsoup.nodes.Element prepend(java.lang.String)
-    415:415:public org.jsoup.nodes.Element before(java.lang.String)
-    438:438:public org.jsoup.nodes.Element after(java.lang.String)
-    449:449:public org.jsoup.nodes.Element after(org.jsoup.nodes.Node)
-    457:458:public org.jsoup.nodes.Element empty()
-    469:469:public org.jsoup.nodes.Element wrap(java.lang.String)
-    483:499:public java.lang.String cssSelector()
-    529:536:public org.jsoup.nodes.Element nextElementSibling()
-    561:562:public org.jsoup.nodes.Element firstElementSibling()
-    580:581:public org.jsoup.nodes.Element lastElementSibling()
-    604:607:public org.jsoup.select.Elements getElementsByTag(java.lang.String)
-    641:643:public org.jsoup.select.Elements getElementsByClass(java.lang.String)
-    653:656:public org.jsoup.select.Elements getElementsByAttribute(java.lang.String)
-    666:669:public org.jsoup.select.Elements getElementsByAttributeStarting(java.lang.String)
-    680:680:public org.jsoup.select.Elements getElementsByAttributeValue(java.lang.String,java.lang.String)
-    691:691:public org.jsoup.select.Elements getElementsByAttributeValueNot(java.lang.String,java.lang.String)
-    702:702:public org.jsoup.select.Elements getElementsByAttributeValueStarting(java.lang.String,java.lang.String)
-    713:713:public org.jsoup.select.Elements getElementsByAttributeValueEnding(java.lang.String,java.lang.String)
-    724:724:public org.jsoup.select.Elements getElementsByAttributeValueContaining(java.lang.String,java.lang.String)
-    734:734:public org.jsoup.select.Elements getElementsByAttributeValueMatching(java.lang.String,java.util.regex.Pattern)
-    747:751:public org.jsoup.select.Elements getElementsByAttributeValueMatching(java.lang.String,java.lang.String)
-    760:760:public org.jsoup.select.Elements getElementsByIndexLessThan(int)
-    769:769:public org.jsoup.select.Elements getElementsByIndexGreaterThan(int)
-    778:778:public org.jsoup.select.Elements getElementsByIndexEquals(int)
-    789:789:public org.jsoup.select.Elements getElementsContainingText(java.lang.String)
-    800:800:public org.jsoup.select.Elements getElementsContainingOwnText(java.lang.String)
-    810:810:public org.jsoup.select.Elements getElementsMatchingText(java.util.regex.Pattern)
-    822:826:public org.jsoup.select.Elements getElementsMatchingText(java.lang.String)
-    836:836:public org.jsoup.select.Elements getElementsMatchingOwnText(java.util.regex.Pattern)
-    848:852:public org.jsoup.select.Elements getElementsMatchingOwnText(java.lang.String)
-    953:959:public org.jsoup.nodes.Element text(java.lang.String)
-    967:978:public boolean hasText()
-    988:1000:public java.lang.String data()
-    1009:1009:public java.lang.String className()
-    1019:1023:public java.util.Set classNames()
-    1032:1034:public org.jsoup.nodes.Element classNames(java.util.Set)
-    1070:1076:public org.jsoup.nodes.Element addClass(java.lang.String)
-    1085:1091:public org.jsoup.nodes.Element removeClass(java.lang.String)
-    1100:1109:public org.jsoup.nodes.Element toggleClass(java.lang.String)
-    1117:1120:public java.lang.String val()
-    1129:1133:public org.jsoup.nodes.Element val(java.lang.String)
-    1190:1192:public org.jsoup.nodes.Element html(java.lang.String)
-    21:21:public bridge synthetic org.jsoup.nodes.Node wrap(java.lang.String)
-    21:21:public bridge synthetic org.jsoup.nodes.Node after(org.jsoup.nodes.Node)
-    21:21:public bridge synthetic org.jsoup.nodes.Node after(java.lang.String)
-    21:21:public bridge synthetic org.jsoup.nodes.Node before(java.lang.String)
-org.jsoup.nodes.Entities:
-    73:75:static java.lang.String escape(java.lang.String,org.jsoup.nodes.Document$OutputSettings)
-    158:158:static java.lang.String unescape(java.lang.String)
-    168:168:static java.lang.String unescape(java.lang.String,boolean)
-org.jsoup.nodes.FormElement:
-    36:36:public org.jsoup.select.Elements elements()
-    57:64:public org.jsoup.Connection submit()
-    73:105:public java.util.List formData()
-org.jsoup.nodes.Node:
-    126:128:public org.jsoup.nodes.Node removeAttr(java.lang.String)
-    213:217:public java.util.List childNodesCopy()
-    229:229:protected org.jsoup.nodes.Node[] childNodesAsArray()
-    276:277:public org.jsoup.nodes.Node before(java.lang.String)
-    301:302:public org.jsoup.nodes.Node after(java.lang.String)
-    312:316:public org.jsoup.nodes.Node after(org.jsoup.nodes.Node)
-    320:326:private void addSiblingHtml(int,java.lang.String)
-    334:355:public org.jsoup.nodes.Node wrap(java.lang.String)
-    374:380:public org.jsoup.nodes.Node unwrap()
-    384:388:private org.jsoup.nodes.Element getDeepChild(org.jsoup.nodes.Element)
-    396:399:public void replaceWith(org.jsoup.nodes.Node)
-    408:418:protected void replaceChild(org.jsoup.nodes.Node,org.jsoup.nodes.Node)
-    430:436:protected varargs void addChildren(org.jsoup.nodes.Node[])
-    505:511:public org.jsoup.nodes.Node previousSibling()
-org.jsoup.nodes.TextNode:
-    private static final java.lang.String TEXT_KEY
-    41:41:public java.lang.String text()
-    50:53:public org.jsoup.nodes.TextNode text(java.lang.String)
-    79:89:public org.jsoup.nodes.TextNode splitText(int)
-    115:116:public static org.jsoup.nodes.TextNode createFromEncoded(java.lang.String,java.lang.String)
-    120:121:static java.lang.String normaliseWhitespace(java.lang.String)
-    125:125:static java.lang.String stripLeadingWhitespace(java.lang.String)
-    166:167:public org.jsoup.nodes.Node removeAttr(java.lang.String)
-org.jsoup.nodes.XmlDeclaration:
-    static final java.lang.String DECL_KEY
-org.jsoup.parser.CharacterReader:
-    static final char EOF
-    private static final int maxCacheLen
-    62:62:java.lang.String consumeAsString()
-org.jsoup.parser.HtmlTreeBuilder:
-    526:527:void setPendingTableCharacters(java.util.List)
-org.jsoup.parser.HtmlTreeBuilderState$Constants:
-    1488:1488:private HtmlTreeBuilderState$Constants()
-org.jsoup.parser.ParseError:
-    25:25:public java.lang.String getErrorMessage()
-    33:33:public int getPosition()
-org.jsoup.parser.ParseErrorList:
-    private static final int INITIAL_CAPACITY
-    24:24:int getMaxSize()
-org.jsoup.parser.Parser:
-    private static final int DEFAULT_MAX_ERRORS
-    39:39:public org.jsoup.parser.TreeBuilder getTreeBuilder()
-    48:49:public org.jsoup.parser.Parser setTreeBuilder(org.jsoup.parser.TreeBuilder)
-    66:67:public org.jsoup.parser.Parser setTrackErrors(int)
-    75:75:public java.util.List getErrors()
-    115:116:public static java.util.List parseXmlFragment(java.lang.String,java.lang.String)
-    148:149:public static java.lang.String unescapeEntities(java.lang.String,boolean)
-    160:160:public static org.jsoup.nodes.Document parseBodyFragmentRelaxed(java.lang.String,java.lang.String)
-org.jsoup.parser.Tag:
-    92:92:public boolean canContainBlock()
-    101:101:public boolean isInline()
-    110:110:public boolean isData()
-    147:147:public static boolean isKnownTag(java.lang.String)
-    172:172:public boolean isFormSubmittable()
-org.jsoup.parser.TokenQueue:
-    private static final char ESC
-    43:43:public char peek()
-    51:52:public void addFirst(java.lang.Character)
-    60:62:public void addFirst(java.lang.String)
-    79:79:public boolean matchesCS(java.lang.String)
-    109:109:public boolean matchesStartTag()
-    147:148:public void advance()
-    192:212:public java.lang.String consumeToIgnoreCase(java.lang.String)
-    246:248:public java.lang.String chompToIgnoreCase(java.lang.String)
-    324:327:public java.lang.String consumeWord()
-    336:340:public java.lang.String consumeTagName()
-    374:378:public java.lang.String consumeAttributeKey()
-org.jsoup.parser.Tokeniser:
-    static final char replacementChar
-    109:109:org.jsoup.parser.TokeniserState getState()
-    252:252:boolean currentNodeInHtmlNS()
-    263:275:java.lang.String unescapeEntities(boolean)
-org.jsoup.parser.TokeniserState:
-    static final char nullChar
-    private static final char replacementChar
-    private static final char eof
-org.jsoup.parser.TreeBuilder:
-    38:38:org.jsoup.nodes.Document parse(java.lang.String,java.lang.String)
-org.jsoup.parser.XmlTreeBuilder:
-    121:123:java.util.List parseFragment(java.lang.String,java.lang.String,org.jsoup.parser.ParseErrorList)
-org.jsoup.safety.Whitelist:
-    77:77:public static org.jsoup.safety.Whitelist none()
-    87:88:public static org.jsoup.safety.Whitelist simpleText()
-    108:122:public static org.jsoup.safety.Whitelist basic()
-    134:137:public static org.jsoup.safety.Whitelist basicWithImages()
-    152:178:public static org.jsoup.safety.Whitelist relaxed()
-    190:196:public Whitelist()
-    205:211:public varargs org.jsoup.safety.Whitelist addTags(java.lang.String[])
-    221:233:public varargs org.jsoup.safety.Whitelist removeTags(java.lang.String[])
-    252:270:public varargs org.jsoup.safety.Whitelist addAttributes(java.lang.String,java.lang.String[])
-    289:314:public varargs org.jsoup.safety.Whitelist removeAttributes(java.lang.String,java.lang.String[])
-    331:348:public org.jsoup.safety.Whitelist addEnforcedAttribute(java.lang.String,java.lang.String,java.lang.String)
-    359:371:public org.jsoup.safety.Whitelist removeEnforcedAttribute(java.lang.String,java.lang.String)
-    390:391:public org.jsoup.safety.Whitelist preserveRelativeLinks(boolean)
-    411:437:public varargs org.jsoup.safety.Whitelist addProtocols(java.lang.String,java.lang.String,java.lang.String[])
-    452:476:public varargs org.jsoup.safety.Whitelist removeProtocols(java.lang.String,java.lang.String,java.lang.String[])
-org.jsoup.safety.Whitelist$AttributeValue:
-    583:584:Whitelist$AttributeValue(java.lang.String)
-    587:587:static org.jsoup.safety.Whitelist$AttributeValue valueOf(java.lang.String)
-org.jsoup.safety.Whitelist$Protocol:
-    593:594:Whitelist$Protocol(java.lang.String)
-    597:597:static org.jsoup.safety.Whitelist$Protocol valueOf(java.lang.String)
-org.jsoup.select.Collector:
-    13:14:private Collector()
-org.jsoup.select.CombiningEvaluator$Or:
-    72:78:CombiningEvaluator$Or(java.util.Collection)
-org.jsoup.select.Elements:
-    26:27:public Elements(java.util.Collection)
-    34:35:public varargs Elements(org.jsoup.nodes.Element[])
-    60:64:public java.lang.String attr(java.lang.String)
-    73:77:public boolean hasAttr(java.lang.String)
-    87:90:public org.jsoup.select.Elements attr(java.lang.String,java.lang.String)
-    99:102:public org.jsoup.select.Elements removeAttr(java.lang.String)
-    111:114:public org.jsoup.select.Elements addClass(java.lang.String)
-    123:126:public org.jsoup.select.Elements removeClass(java.lang.String)
-    135:138:public org.jsoup.select.Elements toggleClass(java.lang.String)
-    147:151:public boolean hasClass(java.lang.String)
-    160:163:public java.lang.String val()
-    172:174:public org.jsoup.select.Elements val(java.lang.String)
-    186:192:public java.lang.String text()
-    196:200:public boolean hasText()
-    210:216:public java.lang.String html()
-    254:257:public org.jsoup.select.Elements tagName(java.lang.String)
-    267:270:public org.jsoup.select.Elements html(java.lang.String)
-    280:283:public org.jsoup.select.Elements prepend(java.lang.String)
-    293:296:public org.jsoup.select.Elements append(java.lang.String)
-    306:309:public org.jsoup.select.Elements before(java.lang.String)
-    319:322:public org.jsoup.select.Elements after(java.lang.String)
-    335:339:public org.jsoup.select.Elements wrap(java.lang.String)
-    357:360:public org.jsoup.select.Elements unwrap()
-    375:378:public org.jsoup.select.Elements empty()
-    394:397:public org.jsoup.select.Elements remove()
-    408:408:public org.jsoup.select.Elements select(java.lang.String)
-    422:423:public org.jsoup.select.Elements not(java.lang.String)
-    434:434:public org.jsoup.select.Elements eq(int)
-    443:444:public boolean is(java.lang.String)
-    452:456:public org.jsoup.select.Elements parents()
-    473:473:public org.jsoup.nodes.Element last()
-    482:487:public org.jsoup.select.Elements traverse(org.jsoup.select.NodeVisitor)
-    496:500:public java.util.List forms()
-org.jsoup.select.Evaluator$CssNthEvaluator:
-    411:412:public Evaluator$CssNthEvaluator(int)
-org.jsoup.select.Selector:
-    88:94:private Selector(org.jsoup.select.Evaluator,org.jsoup.nodes.Element)
-    116:116:public static org.jsoup.select.Elements select(org.jsoup.select.Evaluator,org.jsoup.nodes.Element)
-    127:135:public static org.jsoup.select.Elements select(java.lang.String,java.lang.Iterable)
-    144:156:static org.jsoup.select.Elements filterOut(java.util.Collection,java.util.Collection)

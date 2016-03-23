@@ -222,11 +222,12 @@ public class ListSectionAdapter extends BaseAdapter {
 					if(isShowAudio){
 						btnQuestionAudio.setVisibility(Button.VISIBLE);
 						final int pos = position;
+						final int ipos = i;
 						btnQuestionAudio.setOnClickListener(new OnClickListener() {
 							
 							@Override
 							public void onClick(View arg0) {
-								
+								mListener.onPlayAudioQuestion(btnQuestionAudio, pos, ipos);
 							}
 						});						
 					}

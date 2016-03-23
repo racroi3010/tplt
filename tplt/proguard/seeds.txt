@@ -83,6 +83,8 @@ android.support.v4.widget.Space: Space(android.content.Context,android.util.Attr
 android.support.v4.widget.Space: Space(android.content.Context,android.util.AttributeSet)
 android.support.v4.widget.SwipeRefreshLayout
 android.support.v4.widget.SwipeRefreshLayout: SwipeRefreshLayout(android.content.Context,android.util.AttributeSet)
+com.hanaone.jni.JNIHanaone
+com.hanaone.jni.JNIHanaone: java.lang.String stringFromJNI()
 com.hanaone.media.AudioControllerView
 com.hanaone.media.AudioControllerView: AudioControllerView(android.content.Context,android.util.AttributeSet)
 com.hanaone.media.AudioControllerView$1: void onClick(android.view.View)
@@ -116,13 +118,14 @@ com.hanaone.tplt.adapter.ListExamAdapter$4: void onClick(android.view.View)
 com.hanaone.tplt.adapter.ListExamAdapter$5: void onClick(android.view.View)
 com.hanaone.tplt.adapter.ListExamAdapter$6: void onClick(android.content.DialogInterface,int)
 com.hanaone.tplt.adapter.ListExamAdapter$7: void onClick(android.content.DialogInterface,int)
-com.hanaone.tplt.adapter.ListResultAdapter$1: void onClick(android.view.View)
 com.hanaone.tplt.adapter.ListSectionAdapter$1: void onClick(android.view.View)
 com.hanaone.tplt.adapter.ListSectionAdapter$2: void onClick(android.view.View)
 com.hanaone.tplt.adapter.ListSectionAdapter$3: void onClick(android.view.View)
 com.hanaone.tplt.adapter.ListSectionAdapter$4: void onClick(android.view.View)
 com.hanaone.tplt.adapter.ListSectionAdapter$5: void onClick(android.view.View)
 com.hanaone.tplt.adapter.ListSectionAdapter$6: void onClick(android.view.View)
+com.hanaone.tplt.adapter.ListSectionAdapter$7: void onClick(android.view.View)
+com.hanaone.tplt.adapter.ListSectionAdapter$8: void onClick(android.view.View)
 com.hanaone.tplt.db.ChoiceDataSet
 com.hanaone.tplt.db.ChoiceDataSet: int id
 com.hanaone.tplt.db.ChoiceDataSet: int number
@@ -214,6 +217,7 @@ com.hanaone.tplt.db.LevelDataSet: com.hanaone.tplt.db.FileDataSet txt
 com.hanaone.tplt.db.LevelDataSet: java.util.List audio
 com.hanaone.tplt.db.LevelDataSet: com.hanaone.tplt.db.FileDataSet pdf
 com.hanaone.tplt.db.LevelDataSet: int score
+com.hanaone.tplt.db.LevelDataSet: int maxScore
 com.hanaone.tplt.db.LevelDataSet: android.os.Parcelable$Creator CREATOR
 com.hanaone.tplt.db.LevelDataSet: void <clinit>()
 com.hanaone.tplt.db.LevelDataSet: LevelDataSet()
@@ -235,6 +239,8 @@ com.hanaone.tplt.db.LevelDataSet: com.hanaone.tplt.db.FileDataSet getTxt()
 com.hanaone.tplt.db.LevelDataSet: void setTxt(com.hanaone.tplt.db.FileDataSet)
 com.hanaone.tplt.db.LevelDataSet: int getScore()
 com.hanaone.tplt.db.LevelDataSet: void setScore(int)
+com.hanaone.tplt.db.LevelDataSet: int getMaxScore()
+com.hanaone.tplt.db.LevelDataSet: void setMaxScore(int)
 com.hanaone.tplt.db.LevelDataSet: int describeContents()
 com.hanaone.tplt.db.LevelDataSet: void writeToParcel(android.os.Parcel,int)
 com.hanaone.tplt.db.LevelDataSet: LevelDataSet(android.os.Parcel)
@@ -383,6 +389,7 @@ com.hanaone.tplt.db.model.ExamLevel: int audio_id
 com.hanaone.tplt.db.model.ExamLevel: int pdf_id
 com.hanaone.tplt.db.model.ExamLevel: int txt_id
 com.hanaone.tplt.db.model.ExamLevel: int score
+com.hanaone.tplt.db.model.ExamLevel: int maxScore
 com.hanaone.tplt.db.model.ExamLevel: int active
 com.hanaone.tplt.db.model.ExamLevel: ExamLevel()
 com.hanaone.tplt.db.model.ExamLevel: int getId()
@@ -403,6 +410,8 @@ com.hanaone.tplt.db.model.ExamLevel: int getTxt_id()
 com.hanaone.tplt.db.model.ExamLevel: void setTxt_id(int)
 com.hanaone.tplt.db.model.ExamLevel: int getScore()
 com.hanaone.tplt.db.model.ExamLevel: void setScore(int)
+com.hanaone.tplt.db.model.ExamLevel: int getMaxScore()
+com.hanaone.tplt.db.model.ExamLevel: void setMaxScore(int)
 com.hanaone.tplt.db.model.ExamLevel$ExamLevelEntry: java.lang.String TABLE_NAME
 com.hanaone.tplt.db.model.ExamLevel$ExamLevelEntry: java.lang.String COLUMN_NAME_EXAM_ID
 com.hanaone.tplt.db.model.ExamLevel$ExamLevelEntry: java.lang.String COLUMN_NAME_NUMBER
@@ -411,6 +420,7 @@ com.hanaone.tplt.db.model.ExamLevel$ExamLevelEntry: java.lang.String COLUMN_NAME
 com.hanaone.tplt.db.model.ExamLevel$ExamLevelEntry: java.lang.String COLUMN_NAME_PDF_ID
 com.hanaone.tplt.db.model.ExamLevel$ExamLevelEntry: java.lang.String COLUMN_NAME_TXT_ID
 com.hanaone.tplt.db.model.ExamLevel$ExamLevelEntry: java.lang.String COLUMN_NAME_SCORE
+com.hanaone.tplt.db.model.ExamLevel$ExamLevelEntry: java.lang.String COLUMN_NAME_MAXSCORE
 com.hanaone.tplt.db.model.ExamLevel$ExamLevelEntry: java.lang.String COLUMN_NAME_ACTIVE
 com.hanaone.tplt.db.model.ExamLevel$ExamLevelEntry: com.hanaone.tplt.db.model.ExamLevel this$0
 com.hanaone.tplt.db.model.ExamLevel$ExamLevelEntry: ExamLevel$ExamLevelEntry(com.hanaone.tplt.db.model.ExamLevel)
@@ -597,141 +607,3 @@ com.kyleduo.switchbutton.SwitchButton
 com.kyleduo.switchbutton.SwitchButton: SwitchButton(android.content.Context,android.util.AttributeSet,int)
 com.kyleduo.switchbutton.SwitchButton: SwitchButton(android.content.Context,android.util.AttributeSet)
 com.kyleduo.switchbutton.SwitchButton: SwitchButton(android.content.Context)
-org.jsoup.Connection
-org.jsoup.Connection: org.jsoup.Connection url(java.net.URL)
-org.jsoup.Connection: org.jsoup.Connection url(java.lang.String)
-org.jsoup.Connection: org.jsoup.Connection userAgent(java.lang.String)
-org.jsoup.Connection: org.jsoup.Connection timeout(int)
-org.jsoup.Connection: org.jsoup.Connection maxBodySize(int)
-org.jsoup.Connection: org.jsoup.Connection referrer(java.lang.String)
-org.jsoup.Connection: org.jsoup.Connection followRedirects(boolean)
-org.jsoup.Connection: org.jsoup.Connection method(org.jsoup.Connection$Method)
-org.jsoup.Connection: org.jsoup.Connection ignoreHttpErrors(boolean)
-org.jsoup.Connection: org.jsoup.Connection ignoreContentType(boolean)
-org.jsoup.Connection: org.jsoup.Connection validateTLSCertificates(boolean)
-org.jsoup.Connection: org.jsoup.Connection data(java.lang.String,java.lang.String)
-org.jsoup.Connection: org.jsoup.Connection data(java.lang.String,java.lang.String,java.io.InputStream)
-org.jsoup.Connection: org.jsoup.Connection data(java.util.Collection)
-org.jsoup.Connection: org.jsoup.Connection data(java.util.Map)
-org.jsoup.Connection: org.jsoup.Connection data(java.lang.String[])
-org.jsoup.Connection: org.jsoup.Connection header(java.lang.String,java.lang.String)
-org.jsoup.Connection: org.jsoup.Connection cookie(java.lang.String,java.lang.String)
-org.jsoup.Connection: org.jsoup.Connection cookies(java.util.Map)
-org.jsoup.Connection: org.jsoup.Connection parser(org.jsoup.parser.Parser)
-org.jsoup.Connection: org.jsoup.Connection postDataCharset(java.lang.String)
-org.jsoup.Connection: org.jsoup.nodes.Document get()
-org.jsoup.Connection: org.jsoup.nodes.Document post()
-org.jsoup.Connection: org.jsoup.Connection$Response execute()
-org.jsoup.Connection: org.jsoup.Connection$Request request()
-org.jsoup.Connection: org.jsoup.Connection request(org.jsoup.Connection$Request)
-org.jsoup.Connection: org.jsoup.Connection$Response response()
-org.jsoup.Connection: org.jsoup.Connection response(org.jsoup.Connection$Response)
-org.jsoup.Connection$Base
-org.jsoup.Connection$Base: java.net.URL url()
-org.jsoup.Connection$Base: org.jsoup.Connection$Base url(java.net.URL)
-org.jsoup.Connection$Base: org.jsoup.Connection$Method method()
-org.jsoup.Connection$Base: org.jsoup.Connection$Base method(org.jsoup.Connection$Method)
-org.jsoup.Connection$Base: java.lang.String header(java.lang.String)
-org.jsoup.Connection$Base: org.jsoup.Connection$Base header(java.lang.String,java.lang.String)
-org.jsoup.Connection$Base: boolean hasHeader(java.lang.String)
-org.jsoup.Connection$Base: boolean hasHeaderWithValue(java.lang.String,java.lang.String)
-org.jsoup.Connection$Base: org.jsoup.Connection$Base removeHeader(java.lang.String)
-org.jsoup.Connection$Base: java.util.Map headers()
-org.jsoup.Connection$Base: java.lang.String cookie(java.lang.String)
-org.jsoup.Connection$Base: org.jsoup.Connection$Base cookie(java.lang.String,java.lang.String)
-org.jsoup.Connection$Base: boolean hasCookie(java.lang.String)
-org.jsoup.Connection$Base: org.jsoup.Connection$Base removeCookie(java.lang.String)
-org.jsoup.Connection$Base: java.util.Map cookies()
-org.jsoup.Connection$KeyVal
-org.jsoup.Connection$KeyVal: org.jsoup.Connection$KeyVal key(java.lang.String)
-org.jsoup.Connection$KeyVal: java.lang.String key()
-org.jsoup.Connection$KeyVal: org.jsoup.Connection$KeyVal value(java.lang.String)
-org.jsoup.Connection$KeyVal: java.lang.String value()
-org.jsoup.Connection$KeyVal: org.jsoup.Connection$KeyVal inputStream(java.io.InputStream)
-org.jsoup.Connection$KeyVal: java.io.InputStream inputStream()
-org.jsoup.Connection$KeyVal: boolean hasInputStream()
-org.jsoup.Connection$Method
-org.jsoup.Connection$Method: org.jsoup.Connection$Method GET
-org.jsoup.Connection$Method: org.jsoup.Connection$Method POST
-org.jsoup.Connection$Method: org.jsoup.Connection$Method PUT
-org.jsoup.Connection$Method: org.jsoup.Connection$Method DELETE
-org.jsoup.Connection$Method: org.jsoup.Connection$Method PATCH
-org.jsoup.Connection$Method: boolean hasBody
-org.jsoup.Connection$Method: org.jsoup.Connection$Method[] $VALUES
-org.jsoup.Connection$Method: org.jsoup.Connection$Method[] values()
-org.jsoup.Connection$Method: org.jsoup.Connection$Method valueOf(java.lang.String)
-org.jsoup.Connection$Method: Connection$Method(java.lang.String,int,boolean)
-org.jsoup.Connection$Method: boolean hasBody()
-org.jsoup.Connection$Method: void <clinit>()
-org.jsoup.Connection$Request
-org.jsoup.Connection$Request: int timeout()
-org.jsoup.Connection$Request: org.jsoup.Connection$Request timeout(int)
-org.jsoup.Connection$Request: int maxBodySize()
-org.jsoup.Connection$Request: org.jsoup.Connection$Request maxBodySize(int)
-org.jsoup.Connection$Request: boolean followRedirects()
-org.jsoup.Connection$Request: org.jsoup.Connection$Request followRedirects(boolean)
-org.jsoup.Connection$Request: boolean ignoreHttpErrors()
-org.jsoup.Connection$Request: org.jsoup.Connection$Request ignoreHttpErrors(boolean)
-org.jsoup.Connection$Request: boolean ignoreContentType()
-org.jsoup.Connection$Request: org.jsoup.Connection$Request ignoreContentType(boolean)
-org.jsoup.Connection$Request: boolean validateTLSCertificates()
-org.jsoup.Connection$Request: void validateTLSCertificates(boolean)
-org.jsoup.Connection$Request: org.jsoup.Connection$Request data(org.jsoup.Connection$KeyVal)
-org.jsoup.Connection$Request: java.util.Collection data()
-org.jsoup.Connection$Request: org.jsoup.Connection$Request parser(org.jsoup.parser.Parser)
-org.jsoup.Connection$Request: org.jsoup.parser.Parser parser()
-org.jsoup.Connection$Request: org.jsoup.Connection$Request postDataCharset(java.lang.String)
-org.jsoup.Connection$Request: java.lang.String postDataCharset()
-org.jsoup.Connection$Response
-org.jsoup.Connection$Response: int statusCode()
-org.jsoup.Connection$Response: java.lang.String statusMessage()
-org.jsoup.Connection$Response: java.lang.String charset()
-org.jsoup.Connection$Response: java.lang.String contentType()
-org.jsoup.Connection$Response: org.jsoup.nodes.Document parse()
-org.jsoup.Connection$Response: java.lang.String body()
-org.jsoup.Connection$Response: byte[] bodyAsBytes()
-org.jsoup.HttpStatusException
-org.jsoup.HttpStatusException: int statusCode
-org.jsoup.HttpStatusException: java.lang.String url
-org.jsoup.HttpStatusException: HttpStatusException(java.lang.String,int,java.lang.String)
-org.jsoup.HttpStatusException: int getStatusCode()
-org.jsoup.HttpStatusException: java.lang.String getUrl()
-org.jsoup.HttpStatusException: java.lang.String toString()
-org.jsoup.Jsoup
-org.jsoup.Jsoup: Jsoup()
-org.jsoup.Jsoup: org.jsoup.nodes.Document parse(java.lang.String,java.lang.String)
-org.jsoup.Jsoup: org.jsoup.nodes.Document parse(java.lang.String,java.lang.String,org.jsoup.parser.Parser)
-org.jsoup.Jsoup: org.jsoup.nodes.Document parse(java.lang.String)
-org.jsoup.Jsoup: org.jsoup.Connection connect(java.lang.String)
-org.jsoup.Jsoup: org.jsoup.nodes.Document parse(java.io.File,java.lang.String,java.lang.String)
-org.jsoup.Jsoup: org.jsoup.nodes.Document parse(java.io.File,java.lang.String)
-org.jsoup.Jsoup: org.jsoup.nodes.Document parse(java.io.InputStream,java.lang.String,java.lang.String)
-org.jsoup.Jsoup: org.jsoup.nodes.Document parse(java.io.InputStream,java.lang.String,java.lang.String,org.jsoup.parser.Parser)
-org.jsoup.Jsoup: org.jsoup.nodes.Document parseBodyFragment(java.lang.String,java.lang.String)
-org.jsoup.Jsoup: org.jsoup.nodes.Document parseBodyFragment(java.lang.String)
-org.jsoup.Jsoup: org.jsoup.nodes.Document parse(java.net.URL,int)
-org.jsoup.Jsoup: java.lang.String clean(java.lang.String,java.lang.String,org.jsoup.safety.Whitelist)
-org.jsoup.Jsoup: java.lang.String clean(java.lang.String,org.jsoup.safety.Whitelist)
-org.jsoup.Jsoup: java.lang.String clean(java.lang.String,java.lang.String,org.jsoup.safety.Whitelist,org.jsoup.nodes.Document$OutputSettings)
-org.jsoup.Jsoup: boolean isValid(java.lang.String,org.jsoup.safety.Whitelist)
-org.jsoup.UnsupportedMimeTypeException
-org.jsoup.UnsupportedMimeTypeException: java.lang.String mimeType
-org.jsoup.UnsupportedMimeTypeException: java.lang.String url
-org.jsoup.UnsupportedMimeTypeException: UnsupportedMimeTypeException(java.lang.String,java.lang.String,java.lang.String)
-org.jsoup.UnsupportedMimeTypeException: java.lang.String getMimeType()
-org.jsoup.UnsupportedMimeTypeException: java.lang.String getUrl()
-org.jsoup.UnsupportedMimeTypeException: java.lang.String toString()
-org.jsoup.nodes.Document$OutputSettings$Syntax: org.jsoup.nodes.Document$OutputSettings$Syntax[] values()
-org.jsoup.nodes.Document$OutputSettings$Syntax: org.jsoup.nodes.Document$OutputSettings$Syntax valueOf(java.lang.String)
-org.jsoup.nodes.Document$QuirksMode: org.jsoup.nodes.Document$QuirksMode[] values()
-org.jsoup.nodes.Document$QuirksMode: org.jsoup.nodes.Document$QuirksMode valueOf(java.lang.String)
-org.jsoup.nodes.Entities$CoreCharset: org.jsoup.nodes.Entities$CoreCharset[] values()
-org.jsoup.nodes.Entities$CoreCharset: org.jsoup.nodes.Entities$CoreCharset valueOf(java.lang.String)
-org.jsoup.nodes.Entities$EscapeMode: org.jsoup.nodes.Entities$EscapeMode[] values()
-org.jsoup.nodes.Entities$EscapeMode: org.jsoup.nodes.Entities$EscapeMode valueOf(java.lang.String)
-org.jsoup.parser.HtmlTreeBuilderState: org.jsoup.parser.HtmlTreeBuilderState[] values()
-org.jsoup.parser.HtmlTreeBuilderState: org.jsoup.parser.HtmlTreeBuilderState valueOf(java.lang.String)
-org.jsoup.parser.Token$TokenType: org.jsoup.parser.Token$TokenType[] values()
-org.jsoup.parser.Token$TokenType: org.jsoup.parser.Token$TokenType valueOf(java.lang.String)
-org.jsoup.parser.TokeniserState: org.jsoup.parser.TokeniserState[] values()
-org.jsoup.parser.TokeniserState: org.jsoup.parser.TokeniserState valueOf(java.lang.String)

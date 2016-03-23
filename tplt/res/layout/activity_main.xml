@@ -20,18 +20,19 @@
             <ImageView 
                 android:layout_width="40dp"
                 android:layout_height="40dp"
+                android:gravity="center_vertical"
                 android:src="@drawable/ic_hardware_keyboard_arrow_left_cyan"
                 />
 			<Button 
 			    android:id="@+id/btn_setting"
-			    android:layout_width="50dp"
-			    android:layout_height="50dp"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
 			    android:background="@null"
 			    android:layout_marginLeft="-15dp"
 			    android:text="@string/title_setting"
 			    android:textColor="@color/CYAN"
 			    android:onClick="onClick"
-
+				android:gravity="center_vertical"
 			    />            
         </LinearLayout>
 
@@ -85,7 +86,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Do a Sample Test"
+                android:text="@string/home_take_sample_test"
                 android:gravity="center_vertical"
                 android:textColor="@color/BLACK" />
             <Button 
@@ -93,7 +94,7 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:onClick="onClick"
-                android:background="@drawable/sample_test"
+                android:background="@drawable/selector_btn_sample"
                 
                 />
         </LinearLayout>  

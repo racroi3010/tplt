@@ -9,7 +9,7 @@ public class Constants {
 	public static final String PATH = Environment.getExternalStorageDirectory().getPath();
 	
 	//public static final String REMOTE_CONFIG_FILE = "https://www.dropbox.com/s/z6t3xg0afbyyaa1/exam_list.txt?raw=1";
-	public static final String REMOTE_CONFIG_FILE_JSON = "https://drive.google.com/uc?export=download&id=0Byaz20I0WF7YOGFIZnFwV2NQa2M";
+	public static final String REMOTE_CONFIG_FILE_JSON = "https://drive.google.com/uc?export=download&id=0Byaz20I0WF7YOGFIZnFwV2NQa21";
 
 	public static final String FILE_TYPE_PDF = "PDF";
 	public static final String FILE_TYPE_TXT = "TXT";
@@ -56,16 +56,29 @@ public class Constants {
 	public static final String UPDATE_SCORE_LEVEL_ID = "UPDATE_SCORE_LEVEL_ID";
 	public static final String UPDATE_SCORE = "UPDATE_SCORE";
 	
+	public static final String LANGUAGE_POSITION = "LANGUAGE_POSITION";
 	
 	
 	
-	public static String getRootPath(Context context){
+	
+	public static String getInternalRootPath(Context context){
 		File folder = context.getDir(Constants.PATH_ROOT, Context.MODE_PRIVATE);
 		return folder.getAbsolutePath();
 	}
-	public static String getPath(Context context, String folder){
+	public static String getInternalPath(Context context, String folder){
 		File root = context.getDir(Constants.PATH_ROOT, Context.MODE_PRIVATE);
 		File dir = new File(root.getAbsolutePath() + File.separator + folder);
+		dir.mkdirs();
+		
+		return dir.getAbsolutePath();
+	}
+
+	public static String getExternalRootPath(Context context){
+		File folder = context.getExternalFilesDir(null);
+		return folder.getAbsolutePath();
+	}
+	public static String getExternalPath(Context context, String folder){
+		File dir = new File(getExternalRootPath(context) + File.separator + folder);
 		dir.mkdirs();
 		
 		return dir.getAbsolutePath();

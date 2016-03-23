@@ -32,7 +32,7 @@ public class DownloadHelper {
 
 	public boolean downloadFile(String remoteFile, String localFile) throws IOException, SAXException, ParserConfigurationException{	
 		
-		InputStream is = this.mConnection.connect(Constants.REMOTE_CONFIG_FILE_JSON, ConnectionHelper.HOST_GOOGLE);
+		InputStream is = this.mConnection.connect(remoteFile, ConnectionHelper.HOST_GOOGLE);
 		
 		if(is != null){
 			//File folder = mContext.getDir("tplt", Context.MODE_PRIVATE);

@@ -1,26 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">tplt</string>
+    <string name="app_name">Topik Listening</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    
     <string name="title_name">TOPIK Listening</string>
-	
     <string name="description">Media Controls</string>
     <string name="selection_sample">SAMPLE TOPIK TEST</string>
-    
-    
+    <string name="home_take_sample_test">Take Your Sample Test</string>
+
     <!-- Setting -->
     <string name="title_home">Home</string>
     <string name="title_setting">Setting</string>
-     <string name="title_result">Result</string>
+    <string name="title_result">Result</string>
     <string name="setting_play_audio">Play Audio</string>
     <string name="setting_auto">Auto</string>
     <string name="setting_manual">Manual</string>
     <string name="setting_rate">Rate this app</string>
-    <string name="setting_message">Korean food, Korean drama, Kpop become more and more popular. Consequently, many people get interested in learing Korean. This application isn\'t only suitable for whom persues Topik certificate, but also good for practice reading and listening Korean. Hope all you to spend useful time with it. If there is any wrong in content, please feel free to contact with me via doanhuunoi@gmail.com. Thank you.</string>
-    
+    <string name="setting_share">Share this app</string>
+    <string name="setting_message">Korean food, Korean drama, Kpop become more and more popular. Consequently, many people get interested in learing Korean. This application isn\'t only suitable for whom persues Topik certificate, but also good for practice reading and listening Korean. Hope all you to spend useful time with it. If there is any wrong in content, please feel free to contact with me via doanhuunoi@gmail.com . Thank you.</string>
+    <string name="setting_practice">Practice</string>
+    <string name="setting_display_hint">Display Hint Phrase</string>
+    <string name="setting_app">App</string>
+    <string name="setting_language">Language</string>
     <!-- Dialog -->
     <string name="dialog_yes">YES</string>
     <string name="dialog_no">NO</string>
@@ -28,4 +30,42 @@
     <string name="dialog_ask_download">Data files will be downloaded\nPress YES to continue.</string>
     <string name="dialog_ask_downloading">the data is downloading\nPlease wait for a minute.</string>
     <string name="dialog_ask_queued">the data is queued\nPlease wait for finish other download processes.</string>
+
+    <!-- Question -->
+    <string name="question_previous">Previous</string>
+    <string name="question_next">Next</string>
+    <string name="question_submit">Submit</string>
+    <string name="question_result">Result</string>
+
+    <!-- Result -->
+    <string name="result_total">Total: </string>
+    <string name="result_correct">Correct: </string>
+    <string name="result_score">Score: </string>
+    <string name="result_pass">PASS</string>
+    <string name="result_failed">FAILED</string>
+    <string name="result_bar_question">Question</string>
+    <string name="result_bar_choice">Your Choice</string>
+    <string name="result_bar_answer">Answer</string>
+    <string name="result_bar_score">Score</string>
+
+    <!-- Select -->
+    <string name="selection_title">TOPIK Listening %1$s회-%2$s</string>
+    <string name="selection_practice">PRACTICE</string>
+    <string name="selection_exam">TAKE YOUR TEST</string>
+    <string name="selection_sample_title">TOPIK Listening\nSample</string>
+    <string name="selection_sample_topik1">TOPIK I</string>
+    <string name="selection_sample_topik2">TOPIK II</string>
+    
+    <!-- Exam -->
+    <string name="exam_title">TOPIK - %1$d회</string>
+    <string name="exam_level_title">%1$s</string>
+    <string name="exam_level_point">Point\n%1$s/%2$s</string>
+    <string name="loading_exam">Loading New Exams...</string>
+
+    <string-array name="array_language">
+        <item>English</item>
+        <item>Tiếng Việt</item>
+        <item>한국어</item>
+    </string-array>
+
 </resources>

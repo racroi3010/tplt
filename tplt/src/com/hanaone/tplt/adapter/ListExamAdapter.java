@@ -105,7 +105,7 @@ public class ListExamAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		final ViewHolder holder;
-		ExamDataSet data = exams.get(position);
+		final ExamDataSet data = exams.get(position);
 		final DownloadInfo info = infos.get(position);
 		if(convertView == null){
 			convertView = mInflater.inflate(R.layout.layout_exam, parent, false);
@@ -201,8 +201,9 @@ public class ListExamAdapter extends BaseAdapter {
 		holder.layoutLevel1.setVisibility(RelativeLayout.GONE);
 		
 		if(data != null){
-			final String examName = "TOPIK " + data.getNumber()+ "회";
-			holder.txtTitle.setText(examName);
+			final String examName = mContext.getResources().getString(R.string.exam_title);
+			final String selectName = mContext.getResources().getString(R.string.selection_title);
+			holder.txtTitle.setText(String.format(examName, data.getNumber()));
 			
 			final List<LevelDataSet> levels = data.getLevels();
 			if(levels != null){
@@ -221,7 +222,7 @@ public class ListExamAdapter extends BaseAdapter {
 							@Override
 							public void onClick(View v) {
 								if(level.getActive() == Constants.STATUS_ACTIVE){
-									String examLevelName = examName + " - " + level.getLabel();
+									String examLevelName = String.format(selectName, data.getNumber(),level.getLabel());
 									mListener.onSelect(level.getId(), examLevelName);
 								} else {
 									
@@ -253,7 +254,7 @@ public class ListExamAdapter extends BaseAdapter {
 							@Override
 							public void onClick(View v) {
 								if(level.getActive() == Constants.STATUS_ACTIVE){
-									String examLevelName = examName + " - " + level.getLabel();
+									String examLevelName = String.format(selectName, data.getNumber(),level.getLabel());
 									mListener.onSelect(level.getId(), examLevelName);
 								} else {
 									onclick(level, info);
@@ -284,7 +285,7 @@ public class ListExamAdapter extends BaseAdapter {
 							@Override
 							public void onClick(View v) {
 								if(level.getActive() == Constants.STATUS_ACTIVE){
-									String examLevelName = examName + " - " + level.getLabel();
+									String examLevelName = String.format(selectName, data.getNumber(),level.getLabel());
 									mListener.onSelect(level.getId(), examLevelName);
 								} else {
 									onclick(level, info);
@@ -500,7 +501,8 @@ public class ListExamAdapter extends BaseAdapter {
 			// download audio
 			boolean audioFlag = false;
 			boolean txtFlag = false;
-			String rootPath = Constants.getRootPath(mContext);
+			String internalRootPath = Constants.getInternalRootPath(mContext);
+			String externalRootPath = Constants.getExternalRootPath(mContext);
 			String urlTxt = level.getTxt().getPath();
 			String urlAudio = level.getAudio().get(0).getPath();
 			
@@ -520,7 +522,7 @@ public class ListExamAdapter extends BaseAdapter {
 			// download text
 			
 			
-			String txtPath = rootPath + "/" + Constants.FILE_TYPE_TXT + "_" + level.getId() + ".txt";
+			String txtPath = internalRootPath + "/" + Constants.FILE_TYPE_TXT + "_" + level.getId() + ".txt";
 			File file = new File(txtPath);
 			if(urlTxt.contains("http")){
 				try {
@@ -555,7 +557,7 @@ public class ListExamAdapter extends BaseAdapter {
 			
 
 			
-			String audioPath = rootPath + "/" + Constants.FILE_TYPE_MP3 + "_" + level.getId() + ".mp3";
+			String audioPath = externalRootPath + "/" + Constants.FILE_TYPE_MP3 + "_" + level.getId() + ".mp3";
 			
 			if(urlAudio.contains("http")){
 				try {
@@ -623,7 +625,7 @@ public class ListExamAdapter extends BaseAdapter {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
 								}
-								String choicePath = rootPath + "/img_" + level.getId() + "_" + section.getId() 
+								String choicePath = externalRootPath + "/img_" + level.getId() + "_" + section.getId() 
 										+ "_" + question.getId() + "_" +  choice.getLabel() + ".jpg";
 								try {
 									InputStream is = dlHelper.parseUrl(urlChoice);

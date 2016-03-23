@@ -8,6 +8,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -104,6 +106,17 @@ public class ResultActivity extends Activity {
 		adapter.setDataSets(listResult);
 		
 		lvResult.setAdapter(adapter);
+		
+		lvResult.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+					long arg3) {
+				mListener.onSelect(arg2);
+				
+			}
+			
+		});
 
 		
 		TextView txtTotal = (TextView) findViewById(R.id.txt_result_total);

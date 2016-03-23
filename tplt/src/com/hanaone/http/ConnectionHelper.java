@@ -1,6 +1,5 @@
 package com.hanaone.http;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -8,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.List;
@@ -16,14 +14,11 @@ import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.xml.sax.SAXException;
 
 import android.content.Context;
-import android.webkit.CookieManager;
 
+import com.hanaone.jni.JNIHanaone;
 import com.hanaone.tplt.Constants;
 import com.hanaone.tplt.db.FileDataSet;
 
@@ -69,6 +64,7 @@ public class ConnectionHelper {
 	}
 	
 	private InputStream gConnect(String remoteFile) throws IOException{
+		
 		URL  url = new URL(remoteFile);
 		URLConnection connection = url.openConnection();
 		if(connection instanceof HttpURLConnection){
@@ -96,7 +92,7 @@ public class ConnectionHelper {
 					
 					if(type.contains("text/html")){
 						String cookie = httpConnection.getHeaderField("Set-Cookie");
-						String temp = Constants.getPath(mContext, Constants.PATH_TEMP) + "/temp.html";
+						String temp = Constants.getInternalPath(mContext, Constants.PATH_TEMP) + "/temp.html";
 						if(saveGHtmlFile(is, temp)){
 							String href = getRealUrl(temp);
 							if(href != null){
@@ -106,7 +102,7 @@ public class ConnectionHelper {
 						
 						
 					} else if(type.contains("application/json")){
-						String temp = Constants.getPath(mContext, Constants.PATH_TEMP) + "/temp.txt";
+						String temp = Constants.getInternalPath(mContext, Constants.PATH_TEMP) + "/temp.txt";
 						if(saveGJsonFile(is, temp)){
 							FileDataSet data = JsonReaderHelper.readFileDataset(new File(temp));
 							if(data.getPath() != null){
@@ -143,7 +139,7 @@ public class ConnectionHelper {
 					
 					String type = values.get(0);
 					if(type.contains("text/html")){
-						String temp = Constants.getPath(mContext, Constants.PATH_TEMP) + "/temp.html";
+						String temp = Constants.getInternalPath(mContext, Constants.PATH_TEMP) + "/temp.html";
 						if(saveGHtmlFile(is, temp)){
 							String href = getRealUrl(temp);
 							URL  urlTemp = new URL(href);
@@ -160,7 +156,7 @@ public class ConnectionHelper {
 						}						
 						
 					} else if(type.contains("application/json")){
-						String temp = Constants.getPath(mContext, Constants.PATH_TEMP) + "/temp.txt";
+						String temp = Constants.getInternalPath(mContext, Constants.PATH_TEMP) + "/temp.txt";
 						if(saveGJsonFile(is, temp)){
 							FileDataSet data = JsonReaderHelper.readFileDataset(new File(temp));
 							return data.getSize();
@@ -284,20 +280,20 @@ public class ConnectionHelper {
 		return true;
 	}
 	private String getRealUrl(String path){
-		try {
-			Document doc = Jsoup.parse(new File(path), "UTF-8", "https://drive.google.com");
-			if(doc != null){
-				Element element = doc.getElementById("uc-download-link");
-				String href = element.attr("href");
-				
-				
-				
-				return "https://drive.google.com" + href;
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		try {
+//			Document doc = Jsoup.parse(new File(path), "UTF-8", "https://drive.google.com");
+//			if(doc != null){
+//				Element element = doc.getElementById("uc-download-link");
+//				String href = element.attr("href");
+//				
+//				
+//				
+//				return "https://drive.google.com" + href;
+//			}
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		
 		
 		return null;

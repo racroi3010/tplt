@@ -22,15 +22,17 @@
             <ImageView 
                 android:layout_width="40dp"
                 android:layout_height="40dp"
+                android:gravity="center_vertical"
                 android:src="@drawable/ic_hardware_keyboard_arrow_left_cyan"
                 />
 
             <Button
                 android:id="@+id/btn_home"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
                 android:background="@null"
                 android:onClick="onClick"
+                android:gravity="center_vertical"
                 android:layout_marginLeft="-15dp"
                 android:text="@string/title_home"
                 android:textColor="@color/CYAN" />
@@ -50,7 +52,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="TOPIK Listening - 41회"
+            android:text="@string/selection_title"
             android:textColor="@color/BLACK"
             android:textSize="40sp"
             android:textStyle="bold" />
@@ -60,10 +62,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
-            android:background="@drawable/btn_save"
+            android:background="@drawable/selector_btn_select"
             android:gravity="center"
             android:onClick="onClick"
-            android:text="PRACTICE"
+            android:text="@string/selection_practice"
             android:textColor="@color/WHITE" />
 
         <Button
@@ -71,9 +73,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:background="@drawable/btn_save"
+            android:background="@drawable/selector_btn_select"
             android:onClick="onClick"
-            android:text="TAKE AN EXAM"
+            android:text="@string/selection_exam"
             android:textColor="@color/WHITE" />
     </LinearLayout>
 
@@ -91,7 +93,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="TOPIK Listening - 41회"
+            android:text="@string/selection_sample_title"
             android:textColor="@color/BLACK"
             android:textSize="40sp"
             android:textStyle="bold" />
@@ -101,10 +103,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
-            android:background="@drawable/btn_save"
+            android:background="@drawable/selector_btn_select"
             android:gravity="center"
             android:onClick="onClick"
-            android:text="TOPIK I"
+            android:text="@string/selection_sample_topik1"
             android:textColor="@color/WHITE" />
 
         <Button
@@ -112,9 +114,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:background="@drawable/btn_save"
+            android:background="@drawable/selector_btn_select"
             android:onClick="onClick"
-            android:text="TOPIK II"
+            android:text="@string/selection_sample_topik2"
             android:textColor="@color/WHITE" />
     </LinearLayout>
 

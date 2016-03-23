@@ -36,6 +36,7 @@ import com.hanaone.tplt.adapter.ListSectionAdapter;
 import com.hanaone.tplt.adapter.QuestionSlideAdapter;
 import com.hanaone.tplt.db.FileDataSet;
 import com.hanaone.tplt.db.LevelDataSet;
+import com.hanaone.tplt.db.QuestionDataSet;
 import com.hanaone.tplt.db.ResultDataSet;
 import com.hanaone.tplt.db.SectionDataSet;
 import com.hanaone.tplt.util.Config;
@@ -45,7 +46,7 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 	private AudioControllerView mControllerView;
 	private Context mContext;
 	private static MediaPlayer mPlayer;
-	private Timer timer;
+//	private Timer timer;
 	// view pager
 	private ViewPager mPager;
 	private PagerAdapter mPagerAdapter;
@@ -119,14 +120,55 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 		}
 
 		@Override
-		public void onPlayAudioQuestion(Button audioButton, int sectionNumber,
+		public void onPlayAudioQuestion(final Button audioButton, int sectionNumber,
 				int questionNumber) {
 			if(replayButton != null){
 				replayButton.setEnabled(true);
 				replayButton.setBackgroundResource(R.drawable.ic_av_volume_down_black);
 			}
 			if(Constants.QUESTION_MODE_REVIEW.equals(mMode)){
+				replayButton = audioButton;
+				replayButton.setBackgroundResource(R.drawable.ic_av_volume_down_cyan);
+				replayButton.setEnabled(false);
+				currentItem = sectionNumber;
 				
+				// temporary set start end audio
+				SectionDataSet section = level.getSections().get(sectionNumber);
+				QuestionDataSet question = section.getQuestions().get(questionNumber);
+				section.setStartAudio(question.getStartAudio());
+				section.setEndAudio(question.getEndAudio());
+				
+				FileDataSet audio = null;
+				if(level.getAudio().size() > sectionNumber){
+					audio = level.getAudio().get(sectionNumber);
+				} else {
+					audio = level.getAudio().get(0);
+				}
+				mPlayer = getMediaPlayer();	
+				String path = audio.getPath();
+				try {
+					
+					mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);					
+					FileInputStream is = new FileInputStream(path);				
+					mPlayer.setDataSource(is.getFD());
+					is.close();
+					mPlayer.prepareAsync();
+					mPlayer.setOnPreparedListener(QuestionActivity.this);
+					
+					//mControllerView.show(0);
+				} catch (IllegalArgumentException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (SecurityException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IllegalStateException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}					
 			}			
 		}
 
@@ -230,6 +272,7 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 						seekTo(0);
 						mControllerView.show();	
 						if(PreferenceHandler.getAudioPlayPreference(mContext)){
+							seekTo(0);
 							start();
 						}	
 												
@@ -291,6 +334,7 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 				seekTo(0);
 				mControllerView.show();	
 				if(PreferenceHandler.getAudioPlayPreference(mContext)){
+					seekTo(0);
 					start();
 				}				
 			}
@@ -304,6 +348,7 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 				seekTo(0);				
 				mControllerView.show();
 				if(PreferenceHandler.getAudioPlayPreference(mContext)){
+					seekTo(0);
 					start();
 				}				
 			} else {
@@ -322,10 +367,10 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 			if(mPlayer != null){
 				mPlayer.pause();
 			}	
-			if(timer != null){
-				timer.cancel();
-				timer = null;
-			}			
+//			if(timer != null){
+//				timer.cancel();
+//				timer = null;
+//			}			
 			finish();
 			startActivity(new Intent(mContext, MainActivity.class)
 						.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
@@ -344,10 +389,10 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 	@Override
 	protected void onPause() {
 		if(mPlayer != null) mPlayer.pause();
-		if(timer != null){
-			timer.cancel();
-			timer = null;
-		}		
+//		if(timer != null){
+//			timer.cancel();
+//			timer = null;
+//		}		
 		super.onPause();
 	}
 
@@ -366,11 +411,17 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 			seekTo(0);
 			mControllerView.show();
 			if(PreferenceHandler.getAudioPlayPreference(mContext)){
+				seekTo(0);
 				start();
 			}
 		} else if(Constants.QUESTION_MODE_EXAM.equals(mMode)) {
 			mPlayer.start();
 		} else if(Constants.QUESTION_MODE_REVIEW.equals(mMode)) {
+//			if(timer != null){
+//				timer.cancel();
+//				timer = null;
+//			}	
+			seekTo(0);
 			start();
 			mControllerView.show();
 		} else {
@@ -382,14 +433,19 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 	public void start() {
 //		SectionDataSet section = level.getSections().get(currentItem);
 //		int start = (int)(section.getStartAudio() * 1000);
-		seekTo(0);				
+						
 		mPlayer.start();
+		mControllerView.updatePausePlay();
+		
+//		if(Constants.QUESTION_MODE_SAMPLE_BEGINNER.equals(mMode) || Constants.QUESTION_MODE_SAMPLE_INTERMEDIATE.equals(mMode)){
+//			timer = new Timer(true);
+//			timer.schedule(new Sleeper(), getDuration());			
+//		} 		
 
-		timer = new Timer(true);
-		timer.schedule(new Sleeper(), getDuration());
 		
 	}
 	public void pause() {
+		mControllerView.updatePausePlay();
 		mPlayer.pause();
 	}
 	public int getDuration() {
@@ -407,7 +463,7 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 		int current = mPlayer.getCurrentPosition();
 		int duration = current - start;
 		if(duration >= getDuration()){
-			mPlayer.pause();
+			pause();
 			if(replayButton != null){
 				replayButton.setBackgroundResource(R.drawable.ic_av_volume_down_black);
 				replayButton.setEnabled(true);
@@ -420,7 +476,10 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 	public void seekTo(int pos) {
 		SectionDataSet section = level.getSections().get(currentItem);
 		int start = (int)(section.getStartAudio() * 1000);	
-		mPlayer.seekTo(pos + start);
+		if(pos >= 0 && pos <= getDuration()){
+			mPlayer.seekTo(pos + start);
+		}
+		
 	}
 	public boolean isPlaying() {
 		return mPlayer.isPlaying();
@@ -496,28 +555,28 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 		}
 		
 	};
-	private class Sleeper extends TimerTask{
-
-		@Override
-		public void run() {
-			mHander.obtainMessage(HANDLE_STOP_AUDIO).sendToTarget();
-			if(Constants.QUESTION_MODE_SAMPLE_BEGINNER.equals(mMode) || Constants.QUESTION_MODE_SAMPLE_INTERMEDIATE.equals(mMode)){
-				currentItem ++;
-				mHander.obtainMessage(HANDLE_PLAY_LIST).sendToTarget();				
-			} 
-			
-		}
-		
-	}
+//	private class Sleeper extends TimerTask{
+//
+//		@Override
+//		public void run() {
+//			mHander.obtainMessage(HANDLE_STOP_AUDIO).sendToTarget();
+//			if(Constants.QUESTION_MODE_SAMPLE_BEGINNER.equals(mMode) || Constants.QUESTION_MODE_SAMPLE_INTERMEDIATE.equals(mMode)){
+//				currentItem ++;
+//				mHander.obtainMessage(HANDLE_PLAY_LIST).sendToTarget();				
+//			} 
+//			
+//		}
+//		
+//	}
 	@Override
 	public void onBackPressed() {
 		if(mPlayer != null){
 			mPlayer.pause();	
 		}
-		if(timer != null){
-			timer.cancel();
-			timer = null;
-		}
+//		if(timer != null){
+//			timer.cancel();
+//			timer = null;
+//		}
 		super.onBackPressed();
 	}
 	private static MediaPlayer getMediaPlayer(){

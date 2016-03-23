@@ -21,16 +21,18 @@
             <ImageView 
                 android:layout_width="40dp"
                 android:layout_height="40dp"
+                android:gravity="center_vertical"
                 android:src="@drawable/ic_hardware_keyboard_arrow_left_cyan"
                 />
 
             <Button
                 android:id="@+id/btn_home"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
                 android:background="@null"
                 android:onClick="onClick"
                 android:layout_marginLeft="-15dp"
+                android:gravity="center_vertical"
                 android:text="@string/title_home"
                 android:textColor="@color/CYAN" />
         </LinearLayout>
@@ -58,7 +60,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Total: "
+            android:text="@string/result_total"
             android:textColor="@color/BLACK" />
 
         <TextView
@@ -72,7 +74,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:text="Right: "
+            android:text="@string/result_correct"
             android:textColor="@color/BLACK" />
 
         <TextView
@@ -86,7 +88,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:text="Score: "
+            android:text="@string/result_score"
             android:textColor="@color/BLACK" />
 
         <TextView
@@ -101,7 +103,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:text="PASS"
+            android:text="@string/result_pass"
             android:textSize="20dp"
             android:textStyle="bold"
             android:textColor="@color/GREEN" />
@@ -118,14 +120,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/BLACK"
-            android:orientation="horizontal" >
+            android:orientation="horizontal"
+            android:paddingTop="5dp" 
+            android:paddingBottom="5dp">
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Question" />
+                android:text="@string/result_bar_question" />
 
             <ImageView
                 android:layout_width="1dp"
@@ -137,7 +141,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Your Choice" />
+                android:text="@string/result_bar_choice" />
 
             <ImageView
                 android:layout_width="1dp"
@@ -149,7 +153,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Score" />
+                android:text="@string/result_bar_answer" />
 
             <ImageView
                 android:layout_width="1dp"
@@ -161,7 +165,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Review" />
+                android:text="@string/result_bar_score" />
         </LinearLayout>
 
         <ListView

@@ -18,7 +18,7 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:gravity="center"
-            android:text="TOPIK - 41회"
+            android:text="@string/exam_title"
             android:textColor="@color/BLACK"
             android:textSize="15sp"
             android:textStyle="bold" />
@@ -64,7 +64,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:gravity="center"
-                    android:text="TOPIK\nIII"
+                    android:text="@string/exam_level_title"
                     android:textColor="@color/WHITE"
                     android:textSize="20sp"
                     android:textStyle="bold" />
@@ -72,9 +72,9 @@
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:layout_height="match_parent"
                 android:layout_weight="4"
+                android:gravity="center"
                 android:orientation="vertical"
                 android:padding="10dp" >
 
@@ -101,7 +101,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="Point\n50/100"
+                    android:text="@string/exam_level_point"
                     android:textColor="@color/GRAY_ICON" />
             </LinearLayout>
         </LinearLayout>
@@ -139,7 +139,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:gravity="center"
-                android:text="TOPIK\nII"
+                android:text="@string/exam_level_title"
                 android:textColor="@color/WHITE"
                 android:textSize="20sp"
                 android:textStyle="bold" />
@@ -147,9 +147,9 @@
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_height="match_parent"
             android:layout_weight="4"
+            android:gravity="center"
             android:orientation="vertical"
             android:padding="10dp" >
 
@@ -176,7 +176,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Point\n50/100"
+                android:text="@string/exam_level_point"
                 android:textColor="@color/GRAY_ICON" />
         </LinearLayout>
     </LinearLayout>
@@ -213,7 +213,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:gravity="center"
-                android:text="TOPIK\nI"
+                android:text="@string/exam_level_title"
                 android:textColor="@color/WHITE"
                 android:textSize="20sp"
                 android:textStyle="bold" />
@@ -221,9 +221,9 @@
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_height="match_parent"
             android:layout_weight="4"
+            android:gravity="center"
             android:orientation="vertical"
             android:padding="10dp" >
 
@@ -250,7 +250,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Point\n50/100"
+                android:text="@string/exam_level_point"
                 android:textColor="@color/GRAY_ICON" />
         </LinearLayout>
     </LinearLayout>
