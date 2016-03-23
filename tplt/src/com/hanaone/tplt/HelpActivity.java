@@ -125,9 +125,9 @@ public class HelpActivity extends Activity {
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.btn_home:
-			startActivity(new Intent(mContext, MainActivity.class).addFlags(
-					Intent.FLAG_ACTIVITY_CLEAR_TOP).addFlags(
-					Intent.FLAG_ACTIVITY_NEW_TASK));
+			finish();
+			startActivity(new Intent(mContext, MainActivity.class)
+					.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
 			break;
 		case R.id.btn_rate:
 			rateApp();
