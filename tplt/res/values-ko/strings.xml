@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Topik Listening</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">설정</string>
+    <string name="title_name">토빅듣기</string>
+    <string name="description">Media Controls</string>
+    <string name="selection_sample">모임 시험</string>
+    <string name="home_take_sample_test">모임 시험 시착</string>
+
+    <!-- Setting -->
+    <string name="title_home">호음</string>
+    <string name="title_setting">설정</string>
+    <string name="title_result">결과</string>
+    <string name="setting_play_audio">오디오 시착</string>
+    <string name="setting_auto">자동</string>
+    <string name="setting_manual">비자동</string>
+    <string name="setting_rate">앱 추천</string>
+    <string name="setting_share">앱 공유</string>
+    <string name="setting_message">Korean food, Korean drama, Kpop become more and more popular. Consequently, many people get interested in learing Korean. This application isn\'t only suitable for whom persues Topik certificate, but also good for practice reading and listening Korean. Hope all you to spend useful time with it. If there is any wrong in content, please feel free to contact with me via doanhuunoi@gmail.com . Thank you.</string>
+    <string name="setting_practice">연습</string>
+    <string name="setting_display_hint">제안된 문장</string>
+    <string name="setting_app">앱</string>
+    <string name="setting_language">언어</string>
+    <!-- Dialog -->
+    <string name="dialog_yes">애</string>
+    <string name="dialog_no">아니오</string>
+    <string name="dialog_caution">경고</string>
+    <string name="dialog_ask_download">Data files will be downloaded\nPress YES to continue.</string>
+    <string name="dialog_ask_downloading">the data is downloading\nPlease wait for a minute.</string>
+    <string name="dialog_ask_queued">the data is queued\nPlease wait for finish other download processes.</string>
+
+    <!-- Question -->
+    <string name="question_previous">이전</string>
+    <string name="question_next">다음</string>
+    <string name="question_submit">제출</string>
+    <string name="question_result">결과</string>
+
+    <!-- Result -->
+    <string name="result_total">총: </string>
+    <string name="result_correct">맞은것: </string>
+    <string name="result_score">점: </string>
+    <string name="result_pass">합격</string>
+    <string name="result_failed">불합격</string>
+    <string name="result_bar_question">질문</string>
+    <string name="result_bar_choice">선댁</string>
+    <string name="result_bar_answer">대답</string>
+    <string name="result_bar_score">점</string>
+
+    <!-- Select -->
+    <string name="selection_title">토빅 듣기 %1$s회-%2$s</string>
+    <string name="selection_practice">연습</string>
+    <string name="selection_exam">시험 시착</string>
+    <string name="selection_sample_title">모임 토빅 듣기</string>
+    <string name="selection_sample_topik1">토빅 I</string>
+    <string name="selection_sample_topik2">토빅 II</string>
+    
+    <!-- Exam -->
+    <string name="exam_title">토빅 - %1$d회</string>
+    <string name="exam_level_title">%1$s</string>
+    <string name="exam_level_point">점\n%1$s/%2$s</string>
+    <string name="loading_exam">새로운 시험 다운로드...</string>
+
+    <string-array name="array_language">
+        <item>English</item>
+        <item>Tiếng Việt</item>
+        <item>한국어</item>
+    </string-array>
+
+</resources>
