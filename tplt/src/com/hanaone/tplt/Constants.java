@@ -56,9 +56,11 @@ public class Constants {
 	public static final String UPDATE_SCORE_LEVEL_ID = "UPDATE_SCORE_LEVEL_ID";
 	public static final String UPDATE_SCORE = "UPDATE_SCORE";
 	
+	
+	
 	public static final String LANGUAGE_POSITION = "LANGUAGE_POSITION";
 	
-	
+	protected static final String UPDATE_LOCALE = "UPDATE_LOCATION";
 	
 	
 	public static String getInternalRootPath(Context context){

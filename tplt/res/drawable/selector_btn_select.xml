@@ -4,5 +4,5 @@
     <item android:drawable="@drawable/ic_button_cyan" android:state_pressed="true"></item>
     <item android:drawable="@drawable/ic_button_cyan" android:state_focused="true"></item>
 
-	<item android:drawable="@drawable/btn_save"></item>
+	<item android:drawable="@drawable/ic_button_gray"></item>
 </selector>

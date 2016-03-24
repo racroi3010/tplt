@@ -2441,8 +2441,9 @@ com.hanaone.media.AudioControllerView$MessageHandler -> com.hanaone.b.h:
     void handleMessage(android.os.Message) -> handleMessage
 com.hanaone.tplt.Constants -> com.hanaone.tplt.a:
     java.lang.String PATH -> a
-    java.lang.String getRootPath(android.content.Context) -> a
-    java.lang.String getPath(android.content.Context,java.lang.String) -> a
+    java.lang.String getInternalRootPath(android.content.Context) -> a
+    java.lang.String getInternalPath(android.content.Context,java.lang.String) -> a
+    java.lang.String getExternalRootPath(android.content.Context) -> b
 com.hanaone.tplt.HelpActivity -> com.hanaone.tplt.HelpActivity:
     android.content.Context mContext -> a
     android.widget.Spinner spLanguage -> b
@@ -2747,20 +2748,23 @@ com.hanaone.tplt.adapter.ListExamAdapter$2 -> com.hanaone.tplt.a.g:
 com.hanaone.tplt.adapter.ListExamAdapter$3 -> com.hanaone.tplt.a.h:
     com.hanaone.tplt.adapter.ListExamAdapter this$0 -> a
     com.hanaone.tplt.db.LevelDataSet val$level -> b
-    java.lang.String val$examName -> c
-    com.hanaone.tplt.adapter.DownloadInfo val$info -> d
+    java.lang.String val$selectName -> c
+    com.hanaone.tplt.db.ExamDataSet val$data -> d
+    com.hanaone.tplt.adapter.DownloadInfo val$info -> e
     void onClick(android.view.View) -> onClick
 com.hanaone.tplt.adapter.ListExamAdapter$4 -> com.hanaone.tplt.a.i:
     com.hanaone.tplt.adapter.ListExamAdapter this$0 -> a
     com.hanaone.tplt.db.LevelDataSet val$level -> b
-    java.lang.String val$examName -> c
-    com.hanaone.tplt.adapter.DownloadInfo val$info -> d
+    java.lang.String val$selectName -> c
+    com.hanaone.tplt.db.ExamDataSet val$data -> d
+    com.hanaone.tplt.adapter.DownloadInfo val$info -> e
     void onClick(android.view.View) -> onClick
 com.hanaone.tplt.adapter.ListExamAdapter$5 -> com.hanaone.tplt.a.j:
     com.hanaone.tplt.adapter.ListExamAdapter this$0 -> a
     com.hanaone.tplt.db.LevelDataSet val$level -> b
-    java.lang.String val$examName -> c
-    com.hanaone.tplt.adapter.DownloadInfo val$info -> d
+    java.lang.String val$selectName -> c
+    com.hanaone.tplt.db.ExamDataSet val$data -> d
+    com.hanaone.tplt.adapter.DownloadInfo val$info -> e
     void onClick(android.view.View) -> onClick
 com.hanaone.tplt.adapter.ListExamAdapter$6 -> com.hanaone.tplt.a.k:
     com.hanaone.tplt.adapter.ListExamAdapter this$0 -> a
@@ -3299,13 +3303,13 @@ com.hanaone.tplt.util.PreferenceHandler -> com.hanaone.tplt.util.c:
     void setBooleanPreference(android.content.Context,java.lang.String,boolean) -> a
     boolean getBooleanPreference(android.content.Context,java.lang.String) -> c
     void setAudioPlayPreference(android.content.Context,boolean) -> a
-    boolean getAudioPlayPreference(android.content.Context) -> b
+    boolean getAudioPlayPreference(android.content.Context) -> c
     void setHintDisplayPreference(android.content.Context,boolean) -> b
-    boolean getHintDisplayPreference(android.content.Context) -> c
+    boolean getHintDisplayPreference(android.content.Context) -> d
     void setQuestionModePreference(android.content.Context,java.lang.String) -> b
-    java.lang.String getQuestionModePreference(android.content.Context) -> d
+    java.lang.String getQuestionModePreference(android.content.Context) -> e
     void setLanguagePosition(android.content.Context,int) -> a
-    int getLanguagePosition(android.content.Context) -> e
+    int getLanguagePosition(android.content.Context) -> f
 com.kyleduo.switchbutton.SwitchButton -> com.kyleduo.switchbutton.SwitchButton:
     int[] CHECKED_PRESSED_STATE -> a
     int[] UNCHECKED_PRESSED_STATE -> b

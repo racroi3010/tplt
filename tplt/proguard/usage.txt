@@ -3249,6 +3249,7 @@ com.hanaone.tplt.Constants:
     public static final java.lang.String UPDATE_SCORE
     public static final java.lang.String LANGUAGE_POSITION
     8:8:public Constants()
+    81:84:public static java.lang.String getExternalPath(android.content.Context,java.lang.String)
 com.hanaone.tplt.MainActivity:
     private static final java.lang.String TAG
 com.hanaone.tplt.QuestionActivity:
@@ -3287,7 +3288,7 @@ com.hanaone.tplt.R$styleable:
     public static final int SwitchButton_kswThumbRadius
     public static final int SwitchButton_kswThumbWidth
     public static final int SwitchButton_kswTintColor
-    386:386:public R$styleable()
+    430:430:public R$styleable()
 com.hanaone.tplt.adapter.DatabaseHelper:
     public static final int DATABASE_VERSION
     public static final java.lang.String DATABASE_NAME

@@ -561,28 +561,30 @@ public class ListExamAdapter extends BaseAdapter {
 			
 			if(urlAudio.contains("http")){
 				try {
-					
-					InputStream is = dlHelper.parseUrl(urlAudio);
-					if(is != null){
-						file = new File(audioPath);
-						FileOutputStream os = new FileOutputStream(file);
-						
-						byte[] buf = new byte[1024];
-						int read = 0;
-												
-						while((read = is.read(buf)) > 0){
-							os.write(buf, 0, read);	
+					// multi link
+					String[] links = urlAudio.split(";");
+					//
+					for(String link: links){
+						InputStream is = dlHelper.parseUrl(link);
+						if(is != null){
+							file = new File(audioPath);
+							FileOutputStream os = new FileOutputStream(file);
 							
-							sum += read;		
-							if(size > 0) publishProgress((int)((sum * 100l)/size));
-						}
-						os.close();
-						is.close();	
-						
-						// update audio
-						
-											
-					}						
+							byte[] buf = new byte[1024];
+							int read = 0;
+													
+							while((read = is.read(buf)) > 0){
+								os.write(buf, 0, read);	
+								
+								sum += read;		
+								if(size > 0) publishProgress((int)((sum * 100l)/size));
+							}
+							os.close();
+							is.close();	
+							break;
+						}							
+					}
+					
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

@@ -447,6 +447,15 @@ public class AudioControllerView extends FrameLayout {
             mPauseButton.setImageResource(R.drawable.ic_play_circle_filled_black_24dp);
         }
     }
+    public void updateProgress(){
+        if (mRoot == null || mProgress == null || mPlayer == null) {
+            return;
+        } 
+        if(mPlayer.isPlaying()){
+        	setProgress();
+        	mHandler.sendEmptyMessage(SHOW_PROGRESS);
+        } 
+    }
 
     public void updateFullScreen() {
         if (mRoot == null || mFullscreenButton == null || mPlayer == null) {

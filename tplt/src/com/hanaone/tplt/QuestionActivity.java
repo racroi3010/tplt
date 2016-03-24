@@ -21,6 +21,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -372,8 +373,7 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 //				timer = null;
 //			}			
 			finish();
-			startActivity(new Intent(mContext, MainActivity.class)
-						.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+			startActivity(new Intent(mContext, MainActivity.class));
 			break;	
 		default:
 			break;
@@ -388,7 +388,9 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 
 	@Override
 	protected void onPause() {
-		if(mPlayer != null) mPlayer.pause();
+		if(mPlayer != null){
+			pause();
+		}
 //		if(timer != null){
 //			timer.cancel();
 //			timer = null;
@@ -398,7 +400,11 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 
 	@Override
 	protected void onResume() {
-		if(mPlayer != null) mPlayer.start();
+		if(mPlayer != null){
+			start();
+			mControllerView.updateProgress();
+		}
+		
 		super.onResume();
 	}
 

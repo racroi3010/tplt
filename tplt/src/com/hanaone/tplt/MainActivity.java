@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -17,11 +18,14 @@ import org.xml.sax.SAXException;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -42,6 +46,8 @@ import com.hanaone.tplt.db.FileDataSet;
 import com.hanaone.tplt.db.LevelDataSet;
 import com.hanaone.tplt.db.SectionDataSet;
 import com.hanaone.tplt.util.ColorUtils;
+import com.hanaone.tplt.util.LocaleUtils;
+import com.hanaone.tplt.util.PreferenceHandler;
 
 public class MainActivity extends Activity {
 	private static final String TAG = "MainActivity";
@@ -58,25 +64,24 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
-		
 		mContext = this;
 		dbAdapter = new DatabaseAdapter(mContext);
 		
-		listExam = (ListView) findViewById(R.id.list_exam);
+		initLayout();
 		
-		imgSync = (ImageView) findViewById(R.id.img_sync);
-		layoutSync = (LinearLayout) findViewById(R.id.layout_sync);	
-		
-		adapter = new ListExamAdapter(mContext, mListener);	
-		listExam.setAdapter(adapter);
-		
-		init();
+		initData();
 	}
     @Override
 	protected void onResume() {
 		super.onResume();
-		Intent intent = getIntent();
+
+
+		new LoadingNewData().execute();
+	}
+ 
+    @Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
 		if(intent != null){
 			int levelId = intent.getIntExtra(Constants.UPDATE_SCORE_LEVEL_ID, -1);
 			if(levelId > -1){
@@ -92,27 +97,24 @@ public class MainActivity extends Activity {
 					adapter.notifyDataSetChanged();			
 				}
 
-			}			
+			}	
+			
+			// check update locale
+			boolean updateLocale = intent.getBooleanExtra(Constants.UPDATE_LOCALE, false);
+			if(updateLocale){
+				initLayout();
+				updateData();
+			}
 		}
-
-		new LoadingNewData().execute();
-	}
- 
-    @Override
-	protected void onNewIntent(Intent intent) {
-		super.onNewIntent(intent);
-		setIntent(intent);
 	}
 	public void onClick(View v){
     	switch (v.getId()) {
 		case R.id.btn_setting:
 			Intent intent = new Intent(mContext, HelpActivity.class);
-			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
 			break;
 		case R.id.btn_sample_test:
 			intent = new Intent(mContext, SelectionActivity.class);
-			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			intent.putExtra(Constants.SELECTION_MODE, Constants.SELECTION_MODE_SAMPLE);
 
 			startActivity(intent);
@@ -122,7 +124,9 @@ public class MainActivity extends Activity {
 			break;
 		}
     }
-	private void init(){		
+	private void initData(){
+		adapter = new ListExamAdapter(mContext, mListener);	
+		listExam.setAdapter(adapter);		
 		list = dbAdapter.getAllExam();		
 		infos = new ArrayList<DownloadInfo>();
 		for(int i = 0; i < list.size(); i ++){
@@ -133,6 +137,25 @@ public class MainActivity extends Activity {
 		new LoadingNewData().execute();
 		
 	}
+	private void updateData(){
+		listExam.setAdapter(adapter);	
+		adapter.notifyDataSetChanged();
+		new LoadingNewData().execute();
+	}
+	private void initLayout(){
+		int position = PreferenceHandler.getLanguagePositionPreference(mContext);
+		LocaleUtils.setLocale(mContext, position);		
+		setContentView(R.layout.activity_main);				
+		
+		
+		listExam = (ListView) findViewById(R.id.list_exam);
+		
+		imgSync = (ImageView) findViewById(R.id.img_sync);
+		layoutSync = (LinearLayout) findViewById(R.id.layout_sync);	
+		
+		
+	}
+
 	private class LoadingNewData extends AsyncTask<Void, Void, Void> {
 
 		@Override
@@ -233,7 +256,7 @@ public class MainActivity extends Activity {
 
 	@Override
 	public void onBackPressed() {
-		
+		moveTaskToBack(true);
 	}
 
 	

@@ -17,10 +17,10 @@
         android:theme="@android:style/Theme.NoTitleBar" >
         <activity
             android:name="com.hanaone.tplt.MainActivity"
-            android:launchMode="singleTop"
             android:label="@string/app_name"
             android:configChanges="locale|orientation"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask">
             <intent-filter>
                 
                 <action android:name="android.intent.action.MAIN" />
@@ -28,10 +28,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>  
-        <activity android:name="com.hanaone.tplt.SelectionActivity" android:noHistory="true" android:configChanges="locale|orientation" android:screenOrientation="portrait"></activity>   
-        <activity android:name="com.hanaone.tplt.QuestionActivity" android:noHistory="true" android:configChanges="locale|orientation" android:screenOrientation="portrait"></activity>   
+        <activity android:name="com.hanaone.tplt.SelectionActivity" android:configChanges="locale|orientation" android:screenOrientation="portrait"></activity>   
+        <activity android:name="com.hanaone.tplt.QuestionActivity" android:configChanges="locale|orientation" android:screenOrientation="portrait"></activity>   
         <activity android:name="com.hanaone.tplt.ResultActivity" android:configChanges="locale|orientation" android:screenOrientation="portrait"></activity>  
-        <activity android:name="com.hanaone.tplt.HelpActivity" android:configChanges="locale|orientation" android:screenOrientation="portrait"></activity>  
+        <activity android:name="com.hanaone.tplt.HelpActivity" android:launchMode="singleTop" android:configChanges="locale|orientation" android:screenOrientation="portrait"></activity>  
     </application>
 
 </manifest>

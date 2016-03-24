@@ -13,6 +13,8 @@ public class PreferenceHandler extends Constants {
 	
 	private static final String LANGUAGE_POSITION = "LANGUAGE_POSITION";
 	
+	
+	
 	private static void removeAllPreference(Context context){
 		SharedPreferences pref = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = pref.edit();		
@@ -75,10 +77,17 @@ public class PreferenceHandler extends Constants {
 		return getStringPreference(context, QUESTION_MODE);
 	}
 	
-	public static void setLanguagePosition(Context context, int value){
+	public static void setLanguagePositionPreference(Context context, int value){
 		setIntPreference(context, LANGUAGE_POSITION, value);
 	}
-	public static int getLanguagePosition(Context context){
+	public static int getLanguagePositionPreference(Context context){
 		return getIntPreference(context, LANGUAGE_POSITION);
+	}
+	
+	public static void setUpdateLocalePreference(Context context, boolean value){
+		setBooleanPreference(context, UPDATE_LOCALE, value);
+	}
+	public static boolean getUpdateLocalePreference(Context context){
+		return getBooleanPreference(context, UPDATE_LOCALE);
 	}
 }
