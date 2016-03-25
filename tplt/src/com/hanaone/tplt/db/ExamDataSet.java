@@ -10,7 +10,7 @@ public class ExamDataSet implements Parcelable {
 	private int number;
 	private String date;
 	private List<LevelDataSet> levels;
-	private int color;
+//	private int color;
 	public ExamDataSet() {
 
 	}		
@@ -34,12 +34,12 @@ public class ExamDataSet implements Parcelable {
 		this.levels = levels;
 	}
 	
-	public int getColor() {
-		return color;
-	}
-	public void setColor(int color) {
-		this.color = color;
-	}
+//	public int getColor() {
+//		return color;
+//	}
+//	public void setColor(int color) {
+//		this.color = color;
+//	}
 	@Override
 	public int describeContents() {
 		// TODO Auto-generated method stub
@@ -50,7 +50,7 @@ public class ExamDataSet implements Parcelable {
 		dest.writeInt(number);
 		dest.writeString(date);
 		dest.writeTypedList(levels);
-		dest.writeInt(color);
+//		dest.writeInt(color);
 		
 	}
 	public static final Parcelable.Creator<ExamDataSet> CREATOR
@@ -75,7 +75,7 @@ public class ExamDataSet implements Parcelable {
 		
 		levels = new ArrayList<LevelDataSet>();
 		in.readList(levels, (ClassLoader) LevelDataSet.CREATOR);
-		color = in.readInt();
+//		color = in.readInt();
 	
 	}	
 }

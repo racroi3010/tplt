@@ -13,7 +13,7 @@ public class ExamLevel {
 	private int score;
 	private int maxScore;	
 	private int active;
-	
+	private int color;
 	
 	public int getId() {
 		return id;
@@ -98,6 +98,16 @@ public class ExamLevel {
 
 
 
+	public int getColor() {
+		return color;
+	}
+	public void setColor(int color) {
+		this.color = color;
+	}
+
+
+
+
 	public abstract class ExamLevelEntry implements BaseColumns{
 		public static final String TABLE_NAME = "examlevel";
 		public static final String COLUMN_NAME_EXAM_ID = "exam_id";
@@ -109,7 +119,7 @@ public class ExamLevel {
 		public static final String COLUMN_NAME_SCORE = "score";
 		public static final String COLUMN_NAME_MAXSCORE = "maxscore";
 		public static final String COLUMN_NAME_ACTIVE = "active";
-		
+		public static final String COLUMN_NAME_COLOR = "color";
 		
 	}	
 }

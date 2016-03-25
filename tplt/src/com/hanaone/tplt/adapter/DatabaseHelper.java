@@ -61,8 +61,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	private static final String CREATE_TABLE_EXAM = 
 			"CREATE TABLE " + ExamEntry.TABLE_NAME + " ("
 			+ ExamEntry.COLUMN_NAME_NUMBER + INTEGER_TYPE + PRIMARY_KEY + COMMA_STEP
-			+ ExamEntry.COLUMN_NAME_DATE + TEXT_TYPE + COMMA_STEP
-			+ ExamEntry.COLUMN_NAME_COLOR + INTEGER_TYPE
+			+ ExamEntry.COLUMN_NAME_DATE + TEXT_TYPE
 			+ ")";		
 	private static final String CREATE_TABLE_QUESTION = 
 			"CREATE TABLE " + QuestionEntry.TABLE_NAME + " ("
@@ -103,6 +102,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			+ ExamLevelEntry.COLUMN_NAME_SCORE + INTEGER_TYPE + COMMA_STEP
 			+ ExamLevelEntry.COLUMN_NAME_MAXSCORE + INTEGER_TYPE + COMMA_STEP
 			+ ExamLevelEntry.COLUMN_NAME_ACTIVE + INTEGER_TYPE + COMMA_STEP
+			+ ExamLevelEntry.COLUMN_NAME_COLOR + INTEGER_TYPE + COMMA_STEP
 			+ FOREIGN_KEY + " (" + ExamLevelEntry.COLUMN_NAME_EXAM_ID + ") REFERENCES " + ExamEntry.TABLE_NAME + "(" + ExamEntry.COLUMN_NAME_NUMBER + ")" + COMMA_STEP
 			+ FOREIGN_KEY + " (" + ExamLevelEntry.COLUMN_NAME_AUDIO_ID + ") REFERENCES " + FileExtraEntry.TABLE_NAME + "(" + FileExtraEntry._ID + ")" + COMMA_STEP
 			+ FOREIGN_KEY + " (" + ExamLevelEntry.COLUMN_NAME_PDF_ID + ") REFERENCES " + FileExtraEntry.TABLE_NAME + "(" + FileExtraEntry._ID + ")" + COMMA_STEP
@@ -177,7 +177,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			values = new ContentValues();
 			values.put(ExamEntry.COLUMN_NAME_NUMBER, exam.getNumber());
 			values.put(ExamEntry.COLUMN_NAME_DATE, exam.getDate());
-			values.put(ExamEntry.COLUMN_NAME_COLOR, exam.getColor());
+			
 			
 		} else if(obj instanceof ExamLevel){
 			ExamLevel examLevel = (ExamLevel) obj;
@@ -193,7 +193,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			values.put(ExamLevelEntry.COLUMN_NAME_SCORE, examLevel.getScore());
 			values.put(ExamLevelEntry.COLUMN_NAME_MAXSCORE, examLevel.getMaxScore());
 			values.put(ExamLevelEntry.COLUMN_NAME_ACTIVE, examLevel.getActive());
-			
+			values.put(ExamLevelEntry.COLUMN_NAME_COLOR, examLevel.getColor());
 			
 		} else if(obj instanceof Section){
 			Section section = (Section) obj;
@@ -266,7 +266,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			values = new ContentValues();
 			values.put(ExamEntry.COLUMN_NAME_NUMBER, exam.getNumber());
 			values.put(ExamEntry.COLUMN_NAME_DATE, exam.getDate());
-			values.put(ExamEntry.COLUMN_NAME_COLOR, exam.getColor());
 			
 		} else if(obj instanceof ExamLevel){
 			ExamLevel examLevel = (ExamLevel) obj;
@@ -285,6 +284,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			values.put(ExamLevelEntry.COLUMN_NAME_SCORE, examLevel.getScore());
 			values.put(ExamLevelEntry.COLUMN_NAME_MAXSCORE, examLevel.getMaxScore());
 			values.put(ExamLevelEntry.COLUMN_NAME_ACTIVE, examLevel.getActive());
+			values.put(ExamLevelEntry.COLUMN_NAME_COLOR, examLevel.getColor());
 		} else if(obj instanceof Section){
 			Section section = (Section) obj;
 			
@@ -369,7 +369,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			Examination data = new Examination();
 			data.setNumber(c.getInt(0));
 			data.setDate(c.getString(1));
-			data.setColor(c.getInt(2));
 			list.add(data);
 			
 		} while(c.moveToNext());
@@ -394,7 +393,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		Examination exam = new Examination();
 		exam.setNumber(c.getInt(0));
 		exam.setDate(c.getString(1));		
-		exam.setColor(c.getInt(2));
 			
 		c.close();
 		closeFix();
@@ -428,7 +426,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			examLevel.setScore(c.getInt(7));
 			examLevel.setMaxScore(c.getInt(8));
 			examLevel.setActive(c.getInt(9));
-			
+			examLevel.setColor(c.getInt(10));
 			list.add(examLevel);
 		} while(c.moveToNext());
 			
@@ -487,7 +485,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		examLevel.setScore(c.getInt(7));
 		examLevel.setMaxScore(c.getInt(8));
 		examLevel.setActive(c.getInt(9));
-			
+		examLevel.setColor(c.getInt(10));	
 		c.close();
 		closeFix();
 		

@@ -9,31 +9,31 @@
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:layout_alignParentTop="true" >
-        <LinearLayout 
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-			android:layout_alignParentLeft="true"
-			android:layout_centerVertical="true"            
-            android:orientation="horizontal"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
             android:gravity="center_vertical"
-            >
-            <ImageView 
+            android:orientation="horizontal" >
+
+            <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:gravity="center_vertical"
-                android:src="@drawable/ic_hardware_keyboard_arrow_left_cyan"
-                />
-			<Button 
-			    android:id="@+id/btn_setting"
-			    android:layout_width="wrap_content"
-			    android:layout_height="wrap_content"
-			    android:background="@null"
-			    android:layout_marginLeft="-15dp"
-			    android:text="@string/title_setting"
-			    android:textColor="@color/CYAN"
-			    android:onClick="onClick"
-				android:gravity="center_vertical"
-			    />            
+                android:src="@drawable/ic_hardware_keyboard_arrow_left_cyan" />
+
+            <Button
+                android:id="@+id/btn_setting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="-15dp"
+                android:background="@null"
+                android:gravity="center_vertical"
+                android:onClick="onClick"
+                android:text="@string/title_setting"
+                android:textColor="@color/CYAN" />
         </LinearLayout>
 
         <TextView
@@ -74,36 +74,35 @@
         android:orientation="horizontal"
         android:paddingLeft="20dp" >
 
-
         <LinearLayout
             android:id="@+id/layout_sample_test"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:gravity="center_vertical"
+            android:orientation="horizontal"
             android:visibility="visible" >
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/home_take_sample_test"
                 android:gravity="center_vertical"
+                android:text="@string/home_take_sample_test"
                 android:textColor="@color/BLACK" />
-            <Button 
+
+            <Button
                 android:id="@+id/btn_sample_test"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:onClick="onClick"
                 android:background="@drawable/selector_btn_sample"
-                
-                />
-        </LinearLayout>  
+                android:onClick="onClick" />
+        </LinearLayout>
+
         <LinearLayout
             android:id="@+id/layout_sync"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:gravity="center_vertical"
+            android:orientation="horizontal"
             android:visibility="gone" >
 
             <ImageView
@@ -111,18 +110,16 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:background="@drawable/ic_sync_black_24dp" />
-
-        </LinearLayout>              
+        </LinearLayout>
     </LinearLayout>
 
-    <ListView
+	<com.baoyz.swipemenulistview.SwipeMenuListView 
         android:id="@+id/list_exam"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/layout_bot"
         android:layout_below="@id/layout_top_under"
         android:cacheColorHint="@android:color/transparent"
-        android:listSelector="@android:color/transparent" >
-    </ListView>
-
+        android:listSelector="@android:color/transparent" 	    
+	    ></com.baoyz.swipemenulistview.SwipeMenuListView>
 </RelativeLayout>

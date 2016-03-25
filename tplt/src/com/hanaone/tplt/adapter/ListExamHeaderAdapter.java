@@ -1,0 +1,221 @@
+package com.hanaone.tplt.adapter;
+
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+import com.hanaone.tplt.Constants;
+import com.hanaone.tplt.R;
+import com.hanaone.tplt.db.ExamDataSet;
+import com.hanaone.tplt.db.LevelDataSet;
+
+import android.content.Context;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+
+public class ListExamHeaderAdapter extends BaseAdapter {
+	// adapter
+	private Context mContext;
+	private ListLevelListener mListener;
+	private List<ExamItem> items;
+	private LayoutInflater mInflater;
+	private DatabaseAdapter dbAdapter;
+//	private List<DownloadInfo> infos;	
+	
+	// header
+	private static final int TYPE_ITEM = 0;
+	 private static final int TYPE_SEPARATOR = 1;
+	public enum RowType{
+		LIST_ITEM, HEADER_ITEM
+	}
+	public ListExamHeaderAdapter(Context mContext, ListLevelListener mListener) {
+		//super(mContext);
+		this.mContext = mContext;
+		this.mListener = mListener;
+		this.mInflater = LayoutInflater.from(mContext);
+		this.dbAdapter  = new DatabaseAdapter(mContext);
+
+	}
+	
+	public void setItems(List<ExamItem> objects){
+		this.items = objects;
+		this.notifyDataSetChanged();
+	}
+	
+	@Override
+	public int getCount() {
+		if(this.items != null) return this.items.size();
+		return 0;
+	}
+
+	@Override
+	public Object getItem(int arg0) {
+		if(this.items != null) return this.items.get(arg0);
+		return null;
+	}
+
+	@Override
+	public long getItemId(int arg0) {
+		return 0;
+	}
+		
+//	public void setExams(List<ExamDataSet> exams) {
+//		this.exams = exams;
+//		Collections.sort(exams, new Comparator<ExamDataSet>() {
+//
+//			@Override
+//			public int compare(ExamDataSet arg0, ExamDataSet arg1) {
+//				if(arg0.getNumber() > arg1.getNumber()){
+//					return -1;
+//				} else if(arg0.getNumber() < arg1.getNumber()){
+//					return 1;
+//				}
+//				return 0;
+//			}
+//			
+//		});		
+//		this.notifyDataSetChanged();
+//	}	
+//	public void setDownloadInfos(List<DownloadInfo> infos) {
+//		this.infos = infos;
+//	}	
+	
+//	@Override
+//	public int getItemViewType(int position) {
+//		return getItem(position).getViewType();
+//	}
+	@Override
+	public int getViewTypeCount() {
+		return RowType.values().length;
+	}
+	@Override
+	public View getView(int position, View convertView, ViewGroup parent) {
+		//int rowType = getItemViewType(position);
+		
+		convertView = items.get(position).getView(mInflater, convertView, parent);
+		
+		return convertView;
+	}
+	public static class ExamHeader implements ExamItem{
+		private final ExamDataSet exam;
+		
+		public ExamHeader(ExamDataSet exam){
+			this.exam = exam;
+		}
+		
+		@Override
+		public int getViewType() {
+			return RowType.HEADER_ITEM.ordinal();
+		}
+
+		@Override
+		public View getView(LayoutInflater inflater, View convertView, ViewGroup parent) {
+			final ViewHolderHeader holder;
+			if(convertView == null){
+				convertView = inflater.inflate(R.layout.layout_exam_header, parent, false);
+				holder = new ViewHolderHeader();
+				holder.txtTitle = (TextView) convertView.findViewById(R.id.txt_title);	
+				
+				convertView.setTag(holder);
+				
+			} else {
+				holder = (ViewHolderHeader) convertView.getTag();
+			}
+			
+			holder.txtTitle.setText(exam.getNumber() + "");
+			return convertView;
+		}
+		private class ViewHolderHeader{
+			TextView txtTitle;
+		}		
+	}
+	
+	public static class ExamLevelItem implements ExamItem{
+		private LevelDataSet level;
+		private DownloadInfo info;
+		public ExamLevelItem(LevelDataSet level, DownloadInfo info) {
+			this.level = level;
+			this.info = info;
+		}
+
+		@Override
+		public int getViewType() {
+			return RowType.LIST_ITEM.ordinal();
+		}
+
+		@Override
+		public View getView(LayoutInflater inflater, View convertView, ViewGroup parent) {
+			final ViewHolderItem holder;	
+			if(convertView == null || !(convertView.getTag() instanceof ViewHolderItem)){
+				convertView = inflater.inflate(R.layout.layout_exam_item, parent, false);
+				holder = new ViewHolderItem();
+				holder.layout = (LinearLayout) convertView;
+				holder.imgIcon = (ImageView) convertView.findViewById(R.id.img_new_lesson);
+				holder.txtLabel = (TextView) convertView.findViewById(R.id.txt_label);
+				holder.prgBar = (ProgressBar) convertView.findViewById(R.id.prg_level);
+				holder.txtScore = (TextView) convertView.findViewById(R.id.txt_score);
+				
+				holder.info = this.info;
+				
+				convertView.setTag(holder);					
+			} else {
+				holder = (ViewHolderItem) convertView.getTag();
+				
+				holder.info.setLayout(null);
+				holder.info.setPrgBar(null);
+				holder.info.setTxtPer(null);
+				
+				holder.info = this.info;				
+				
+			}
+			this.info.setLayout(holder.layout);
+			this.info.setPrgBar(holder.prgBar);
+			this.info.setTxtPer(holder.txtScore);			
+
+			int number = level.getNumber();
+			int maxScore = level.getMaxScore();
+			int score = level.getScore();
+			int progress = maxScore == 0 ? 0 : (score * 100)/maxScore;
+			String scoreLabel = score + "/"+ maxScore;
+			
+			holder.txtLabel.setText(level.getLabel() + "");
+			holder.imgIcon.setBackgroundColor(level.getColor());
+			if(level.getActive() != Constants.STATUS_ACTIVE){
+				holder.layout.setAlpha(0.5f);
+			} else {
+				holder.layout.setAlpha(1f);
+			}				
+			if(info.getStatus() != DownloadInfo.DOWNLOADING && info.getStatus() != DownloadInfo.QUEUED){
+				info.getPrgBar().setProgress(progress);
+				info.getTxtPer().setText(scoreLabel);									
+			} else{
+				info.getPrgBar().setProgress(info.getProgress());
+				info.getTxtPer().setText(info.getProgress() + "%");
+				//info.getLayoutLevel1().setAlpha(1f);
+			}			
+			
+			return convertView;
+		}
+		private class ViewHolderItem{
+			LinearLayout layout;	
+			TextView txtLabel;		
+			ImageView imgIcon;
+					
+			ProgressBar prgBar;
+			TextView txtScore;
+			DownloadInfo info;
+		}		
+
+	}
+
+
+}

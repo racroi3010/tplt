@@ -190,11 +190,11 @@ public class ListExamAdapter extends BaseAdapter {
 			}
 		});	
 		
-		int color = data.getColor();
+		//int color = data.getColor();
 		
-		((ImageView)holder.layoutLevel3.findViewById(R.id.img_new_lesson_3)).setBackgroundColor(color);
-		((ImageView)holder.layoutLevel2.findViewById(R.id.img_new_lesson_2)).setBackgroundColor(color);
-		((ImageView)holder.layoutLevel1.findViewById(R.id.img_new_lesson_1)).setBackgroundColor(color);
+		((ImageView)holder.layoutLevel3.findViewById(R.id.img_new_lesson_3)).setBackgroundColor(data.getLevels().get(0).getColor());
+		((ImageView)holder.layoutLevel2.findViewById(R.id.img_new_lesson_2)).setBackgroundColor(data.getLevels().get(0).getColor());
+		((ImageView)holder.layoutLevel1.findViewById(R.id.img_new_lesson_1)).setBackgroundColor(data.getLevels().get(0).getColor());
 		
 		holder.layoutLevel3.setVisibility(RelativeLayout.GONE);
 		holder.layoutLevel2.setVisibility(RelativeLayout.GONE);

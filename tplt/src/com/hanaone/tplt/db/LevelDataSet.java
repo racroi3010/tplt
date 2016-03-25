@@ -17,7 +17,7 @@ public class LevelDataSet implements Parcelable {
 	private FileDataSet pdf;
 	private int score;
 	private int maxScore;
-	
+	private int color;
 
 	public LevelDataSet() {
 
@@ -86,6 +86,13 @@ public class LevelDataSet implements Parcelable {
 	public void setMaxScore(int maxScore) {
 		this.maxScore = maxScore;
 	}
+	
+	public int getColor() {
+		return color;
+	}
+	public void setColor(int color) {
+		this.color = color;
+	}
 	@Override
 	public int describeContents() {
 		// TODO Auto-generated method stub
@@ -106,6 +113,7 @@ public class LevelDataSet implements Parcelable {
 		dest.writeParcelable(pdf, flags);
 		dest.writeInt(score);
 		dest.writeInt(maxScore);
+		dest.writeInt(color);
 		
 	}
 	public static final Parcelable.Creator<LevelDataSet> CREATOR
@@ -141,6 +149,7 @@ public class LevelDataSet implements Parcelable {
 		
 		score = in.readInt();
 		maxScore = in.readInt();
+		color = in.readInt();
 	}	
 	
 }
