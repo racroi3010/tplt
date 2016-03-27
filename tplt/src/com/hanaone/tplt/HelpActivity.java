@@ -66,8 +66,10 @@ public class HelpActivity extends Activity {
 			intent.putExtra(Constants.UPDATE_LOCALE, updateLocale);
 			startActivity(intent);
 			break;
+		case R.id.layout_rate:
 		case R.id.btn_rate:
 			rateApp();
+		case R.id.layout_share:
 		case R.id.btn_share:
 			shareApp();
 			break;
@@ -134,32 +136,30 @@ public class HelpActivity extends Activity {
 	}
 
 	private void shareApp() {
-		// Intent normalIntent = new Intent(Intent.ACTION_SEND);
-		// normalIntent.setType("text/plain");
-		// normalIntent.setPackage("com.katana.facebook"); // I just know the
-		// package of Facebook, the rest you will have to search for or use my
-		// method.
-		// normalIntent.putExtra(Intent.EXTRA_TEXT,
-		// "The text you want to share to Facebook");
-		List<Intent> targetedShareIntents = new ArrayList<Intent>();
-		Intent facebook = getShareIntent("facebook", "subject", "text");
-		if (facebook != null) {
-			targetedShareIntents.add(facebook);
-		}
-		Intent twitterintent = getShareIntent("twitter", "subject", "text");
-		if (twitterintent != null) {
-			targetedShareIntents.add(twitterintent);
-		}
-		Intent plus = getShareIntent("plus", "subject", "text");
-		if (plus != null) {
-			targetedShareIntents.add(plus);
+		String urlToShare = "http://play.google.com/store/apps/details?id=" + mContext.getPackageName();
+		Intent intent = new Intent(Intent.ACTION_SEND);
+		intent.setType("text/plain");
+		// intent.putExtra(Intent.EXTRA_SUBJECT, "Foo bar"); // NB: has no effect!
+		intent.putExtra(Intent.EXTRA_TEXT, urlToShare);
+
+		// See if official Facebook app is found
+		boolean facebookAppFound = false;
+		List<ResolveInfo> matches = getPackageManager().queryIntentActivities(intent, 0);
+		for (ResolveInfo info : matches) {
+		    if (info.activityInfo.packageName.toLowerCase().startsWith("com.facebook.katana")) {
+		        intent.setPackage(info.activityInfo.packageName);
+		        facebookAppFound = true;
+		        break;
+		    }
 		}
 
-		Intent chooser = Intent.createChooser(targetedShareIntents.remove(0),
-				"abc");
-		chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS,
-				targetedShareIntents.toArray(new Parcelable[] {}));
-		startActivity(chooser);
+		// As fallback, launch sharer.php in a browser
+		if (!facebookAppFound) {
+		    String sharerUrl = "https://www.facebook.com/sharer/sharer.php?u=" + urlToShare;
+		    intent = new Intent(Intent.ACTION_VIEW, Uri.parse(sharerUrl));
+		}
+
+		startActivity(intent);
 	}
 
 	private Intent getShareIntent(String type, String subject, String text) {

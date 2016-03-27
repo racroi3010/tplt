@@ -1,7 +1,6 @@
 package com.hanaone.tplt;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
@@ -14,6 +13,9 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.hanaone.tplt.adapter.DatabaseAdapter;
 import com.hanaone.tplt.adapter.ListAdapterListener;
 import com.hanaone.tplt.adapter.ListResultAdapter;
@@ -29,6 +31,7 @@ public class ResultActivity extends Activity {
 	private ArrayList<ResultDataSet> listResult;
 	private int score;
 	private String mode;
+	private InterstitialAd minInterstitialAd;
 	private ListAdapterListener mListener = new ListAdapterListener() {
 		
 		@Override
@@ -39,18 +42,18 @@ public class ResultActivity extends Activity {
 			intent.putExtra(Constants.LEVEL, level);
 			//intent.putParcelableArrayListExtra(Constants.LIST_RESULT, listResult);
 			
-			int sectionIndex = 0;
-			List<SectionDataSet> sections = level.getSections();
-			for(int i = 0; i < sections.size(); i ++){
-				for(QuestionDataSet question: sections.get(i).getQuestions())
-					if(question.getNumber() == listResult.get(number).getNumber()){
-						sectionIndex = i;
-						break;
-					}
-			}
+//			int sectionIndex = 0;
+//			List<SectionDataSet> sections = level.getSections();
+//			for(int i = 0; i < sections.size(); i ++){
+//				for(QuestionDataSet question: sections.get(i).getQuestions())
+//					if(question.getNumber() == listResult.get(number).getNumber()){
+//						sectionIndex = i;
+//						break;
+//					}
+//			}
 				
 			
-			intent.putExtra(Constants.SECTION_INDEX, sectionIndex);
+			intent.putExtra(Constants.QUESTION_NUMBER, listResult.get(number).getNumber());
 			mContext.startActivity(intent);					
 		}
 
@@ -122,30 +125,50 @@ public class ResultActivity extends Activity {
 		TextView txtTotal = (TextView) findViewById(R.id.txt_result_total);
 		TextView txtRight = (TextView) findViewById(R.id.txt_result_right);
 		TextView txtScore = (TextView) findViewById(R.id.txt_result_score);
-		TextView txtGrade = (TextView) findViewById(R.id.txt_result_grade);
+//		TextView txtGrade = (TextView) findViewById(R.id.txt_result_grade);
 		
 		
 		txtTotal.setText(listResult.size() + "");
 		txtRight.setText(right + "");
 		txtScore.setText(score + "");
-		if(right >= listResult.size()/2){
-			txtGrade.setText("PASS");
-			txtGrade.setTextColor(getResources().getColor(R.color.GREEN));
-		} else {
-			txtGrade.setText("FAILED");
-			txtGrade.setTextColor(getResources().getColor(R.color.RED));
-		}
+//		if(right >= listResult.size()/2){
+//			txtGrade.setText("PASS");
+//			txtGrade.setTextColor(getResources().getColor(R.color.GREEN));
+//		} else {
+//			txtGrade.setText("FAILED");
+//			txtGrade.setTextColor(getResources().getColor(R.color.RED));
+//		}
 	
 		mode = PreferenceHandler.getQuestionModePreference(mContext);
 		if(Constants.QUESTION_MODE_EXAM.equals(mode)){
 			new DatabaseAdapter(mContext).updateLevelScore(level.getId(), (score * 100)/maxScore);	
 		}	
 		
+		// ads
+		minInterstitialAd = new InterstitialAd(this);
+		minInterstitialAd.setAdUnitId(getResources().getString(R.string.interstitialAd_id));
+		
+		minInterstitialAd.setAdListener(new AdListener() {
+
+			@Override
+			public void onAdClosed() {
+				requestNewInterstitial();
+				goHome();
+				super.onAdClosed();
+			}
+			
+		});
+		requestNewInterstitial();
 	}
     public void onClick(View v){
     	switch (v.getId()) {
 		case R.id.btn_home:
-			goHome();
+			if(minInterstitialAd.isLoaded()){
+				minInterstitialAd.show();
+			} else {
+				goHome();
+			}			
+			
 			break;
 
 		default:
@@ -155,9 +178,19 @@ public class ResultActivity extends Activity {
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();
-		goHome();
+		if(minInterstitialAd.isLoaded()){
+			minInterstitialAd.show();
+		} else {
+			goHome();
+		}			
+		
 	}	
-    
+	private void requestNewInterstitial(){
+		AdRequest adRequest = new AdRequest.Builder()
+					.addTestDevice("164BB929448C71E850DFB3DC28B7F5BA").build();
+		minInterstitialAd.loadAd(adRequest);	
+					
+	}    
 	private void goHome(){
 		Intent intent = new Intent(mContext, MainActivity.class);			
 		if(Constants.QUESTION_MODE_EXAM.equals(mode)){

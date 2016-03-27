@@ -21,4 +21,5 @@
         <attr name="kswTintColor" format="color|reference" />
     </declare-styleable>
 
+ 
 </resources>

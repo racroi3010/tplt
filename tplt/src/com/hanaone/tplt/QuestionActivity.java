@@ -7,9 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnPreparedListener;
@@ -24,11 +26,18 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
+import android.view.ViewGroup.LayoutParams;
+import android.view.ViewGroup.MarginLayoutParams;
 import android.widget.Button;
+import android.widget.DigitalClock;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.hanaone.media.AudioControllerView;
 import com.hanaone.media.AudioControllerView.MediaPlayerControl;
 import com.hanaone.tplt.adapter.DatabaseAdapter;
@@ -42,6 +51,7 @@ import com.hanaone.tplt.db.ResultDataSet;
 import com.hanaone.tplt.db.SectionDataSet;
 import com.hanaone.tplt.util.Config;
 import com.hanaone.tplt.util.PreferenceHandler;
+import com.hanaone.tplt.view.DigitalClockView;
 
 public class QuestionActivity extends FragmentActivity implements OnPreparedListener, MediaPlayerControl{
 	private AudioControllerView mControllerView;
@@ -55,7 +65,8 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 	private String mMode;
 	private int currentItem;
 	private DatabaseAdapter dbAdapter;
-	private int sectionIndex;
+	//private int sectionIndex;
+	private int questionNumber;
 	
 	// list
 	private ListView mList;
@@ -67,6 +78,9 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 	// list result
 	//private ArrayList<ResultDataSet> listResult;
 	
+//	private Timer timer;
+	private long time;
+	private DigitalClockView clock;
 	
 	private ListAdapterListener mListener = new ListAdapterListener() {
 		
@@ -243,7 +257,7 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 		} else if(Constants.QUESTION_MODE_REVIEW.equals(mMode)){
 			level = getIntent().getParcelableExtra(Constants.LEVEL);
 			//listResult = getIntent().getParcelableArrayListExtra(Constants.LIST_RESULT);
-			sectionIndex = getIntent().getIntExtra(Constants.SECTION_INDEX, 0);
+			questionNumber = getIntent().getIntExtra(Constants.QUESTION_NUMBER, 0);
 		}
 		
 	}
@@ -251,12 +265,19 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 		// pager
 		mPager = (ViewPager) findViewById(R.id.viewpager_question_vp);
 		mList = (ListView) findViewById(R.id.list_sections);
+		// ads
+	    AdView mAdView = (AdView) findViewById(R.id.adView);
+	    AdRequest adRequest = new AdRequest.Builder().build();
+	    mAdView.loadAd(adRequest);		
 		if(Constants.QUESTION_MODE_PRACTICE.equals(mMode)){
 			findViewById(R.id.layout_previous).setVisibility(LinearLayout.VISIBLE);
 			findViewById(R.id.layout_next).setVisibility(LinearLayout.VISIBLE);
+			findViewById(R.id.layout_home_setting).setVisibility(RelativeLayout.VISIBLE);
 			findViewById(R.id.btn_submit).setVisibility(Button.GONE);	
+			findViewById(R.id.layout_list_sections).setVisibility(RelativeLayout.GONE);	
+			mAdView.setVisibility(AdView.GONE);
 			mPager.setVisibility(ViewPager.VISIBLE);
-			mList.setVisibility(ListView.GONE);
+			//mList.setVisibility(ListView.GONE);
 			
 			mPagerAdapter = new QuestionSlideAdapter(getSupportFragmentManager(), level, mMode);
 			mPager.setAdapter(mPagerAdapter);	
@@ -299,28 +320,58 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 			findViewById(R.id.layout_previous).setVisibility(LinearLayout.GONE);
 			findViewById(R.id.layout_next).setVisibility(LinearLayout.GONE);
 			findViewById(R.id.btn_submit).setVisibility(Button.GONE);	
+			findViewById(R.id.layout_home_setting).setVisibility(RelativeLayout.GONE);
 			findViewById(R.id.btn_result).setVisibility(Button.VISIBLE);	
+			findViewById(R.id.layout_list_sections).setVisibility(RelativeLayout.VISIBLE);
+			mAdView.setVisibility(AdView.VISIBLE);
 			mPager.setVisibility(ViewPager.GONE);
-			mList.setVisibility(ListView.VISIBLE);
+			//mList.setVisibility(ListView.VISIBLE);
 
 			mListAdapter = new ListSectionAdapter(mContext, mListener);
 			mList.setAdapter(mListAdapter);
 			mListAdapter.setmDataSet(level.getSections());
 			//mListAdapter.setResults(listResult);
-			mList.setSelection(sectionIndex);
+			int index = 0;
+			boolean flag = false;
+			for(SectionDataSet section: level.getSections()){
+				index ++;
+				for(QuestionDataSet question: section.getQuestions()){				
+					if(question.getNumber() == questionNumber){
+						flag = true;
+						break;
+					}	
+					index ++;
+				}
+				if(flag){
+					break;
+				}
+					
+
+			}
+				
+			mList.setSelection(index);
 			mList.requestFocus();
 
 		}else {
 			findViewById(R.id.layout_previous).setVisibility(LinearLayout.GONE);
 			findViewById(R.id.layout_next).setVisibility(LinearLayout.GONE);
+			findViewById(R.id.layout_home_setting).setVisibility(RelativeLayout.GONE);
 			findViewById(R.id.btn_submit).setVisibility(Button.VISIBLE);	
+			findViewById(R.id.layout_list_sections).setVisibility(RelativeLayout.VISIBLE);	
+			mAdView.setVisibility(AdView.VISIBLE);
 			mPager.setVisibility(ViewPager.GONE);
-			mList.setVisibility(ListView.VISIBLE);
+			//mList.setVisibility(ListView.VISIBLE);
 			
 			mListAdapter = new ListSectionAdapter(mContext, mListener);
 			mList.setAdapter(mListAdapter);
 			mListAdapter.setmDataSet(level.getSections());
-
+			
+			clock = (DigitalClockView) findViewById(R.id.clock);
+			Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/digital-7.ttf");
+			clock.setTypeface(tf);
+			//RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+			//clock.setLayoutParams(layoutParams);
+			
 		}
 	}
 	public void onClick(View v){
@@ -360,9 +411,7 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 			break;
 		case R.id.btn_result:
 		case R.id.btn_submit:
-			Intent intent = new Intent(mContext, ResultActivity.class);
-			intent.putExtra(Constants.LEVEL, level);
-			startActivity(intent);	
+			submit();
 			break;
 		case R.id.btn_home:
 			if(mPlayer != null){
@@ -374,10 +423,22 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 //			}			
 			finish();
 			startActivity(new Intent(mContext, MainActivity.class));
-			break;	
+			break;
+		case R.id.btn_setting:
+			Intent intent = new Intent(mContext, HelpActivity.class);
+			startActivity(intent);			
+			break;
 		default:
 			break;
 		}
+	}
+	public void submit(){
+		if(clock != null){
+			clock.cancel();
+		}
+		Intent intent = new Intent(mContext, ResultActivity.class);
+		intent.putExtra(Constants.LEVEL, level);
+		startActivity(intent);			
 	}
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
@@ -390,21 +451,36 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 	protected void onPause() {
 		if(mPlayer != null){
 			pause();
+			mControllerView.updatePausePlay();		
+			
 		}
 //		if(timer != null){
 //			timer.cancel();
 //			timer = null;
-//		}		
+//		}	
+		if(clock != null){
+			clock.pause();
+		}
 		super.onPause();
 	}
 
 	@Override
 	protected void onResume() {
 		if(mPlayer != null){
-			start();
-			mControllerView.updateProgress();
+			if(Constants.QUESTION_MODE_PRACTICE.equals(mMode)){
+				if(PreferenceHandler.getAudioPlayPreference(mContext)){
+					start();
+					mControllerView.updateProgress();
+				}
+			} else {
+				start();
+				mControllerView.updateProgress();				
+			}
+
 		}
-		
+		if(clock != null){
+			clock.resume();
+		}		
 		super.onResume();
 	}
 
@@ -422,6 +498,12 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 			}
 		} else if(Constants.QUESTION_MODE_EXAM.equals(mMode)) {
 			mPlayer.start();
+			
+			
+			time = mPlayer.getDuration();
+			clock.start(time, this);
+//			timer = new Timer();
+//			timer.schedule(new ClockTimer(), 0, 1000);	
 		} else if(Constants.QUESTION_MODE_REVIEW.equals(mMode)) {
 //			if(timer != null){
 //				timer.cancel();
@@ -432,6 +514,8 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 			mControllerView.show();
 		} else {
 			start();
+//			time = mPlayer.getDuration();
+//			clock.start(time);
 		}
 		
 	}
@@ -512,6 +596,7 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 	private static final int HANDLE_STOP_AUDIO = 1;
 	private static final int HANDLE_PLAY_AUDIO = 2;
 	private static final int HANDLE_PLAY_LIST = 3;
+//	private static final int HANDLE_UPDATE_CLOCK = 4;
 	private Handler mHander = new Handler(){
 
 		@Override
@@ -555,12 +640,17 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 				}
 
 				break;
+//			case HANDLE_UPDATE_CLOCK:
+//				time = time - 1000;
+//				clock.setText(convertTime(time) +"");
+//				break;
 			default:
 				break;
 			}
 		}
 		
 	};
+
 //	private class Sleeper extends TimerTask{
 //
 //		@Override
@@ -576,8 +666,11 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 //	}
 	@Override
 	public void onBackPressed() {
+		if(clock != null){
+			clock.cancel();
+		}		
 		if(mPlayer != null){
-			mPlayer.pause();	
+			mPlayer.pause();
 		}
 //		if(timer != null){
 //			timer.cancel();

@@ -10,32 +10,33 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
+import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.TypedValue;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
+import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.baoyz.swipemenulistview.SwipeMenu;
-import com.baoyz.swipemenulistview.SwipeMenuCreator;
-import com.baoyz.swipemenulistview.SwipeMenuItem;
-import com.baoyz.swipemenulistview.SwipeMenuListView;
-import com.baoyz.swipemenulistview.SwipeMenuListView.OnMenuItemClickListener;
 import com.hanaone.http.DownloadHelper;
 import com.hanaone.http.JsonReaderHelper;
 import com.hanaone.jni.JNIHanaone;
 import com.hanaone.tplt.adapter.DatabaseAdapter;
+import com.hanaone.tplt.adapter.DownloadAdapter;
 import com.hanaone.tplt.adapter.DownloadInfo;
-import com.hanaone.tplt.adapter.ExamItem;
-import com.hanaone.tplt.adapter.ListExamAdapter;
 import com.hanaone.tplt.adapter.ListExamHeaderAdapter;
 import com.hanaone.tplt.adapter.ListLevelListener;
 import com.hanaone.tplt.db.ExamDataSet;
@@ -48,8 +49,8 @@ public class MainActivity extends Activity {
 	private static final String TAG = "MainActivity";
 	private Context mContext;
 	private DatabaseAdapter dbAdapter;
-	private SwipeMenuListView listExam;
-	private List<ExamItem> listItem;
+	private ListView listExam;
+	private List<ListExamHeaderAdapter.ExamItem> listItem;
 	private List<ExamDataSet> list;
 //	private List<DownloadInfo> infos;
 //	private ListExamAdapter adapter;
@@ -133,91 +134,20 @@ public class MainActivity extends Activity {
 //		new LoadingNewData().execute();
 		
 		// test
-		listItem = new ArrayList<ExamItem>();
+		listItem = new ArrayList<ListExamHeaderAdapter.ExamItem>();
 		list = dbAdapter.getAllExam();
-//		for(ExamDataSet exam: list){
-//			listItem.add(new ListExamHeaderAdapter.ExamHeader(exam));
-//			for(LevelDataSet level: exam.getLevels()){
-//				listItem.add(new ListExamHeaderAdapter.ExamLevelItem(level, new DownloadInfo()));
-//			}
-//		}		
-		for(int i = 0; i < 100; i ++){
-			ExamDataSet exam = new ExamDataSet();
-			exam.setNumber(i);
+		for(ExamDataSet exam: list){
 			listItem.add(new ListExamHeaderAdapter.ExamHeader(exam));
-			for(int j = 0; j < 5; j ++){
-				LevelDataSet level = new LevelDataSet();
-				level.setLabel(j + "");
-				listItem.add(new ListExamHeaderAdapter.ExamLevelItem(level, new DownloadInfo()));
+			for(LevelDataSet level: exam.getLevels()){
+				listItem.add(new ListExamHeaderAdapter.ExamLevelItem(level, new DownloadInfo(), mListener));
 			}
-		}				
+		}		
+			
 		adapter = new ListExamHeaderAdapter(mContext, null);	
 		adapter.setItems(listItem);
-		listExam.setAdapter(adapter);
-		
-		SwipeMenuCreator creator = new SwipeMenuCreator() {
-
-		    @Override
-		    public void create(SwipeMenu menu) {
-		        // create "open" item
-		        SwipeMenuItem openItem = new SwipeMenuItem(
-		                getApplicationContext());
-		        // set item background
-		        openItem.setBackground(new ColorDrawable(Color.rgb(0xC9, 0xC9,
-		                0xCE)));
-		        // set item width
-		        openItem.setWidth(dp2px(90));
-		        // set item title
-		        openItem.setTitle("Open");
-		        // set item title fontsize
-		        openItem.setTitleSize(18);
-		        // set item title font color
-		        openItem.setTitleColor(Color.WHITE);
-		        // add to menu
-		        menu.addMenuItem(openItem);
-
-		        // create "delete" item
-		        SwipeMenuItem deleteItem = new SwipeMenuItem(
-		                getApplicationContext());
-		        // set item background
-		        deleteItem.setBackground(new ColorDrawable(Color.rgb(0xF9,
-		                0x3F, 0x25)));
-		        // set item width
-		        deleteItem.setWidth(dp2px(90));
-		        // set a icon
-		        deleteItem.setIcon(R.drawable.ic_launcher);
-		        
-		        
-		        // add to menu
-		        menu.addMenuItem(deleteItem);
-		    }
-		};	
-		listExam.setMenuCreator(creator);
-		
-		listExam.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-			
-			@Override
-			public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
-				switch (index) {
-				case 0:
-					Toast.makeText(mContext, "click Open " + position, Toast.LENGTH_SHORT).show();
-					break;
-				case 1:
-					Toast.makeText(mContext, "click Delete " + position, Toast.LENGTH_SHORT).show();
-					break;
-				default:
-					break;
-				}
-				return false;
-			}
-		});
-		
+		listExam.setAdapter(adapter);	
 		new LoadingNewData().execute();
 	}
-	private int dp2px(int dp) {
-		return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
-				getResources().getDisplayMetrics());
-	}	
 	private void updateData(){
 		listExam.setAdapter(adapter);	
 		adapter.notifyDataSetChanged();
@@ -229,7 +159,7 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);				
 		
 		
-		listExam = (SwipeMenuListView) findViewById(R.id.list_exam);
+		listExam = (ListView) findViewById(R.id.list_exam);
 		
 		imgSync = (ImageView) findViewById(R.id.img_sync);
 		layoutSync = (LinearLayout) findViewById(R.id.layout_sync);	
@@ -287,7 +217,7 @@ public class MainActivity extends Activity {
 								//infos.add(new DownloadInfo());
 								listItem.add(new ListExamHeaderAdapter.ExamHeader(exam));
 								for(LevelDataSet level: exam.getLevels()){
-									listItem.add(new ListExamHeaderAdapter.ExamLevelItem(level, new DownloadInfo()));
+									listItem.add(new ListExamHeaderAdapter.ExamLevelItem(level, new DownloadInfo(), mListener));
 								}
 								publishProgress();
 							}
@@ -340,8 +270,77 @@ public class MainActivity extends Activity {
 			startActivity(intent);
 			overridePendingTransition(R.anim.fadein, R.anim.fadeout);
 		}
-	};
 
+		@Override
+		public void onSelect(LevelDataSet level, DownloadInfo info) {
+			if(level.getActive() == Constants.STATUS_ACTIVE){
+				String selectName = mContext.getResources().getString(R.string.selection_title);
+				String examLevelName = String.format(selectName, level.getNumber(),level.getLabel());
+				mListener.onSelect(level.getId(), examLevelName);
+			} else {
+				confirmDownload(level, info);
+			}			
+		}
+		
+	};
+	public void confirmDownload(final LevelDataSet level, final DownloadInfo info){
+		Resources resouces = mContext.getResources();
+		
+		boolean download = false;
+		String msg = null;
+		
+		if(info.getStatus() == DownloadInfo.NOT_START){
+			msg = resouces.getString(R.string.dialog_ask_download);
+			download = true;
+		} else if(info.getStatus() == DownloadInfo.DOWNLOADING) {
+			msg = resouces.getString(R.string.dialog_ask_downloading);
+		} else if(info.getStatus() == DownloadInfo.QUEUED){
+			msg = resouces.getString(R.string.dialog_ask_queued);
+		}
+
+		final Dialog dialog = new Dialog(mContext);
+		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		if(download){
+			dialog.setContentView(R.layout.layout_dialog_yes_no);
+		} else {
+			dialog.setContentView(R.layout.layout_dialog_ok);
+		}
+		dialog.getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+		dialog.show();
+		
+		((TextView)dialog.findViewById(R.id.txt_dialog_content)).setText(msg);
+		
+		if(download){
+			final DownloadAdapter dlAdapter = new DownloadAdapter(mContext, level, info, dbAdapter);
+			
+			dialog.findViewById(R.id.btn_dialog_ok).setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					dlAdapter.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+					dialog.dismiss();
+				}
+			});	
+			dialog.findViewById(R.id.btn_dialog_no).setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					dialog.dismiss();
+				}
+			});			
+		} else {
+			dialog.findViewById(R.id.btn_dialog_ok).setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					dialog.dismiss();
+				}
+			});				
+		}
+
+		
+		
+	}	
 	@Override
 	public void onBackPressed() {
 		moveTaskToBack(true);

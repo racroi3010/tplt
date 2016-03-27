@@ -20,7 +20,7 @@
 
             <ImageView 
                 android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:src="@drawable/ic_hardware_keyboard_arrow_left_cyan"
                 />
@@ -28,7 +28,7 @@
             <Button
                 android:id="@+id/btn_home"
 			    android:layout_width="wrap_content"
-			    android:layout_height="wrap_content"
+			    android:layout_height="match_parent"
                 android:background="@null"
                 android:onClick="onClick"
                 android:layout_marginLeft="-15dp"
@@ -45,7 +45,13 @@
             android:textColor="@color/BLACK"
             android:textSize="18sp"
             android:textStyle="bold" /> 
-        
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:text="@string/result_click_item"
+            android:textColor="@color/BLACK" />        
     </RelativeLayout>
 
     <LinearLayout
@@ -53,7 +59,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
-        android:gravity="center_vertical"
+        android:gravity="center"
         android:orientation="horizontal"
         android:paddingLeft="20dp" >
 
@@ -98,15 +104,7 @@
             android:text="60"
             android:textColor="@color/GREEN" />
 
-        <TextView
-            android:id="@+id/txt_result_grade"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:text="@string/result_pass"
-            android:textSize="20dp"
-            android:textStyle="bold"
-            android:textColor="@color/GREEN" />
+
     </LinearLayout>
 
     <LinearLayout

@@ -20,14 +20,14 @@
 
             <ImageView
                 android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:src="@drawable/ic_hardware_keyboard_arrow_left_cyan" />
 
             <Button
                 android:id="@+id/btn_setting"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="-15dp"
                 android:background="@null"
                 android:gravity="center_vertical"
@@ -113,7 +113,7 @@
         </LinearLayout>
     </LinearLayout>
 
-	<com.baoyz.swipemenulistview.SwipeMenuListView 
+	<ListView 
         android:id="@+id/list_exam"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -121,5 +121,6 @@
         android:layout_below="@id/layout_top_under"
         android:cacheColorHint="@android:color/transparent"
         android:listSelector="@android:color/transparent" 	    
-	    ></com.baoyz.swipemenulistview.SwipeMenuListView>
+	    ></ListView>
+
 </RelativeLayout>

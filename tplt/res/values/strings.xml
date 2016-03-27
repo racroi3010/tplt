@@ -23,19 +23,13 @@
     <string name="setting_display_hint">Display Hint Phrase</string>
     <string name="setting_app">App</string>
     <string name="setting_language">Language</string>
-    <!-- Dialog -->
-    <string name="dialog_yes">YES</string>
-    <string name="dialog_no">NO</string>
-    <string name="dialog_caution">CAUTION</string>
-    <string name="dialog_ask_download">Data files will be downloaded\nPress YES to continue.</string>
-    <string name="dialog_ask_downloading">the data is downloading\nPlease wait for a minute.</string>
-    <string name="dialog_ask_queued">the data is queued\nPlease wait for finish other download processes.</string>
 
     <!-- Question -->
     <string name="question_previous">Previous</string>
     <string name="question_next">Next</string>
     <string name="question_submit">Submit</string>
     <string name="question_result">Result</string>
+    <string name="question_practice">Practice</string>
 
     <!-- Result -->
     <string name="result_total">Total: </string>
@@ -47,6 +41,7 @@
     <string name="result_bar_choice">Your Choice</string>
     <string name="result_bar_answer">Answer</string>
     <string name="result_bar_score">Score</string>
+    <string name="result_click_item">(Click question to review)</string>
 
     <!-- Select -->
     <string name="selection_title">TOPIK Listening %1$s회-%2$s</string>
@@ -55,17 +50,33 @@
     <string name="selection_sample_title">TOPIK Listening\nSample</string>
     <string name="selection_sample_topik1">TOPIK I</string>
     <string name="selection_sample_topik2">TOPIK II</string>
-    
+
     <!-- Exam -->
     <string name="exam_title">TOPIK - %1$d회</string>
     <string name="exam_level_title">%1$s</string>
     <string name="exam_level_point">Point\n%1$s/%2$s</string>
     <string name="loading_exam">Loading New Exams...</string>
-
+    
+    <!-- Dialog -->
+	<string name="dialog_title_caution">Download data files?</string>
+	<string name="dialog_content_data">Warning: Audio file, text files are huge.</string>
+    <string name="dialog_yes">YES</string>
+    <string name="dialog_no">NO</string>
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_caution">CAUTION</string>
+    <string name="dialog_ask_download">Data files will be downloaded\nPress YES to continue.</string>
+    <string name="dialog_ask_downloading">the data is downloading\nPlease wait for a minute.</string>
+    <string name="dialog_ask_queued">the data is queued\nPlease wait for finish other download processes.</string>
+		
+	
     <string-array name="array_language">
         <item>English</item>
         <item>Tiếng Việt</item>
         <item>한국어</item>
     </string-array>
+
+    <!-- Ads -->
+    <string name="banner_ad_id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="interstitialAd_id">ca-app-pub-3940256099942544/1033173712</string>
 
 </resources>

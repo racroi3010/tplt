@@ -43,6 +43,8 @@ public <init>(android.content.Context, android.util.AttributeSet);
 
 -keep interface com.hanaone.media.AudioControllerView.MediaPlayerControl{*;}
 
+-keep interface com.hanaone.tplt.adapter.ListExamHeaderAdapter.ExamItem{*;}
+
 -keep class com.hanaone.tplt.db.*{*;}
 -keepclassmembers class com.hanaone.tplt.db.** { *; }  
 

@@ -1,41 +1,54 @@
-# view res/layout/activity_question_practice.xml #generated:115
+# view res/layout/activity_question_practice.xml #generated:178
 -keep class android.support.v4.view.ViewPager { <init>(...); }
 
-# view AndroidManifest.xml #generated:32
+# view AndroidManifest.xml #generated:39
+-keep class com.google.android.gms.ads.AdActivity { <init>(...); }
+
+# view res/layout/activity_question_practice.xml #generated:15
+-keep class com.google.android.gms.ads.AdView { <init>(...); }
+
+# view AndroidManifest.xml #generated:38
 -keep class com.hanaone.tplt.HelpActivity { <init>(...); }
 
-# view AndroidManifest.xml #generated:18
+# view AndroidManifest.xml #generated:22
 -keep class com.hanaone.tplt.MainActivity { <init>(...); }
 
-# view AndroidManifest.xml #generated:30
+# view AndroidManifest.xml #generated:36
 -keep class com.hanaone.tplt.QuestionActivity { <init>(...); }
 
-# view AndroidManifest.xml #generated:31
+# view AndroidManifest.xml #generated:37
 -keep class com.hanaone.tplt.ResultActivity { <init>(...); }
 
-# view AndroidManifest.xml #generated:29
+# view AndroidManifest.xml #generated:35
 -keep class com.hanaone.tplt.SelectionActivity { <init>(...); }
 
-# view res/layout/activity_help.xml #generated:157
-# view res/layout/activity_help.xml #generated:204
-# view res/layout/activity_help.xml #generated:267
+# view res/layout/activity_question_practice.xml #generated:230
+-keep class com.hanaone.tplt.view.DigitalClockView { <init>(...); }
+
+# view res/layout/activity_help.xml #generated:160
+# view res/layout/activity_help.xml #generated:207
 -keep class com.kyleduo.switchbutton.SwitchButton { <init>(...); }
 
-# onClick res/layout/activity_help.xml #generated:27
-# onClick res/layout/activity_help.xml #generated:287
-# onClick res/layout/activity_help.xml #generated:310
-# onClick res/layout/activity_main.xml #generated:25
-# onClick res/layout/activity_main.xml #generated:90
-# onClick res/layout/activity_question_practice.xml #generated:102
-# onClick res/layout/activity_question_practice.xml #generated:20
-# onClick res/layout/activity_question_practice.xml #generated:71
-# onClick res/layout/activity_question_practice.xml #generated:82
-# onClick res/layout/activity_question_practice.xml #generated:92
-# onClick res/layout/activity_result.xml #generated:26
-# onClick res/layout/activity_selection.xml #generated:108
-# onClick res/layout/activity_selection.xml #generated:27
-# onClick res/layout/activity_selection.xml #generated:56
-# onClick res/layout/activity_selection.xml #generated:67
-# onClick res/layout/activity_selection.xml #generated:97
+# onClick res/layout/activity_help.xml #generated:28
+# onClick res/layout/activity_help.xml #generated:282
+# onClick res/layout/activity_help.xml #generated:296
+# onClick res/layout/activity_help.xml #generated:319
+# onClick res/layout/activity_help.xml #generated:334
+# onClick res/layout/activity_help.xml #generated:348
+# onClick res/layout/activity_help.xml #generated:371
+# onClick res/layout/activity_main.xml #generated:27
+# onClick res/layout/activity_main.xml #generated:92
+# onClick res/layout/activity_question_practice.xml #generated:139
+# onClick res/layout/activity_question_practice.xml #generated:159
+# onClick res/layout/activity_question_practice.xml #generated:204
+# onClick res/layout/activity_question_practice.xml #generated:216
+# onClick res/layout/activity_question_practice.xml #generated:40
+# onClick res/layout/activity_question_practice.xml #generated:66
+# onClick res/layout/activity_result.xml #generated:28
+# onClick res/layout/activity_selection.xml #generated:101
+# onClick res/layout/activity_selection.xml #generated:112
+# onClick res/layout/activity_selection.xml #generated:29
+# onClick res/layout/activity_selection.xml #generated:60
+# onClick res/layout/activity_selection.xml #generated:71
 -keepclassmembers class * { *** onClick(...); }
 

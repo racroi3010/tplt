@@ -1,26 +1,22 @@
 package com.hanaone.tplt.adapter;
 
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.hanaone.tplt.Constants;
 import com.hanaone.tplt.R;
 import com.hanaone.tplt.db.ExamDataSet;
 import com.hanaone.tplt.db.LevelDataSet;
-
-import android.content.Context;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 public class ListExamHeaderAdapter extends BaseAdapter {
 	// adapter
@@ -28,12 +24,11 @@ public class ListExamHeaderAdapter extends BaseAdapter {
 	private ListLevelListener mListener;
 	private List<ExamItem> items;
 	private LayoutInflater mInflater;
-	private DatabaseAdapter dbAdapter;
 //	private List<DownloadInfo> infos;	
 	
 	// header
 	private static final int TYPE_ITEM = 0;
-	 private static final int TYPE_SEPARATOR = 1;
+	private static final int TYPE_SEPARATOR = 1;
 	public enum RowType{
 		LIST_ITEM, HEADER_ITEM
 	}
@@ -41,8 +36,7 @@ public class ListExamHeaderAdapter extends BaseAdapter {
 		//super(mContext);
 		this.mContext = mContext;
 		this.mListener = mListener;
-		this.mInflater = LayoutInflater.from(mContext);
-		this.dbAdapter  = new DatabaseAdapter(mContext);
+		this.mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 	}
 	
@@ -67,44 +61,30 @@ public class ListExamHeaderAdapter extends BaseAdapter {
 	public long getItemId(int arg0) {
 		return 0;
 	}
-		
-//	public void setExams(List<ExamDataSet> exams) {
-//		this.exams = exams;
-//		Collections.sort(exams, new Comparator<ExamDataSet>() {
-//
-//			@Override
-//			public int compare(ExamDataSet arg0, ExamDataSet arg1) {
-//				if(arg0.getNumber() > arg1.getNumber()){
-//					return -1;
-//				} else if(arg0.getNumber() < arg1.getNumber()){
-//					return 1;
-//				}
-//				return 0;
-//			}
-//			
-//		});		
-//		this.notifyDataSetChanged();
-//	}	
-//	public void setDownloadInfos(List<DownloadInfo> infos) {
-//		this.infos = infos;
-//	}	
-	
-//	@Override
-//	public int getItemViewType(int position) {
-//		return getItem(position).getViewType();
-//	}
+	@Override
+	public int getItemViewType(int position) {
+		return items.get(position).getViewType();
+	}
 	@Override
 	public int getViewTypeCount() {
 		return RowType.values().length;
 	}
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-		//int rowType = getItemViewType(position);
+	public View getView(int position, View convertView, ViewGroup parent) {	
+
 		
-		convertView = items.get(position).getView(mInflater, convertView, parent);
-		
+		convertView = items.get(position).getView(mContext, mInflater, convertView, parent);
 		return convertView;
 	}
+
+
+
+	
+	public interface ExamItem {
+		public int getViewType();
+		public View getView(Context context, LayoutInflater inflater, View convertView, ViewGroup parent);
+	}
+	
 	public static class ExamHeader implements ExamItem{
 		private final ExamDataSet exam;
 		
@@ -118,9 +98,9 @@ public class ListExamHeaderAdapter extends BaseAdapter {
 		}
 
 		@Override
-		public View getView(LayoutInflater inflater, View convertView, ViewGroup parent) {
+		public View getView(Context context, LayoutInflater inflater, View convertView, ViewGroup parent) {
 			final ViewHolderHeader holder;
-			if(convertView == null){
+			if(convertView == null || !(convertView.getTag() instanceof ViewHolderHeader)){
 				convertView = inflater.inflate(R.layout.layout_exam_header, parent, false);
 				holder = new ViewHolderHeader();
 				holder.txtTitle = (TextView) convertView.findViewById(R.id.txt_title);	
@@ -130,8 +110,10 @@ public class ListExamHeaderAdapter extends BaseAdapter {
 			} else {
 				holder = (ViewHolderHeader) convertView.getTag();
 			}
+			String examName = context.getResources().getString(R.string.exam_title);
 			
-			holder.txtTitle.setText(exam.getNumber() + "");
+			
+			holder.txtTitle.setText(String.format(examName, exam.getNumber()));			
 			return convertView;
 		}
 		private class ViewHolderHeader{
@@ -142,9 +124,11 @@ public class ListExamHeaderAdapter extends BaseAdapter {
 	public static class ExamLevelItem implements ExamItem{
 		private LevelDataSet level;
 		private DownloadInfo info;
-		public ExamLevelItem(LevelDataSet level, DownloadInfo info) {
+		private ListLevelListener mListener;
+		public ExamLevelItem(LevelDataSet level, DownloadInfo info, ListLevelListener mListener) {
 			this.level = level;
 			this.info = info;
+			this.mListener = mListener;
 		}
 
 		@Override
@@ -153,12 +137,12 @@ public class ListExamHeaderAdapter extends BaseAdapter {
 		}
 
 		@Override
-		public View getView(LayoutInflater inflater, View convertView, ViewGroup parent) {
+		public View getView(Context context, LayoutInflater inflater, View convertView, ViewGroup parent) {
 			final ViewHolderItem holder;	
 			if(convertView == null || !(convertView.getTag() instanceof ViewHolderItem)){
 				convertView = inflater.inflate(R.layout.layout_exam_item, parent, false);
 				holder = new ViewHolderItem();
-				holder.layout = (LinearLayout) convertView;
+				holder.layout = (LinearLayout) convertView.findViewById(R.id.layout_item);
 				holder.imgIcon = (ImageView) convertView.findViewById(R.id.img_new_lesson);
 				holder.txtLabel = (TextView) convertView.findViewById(R.id.txt_label);
 				holder.prgBar = (ProgressBar) convertView.findViewById(R.id.prg_level);
@@ -177,6 +161,7 @@ public class ListExamHeaderAdapter extends BaseAdapter {
 				holder.info = this.info;				
 				
 			}
+			
 			this.info.setLayout(holder.layout);
 			this.info.setPrgBar(holder.prgBar);
 			this.info.setTxtPer(holder.txtScore);			
@@ -201,8 +186,16 @@ public class ListExamHeaderAdapter extends BaseAdapter {
 				info.getPrgBar().setProgress(info.getProgress());
 				info.getTxtPer().setText(info.getProgress() + "%");
 				//info.getLayoutLevel1().setAlpha(1f);
-			}			
+			}		
+			holder.layout.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					mListener.onSelect(level, info);
+				}
+			});
 			
+		
 			return convertView;
 		}
 		private class ViewHolderItem{
@@ -216,6 +209,10 @@ public class ListExamHeaderAdapter extends BaseAdapter {
 		}		
 
 	}
+
+
+
+
 
 
 }
