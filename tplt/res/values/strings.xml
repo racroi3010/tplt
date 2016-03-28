@@ -55,7 +55,6 @@
     <string name="exam_title">TOPIK - %1$d회</string>
     <string name="exam_level_title">%1$s</string>
     <string name="exam_level_point">Point\n%1$s/%2$s</string>
-    <string name="loading_exam">Loading New Exams...</string>
     
     <!-- Dialog -->
 	<string name="dialog_title_caution">Download data files?</string>

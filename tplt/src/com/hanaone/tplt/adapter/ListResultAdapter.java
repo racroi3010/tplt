@@ -82,18 +82,18 @@ public class ListResultAdapter extends BaseAdapter {
 			if(data.getChoice() == data.getAnswer()){
 				holder.btnChoice.setText(data.getChoice() + "");
 				//holder.txtChoice.setTextColor(mContext.getResources().getColor(R.color.GREEN));
-				holder.btnChoice.setBackgroundResource(R.drawable.num_green);
+				holder.btnChoice.setBackgroundResource(R.drawable.circle_number_green);
 				
 				holder.txtScore.setText(data.getScore() + "");
 			} else if(data.getChoice() != -1) {
 				holder.btnChoice.setText(data.getChoice() + "");
 				//holder.txtChoice.setTextColor(mContext.getResources().getColor(R.color.RED));	
-				holder.btnChoice.setBackgroundResource(R.drawable.num_red);
+				holder.btnChoice.setBackgroundResource(R.drawable.circle_number_red);
 				holder.txtScore.setText("0");	
 			} else {
 				holder.btnChoice.setText("");
 				//holder.txtChoice.setTextColor(mContext.getResources().getColor(R.color.GREEN));
-				holder.btnChoice.setBackgroundResource(R.drawable.num_trans);
+				holder.btnChoice.setBackgroundResource(R.drawable.circle_number_trans);
 				
 				holder.txtScore.setText("0");				
 			}

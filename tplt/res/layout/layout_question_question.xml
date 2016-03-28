@@ -109,7 +109,7 @@
                 android:id="@+id/btn_question_choice_1"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:background="@drawable/num_trans"
+                android:background="@drawable/circle_number_trans"
                 android:gravity="center"
                 android:text="1"
                 android:textColor="@color/BLACK" />
@@ -144,7 +144,7 @@
                 android:id="@+id/btn_question_choice_2"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:background="@drawable/num_trans"
+                android:background="@drawable/circle_number_trans"
                 android:gravity="center"
                 android:text="2"
                 android:textColor="@color/BLACK" />
@@ -179,7 +179,7 @@
                 android:id="@+id/btn_question_choice_3"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:background="@drawable/num_trans"
+                android:background="@drawable/circle_number_trans"
                 android:gravity="center"
                 android:text="3"
                 android:textColor="@color/BLACK" />
@@ -214,7 +214,7 @@
                 android:id="@+id/btn_question_choice_4"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:background="@drawable/num_trans"
+                android:background="@drawable/circle_number_trans"
                 android:gravity="center"
                 android:text="4"
                 android:textColor="@color/BLACK" />

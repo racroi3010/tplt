@@ -101,10 +101,10 @@ public class ListSectionAdapter extends BaseAdapter {
 		question.setChoice(btn);
 		switch (btn) {
 		case 1:
-			btn1.setBackgroundResource(R.drawable.num_black);						
-			btn2.setBackgroundResource(R.drawable.num_trans);
-			btn3.setBackgroundResource(R.drawable.num_trans);
-			btn4.setBackgroundResource(R.drawable.num_trans);
+			btn1.setBackgroundResource(R.drawable.circle_number_black);						
+			btn2.setBackgroundResource(R.drawable.circle_number_trans);
+			btn3.setBackgroundResource(R.drawable.circle_number_trans);
+			btn4.setBackgroundResource(R.drawable.circle_number_trans);
 			
 			
 			btn1.setTextColor(mContext.getResources().getColor(R.color.WHITE));
@@ -114,10 +114,10 @@ public class ListSectionAdapter extends BaseAdapter {
 			question.setChoice(1);			
 			break;
 		case 2:
-			btn1.setBackgroundResource(R.drawable.num_trans);
-			btn2.setBackgroundResource(R.drawable.num_black);
-			btn3.setBackgroundResource(R.drawable.num_trans);
-			btn4.setBackgroundResource(R.drawable.num_trans);
+			btn1.setBackgroundResource(R.drawable.circle_number_trans);
+			btn2.setBackgroundResource(R.drawable.circle_number_black);
+			btn3.setBackgroundResource(R.drawable.circle_number_trans);
+			btn4.setBackgroundResource(R.drawable.circle_number_trans);
 			
 			btn1.setTextColor(mContext.getResources().getColor(R.color.BLACK));
 			btn2.setTextColor(mContext.getResources().getColor(R.color.WHITE));
@@ -126,10 +126,10 @@ public class ListSectionAdapter extends BaseAdapter {
 			question.setChoice(2);			
 			break;
 		case 3:
-			btn1.setBackgroundResource(R.drawable.num_trans);
-			btn2.setBackgroundResource(R.drawable.num_trans);
-			btn3.setBackgroundResource(R.drawable.num_black);
-			btn4.setBackgroundResource(R.drawable.num_trans);
+			btn1.setBackgroundResource(R.drawable.circle_number_trans);
+			btn2.setBackgroundResource(R.drawable.circle_number_trans);
+			btn3.setBackgroundResource(R.drawable.circle_number_black);
+			btn4.setBackgroundResource(R.drawable.circle_number_trans);
 			
 			btn1.setTextColor(mContext.getResources().getColor(R.color.BLACK));
 			btn2.setTextColor(mContext.getResources().getColor(R.color.BLACK));
@@ -138,10 +138,10 @@ public class ListSectionAdapter extends BaseAdapter {
 			question.setChoice(3);			
 			break;
 		case 4:
-			btn1.setBackgroundResource(R.drawable.num_trans);
-			btn2.setBackgroundResource(R.drawable.num_trans);
-			btn3.setBackgroundResource(R.drawable.num_trans);		
-			btn4.setBackgroundResource(R.drawable.num_black);
+			btn1.setBackgroundResource(R.drawable.circle_number_trans);
+			btn2.setBackgroundResource(R.drawable.circle_number_trans);
+			btn3.setBackgroundResource(R.drawable.circle_number_trans);		
+			btn4.setBackgroundResource(R.drawable.circle_number_black);
 			
 			btn1.setTextColor(mContext.getResources().getColor(R.color.BLACK));
 			btn2.setTextColor(mContext.getResources().getColor(R.color.BLACK));
@@ -316,10 +316,10 @@ public class ListSectionAdapter extends BaseAdapter {
 				holder = (QuestionViewHolder) convertView.getTag();
 			}
 			
-			holder.btnChoice1.setBackgroundResource(R.drawable.num_trans);
-			holder.btnChoice2.setBackgroundResource(R.drawable.num_trans);
-			holder.btnChoice3.setBackgroundResource(R.drawable.num_trans);
-			holder.btnChoice4.setBackgroundResource(R.drawable.num_trans);	
+			holder.btnChoice1.setBackgroundResource(R.drawable.circle_number_trans);
+			holder.btnChoice2.setBackgroundResource(R.drawable.circle_number_trans);
+			holder.btnChoice3.setBackgroundResource(R.drawable.circle_number_trans);
+			holder.btnChoice4.setBackgroundResource(R.drawable.circle_number_trans);	
 			
 			if(question.getHint() == null || question.getHint().isEmpty()){
 				holder.btnHint.setVisibility(Button.GONE);
@@ -466,7 +466,7 @@ public class ListSectionAdapter extends BaseAdapter {
 			}
 			if(btn != null){
 				btn.setTextColor(mContext.getResources().getColor(R.color.WHITE));
-				btn.setBackgroundResource(R.drawable.num_black);
+				btn.setBackgroundResource(R.drawable.circle_number_black);
 			}
 			
 			// check result
@@ -476,7 +476,7 @@ public class ListSectionAdapter extends BaseAdapter {
 				
 				//ResultDataSet result = mResults.get(question.getNumber() - 1);
 				
-				Button rBtn = null;
+				btn = null;
 				switch (question.getAnswer()) {
 				case 1:
 					btn = holder.btnChoice1;
@@ -493,11 +493,11 @@ public class ListSectionAdapter extends BaseAdapter {
 				default:
 					break;
 				}
-				if(rBtn != null){
-					rBtn.setBackgroundResource(R.drawable.num_green);
+				if(btn != null){
+					btn.setBackgroundResource(R.drawable.circle_number_green);
 				}			
 				
-				rBtn = null;
+				btn = null;
 				switch (question.getChoice()) {
 				case 1:
 					btn = holder.btnChoice1;
@@ -514,11 +514,10 @@ public class ListSectionAdapter extends BaseAdapter {
 				default:
 					break;
 				}
-				if(rBtn != null){
+				if(btn != null){
 					if(question.getChoice() != question.getAnswer()){
-						rBtn.setBackgroundResource(R.drawable.num_red);
-					}
-					
+						btn.setBackgroundResource(R.drawable.circle_number_red);
+					}					
 				}														
 					
 			}			

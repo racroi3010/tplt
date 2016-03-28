@@ -268,10 +268,10 @@ public class QuestionSlideFragment extends Fragment {
 		Context mContext = getActivity();
 		switch (btn) {
 		case 1:
-			btn1.setBackgroundResource(R.drawable.num_black);						
-			btn2.setBackgroundResource(R.drawable.num_trans);
-			btn3.setBackgroundResource(R.drawable.num_trans);
-			btn4.setBackgroundResource(R.drawable.num_trans);
+			btn1.setBackgroundResource(R.drawable.circle_number_black);						
+			btn2.setBackgroundResource(R.drawable.circle_number_trans);
+			btn3.setBackgroundResource(R.drawable.circle_number_trans);
+			btn4.setBackgroundResource(R.drawable.circle_number_trans);
 			
 			
 			btn1.setTextColor(mContext.getResources().getColor(R.color.WHITE));
@@ -281,10 +281,10 @@ public class QuestionSlideFragment extends Fragment {
 			question.setChoice(1);			
 			break;
 		case 2:
-			btn1.setBackgroundResource(R.drawable.num_trans);
-			btn2.setBackgroundResource(R.drawable.num_black);
-			btn3.setBackgroundResource(R.drawable.num_trans);
-			btn4.setBackgroundResource(R.drawable.num_trans);
+			btn1.setBackgroundResource(R.drawable.circle_number_trans);
+			btn2.setBackgroundResource(R.drawable.circle_number_black);
+			btn3.setBackgroundResource(R.drawable.circle_number_trans);
+			btn4.setBackgroundResource(R.drawable.circle_number_trans);
 			
 			btn1.setTextColor(mContext.getResources().getColor(R.color.BLACK));
 			btn2.setTextColor(mContext.getResources().getColor(R.color.WHITE));
@@ -293,10 +293,10 @@ public class QuestionSlideFragment extends Fragment {
 			question.setChoice(2);			
 			break;
 		case 3:
-			btn1.setBackgroundResource(R.drawable.num_trans);
-			btn2.setBackgroundResource(R.drawable.num_trans);
-			btn3.setBackgroundResource(R.drawable.num_black);
-			btn4.setBackgroundResource(R.drawable.num_trans);
+			btn1.setBackgroundResource(R.drawable.circle_number_trans);
+			btn2.setBackgroundResource(R.drawable.circle_number_trans);
+			btn3.setBackgroundResource(R.drawable.circle_number_black);
+			btn4.setBackgroundResource(R.drawable.circle_number_trans);
 			
 			btn1.setTextColor(mContext.getResources().getColor(R.color.BLACK));
 			btn2.setTextColor(mContext.getResources().getColor(R.color.BLACK));
@@ -305,10 +305,10 @@ public class QuestionSlideFragment extends Fragment {
 			question.setChoice(3);			
 			break;
 		case 4:
-			btn1.setBackgroundResource(R.drawable.num_trans);
-			btn2.setBackgroundResource(R.drawable.num_trans);
-			btn3.setBackgroundResource(R.drawable.num_trans);		
-			btn4.setBackgroundResource(R.drawable.num_black);
+			btn1.setBackgroundResource(R.drawable.circle_number_trans);
+			btn2.setBackgroundResource(R.drawable.circle_number_trans);
+			btn3.setBackgroundResource(R.drawable.circle_number_trans);		
+			btn4.setBackgroundResource(R.drawable.circle_number_black);
 			
 			btn1.setTextColor(mContext.getResources().getColor(R.color.BLACK));
 			btn2.setTextColor(mContext.getResources().getColor(R.color.BLACK));
