@@ -2,7 +2,7 @@
  -dontpreverify
  -verbose
 
-  -dontskipnonpubliclibraryclasses
+ -dontskipnonpubliclibraryclasses
   -optimizations !code/simplification/arithmetic,!field/*,!class/merging/*
 
  -keep public class * extends android.app.Activity
@@ -38,12 +38,11 @@ public <init>(android.content.Context, android.util.AttributeSet);
  
 -keep class android.support.v4.* { *; }
 -dontwarn android.support.v4.**
--keep class org.jsoup.* { *; }
--dontwarn org.jsoup.**
 
 -keep interface com.hanaone.media.AudioControllerView.MediaPlayerControl{*;}
 
 -keep interface com.hanaone.tplt.adapter.ListExamHeaderAdapter.ExamItem{*;}
+-keep interface com.hanaone.tplt.adapter.ListSectionAdapter.Item{*;}
 
 -keep class com.hanaone.tplt.db.*{*;}
 -keepclassmembers class com.hanaone.tplt.db.** { *; }  
@@ -51,3 +50,22 @@ public <init>(android.content.Context, android.util.AttributeSet);
 
 -keep class com.hanaone.tplt.util.DatabaseUtils {*;}
 -keep class com.hanaone.jni.stringFromJNI {*;}
+
+-keep class * extends java.util.ListResourceBundle {
+    protected Object[][] getContents();
+}
+
+-keep public class com.google.android.gms.common.internal.safeparcel.SafeParcelable {
+    public static final *** NULL;
+}
+
+-keepnames @com.google.android.gms.common.annotation.KeepName class *
+-keepclassmembernames class * {
+    @com.google.android.gms.common.annotation.KeepName *;
+}
+
+-keepnames class * implements android.os.Parcelable {
+    public static final ** CREATOR;
+}
+
+-dontwarn com.google.android.gms.**
