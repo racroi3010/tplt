@@ -11,9 +11,9 @@
 
     <!-- Setting -->
     <string name="title_home">Home</string>
-    <string name="title_setting">Setting</string>
+    <string name="title_setting">Settings</string>
     <string name="title_result">Result</string>
-    <string name="setting_play_audio">Play Audio</string>
+    <string name="setting_play_audio">Auto Play Audio</string>
     <string name="setting_auto">Auto</string>
     <string name="setting_manual">Manual</string>
     <string name="setting_rate">Rate this app</string>
@@ -39,8 +39,9 @@
     <string name="result_wrong">Wrong: </string>
     <string name="result_no_answer">No Answer: </string>
     <string name="result_score">Score: </string>
-    <string name="result_pass">PASS</string>
-    <string name="result_failed">FAILED</string>
+    <string name="result_awesome">Awesome</string>
+    <string name="result_well_done">Well Done</string>
+    <string name="result_more_practice">You Need More Practice</string>
     <string name="result_bar_question">Question</string>
     <string name="result_bar_choice">Your Choice</string>
     <string name="result_bar_answer">Answer</string>
@@ -68,9 +69,9 @@
     <string name="dialog_no">NO</string>
     <string name="dialog_ok">OK</string>
     <string name="dialog_caution">CAUTION</string>
-    <string name="dialog_ask_download">Data files will be downloaded\nPress YES to continue.</string>
-    <string name="dialog_ask_downloading">the data is downloading\nPlease wait for a minute.</string>
-    <string name="dialog_ask_queued">the data is queued\nPlease wait for finish other download processes.</string>
+    <string name="dialog_ask_download">Warning: Data files are huge.\nPress YES to continue.</string>
+    <string name="dialog_ask_downloading">Data files are being downloaded\nPlease wait for a minute.</string>
+    <string name="dialog_ask_queued">Data files are queued\nPlease wait for other download processes.</string>
 		
 	
     <string-array name="array_language">
@@ -80,7 +81,7 @@
     </string-array>
 
     <!-- Ads -->
-    <string name="banner_ad_id">ca-app-pub-3940256099942544/6300978111</string>
-    <string name="interstitialAd_id">ca-app-pub-3940256099942544/1033173712</string>
+    <string name="banner_ad_id">ca-app-pub-4421553447993889/9089829078</string>
+    <string name="interstitialAd_id">ca-app-pub-4421553447993889/9386573472</string>
 
 </resources>

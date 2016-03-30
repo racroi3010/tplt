@@ -147,7 +147,7 @@ public class ResultActivity extends Activity {
 		
 		txtTotal.setText(listResult.size() + "");
 		txtRight.setText(correct + "");
-		txtScore.setText(score + "");
+		txtScore.setText(score + "/" + maxScore);
 
 	
 		mode = PreferenceHandler.getQuestionModePreference(mContext);
@@ -199,7 +199,7 @@ public class ResultActivity extends Activity {
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();
-		if(minInterstitialAd.isLoaded()){
+		if(Config.adsSupport && minInterstitialAd.isLoaded()){
 			minInterstitialAd.show();
 		} else {
 			goHome();
@@ -207,8 +207,7 @@ public class ResultActivity extends Activity {
 		
 	}	
 	private void requestNewInterstitial(){
-		AdRequest adRequest = new AdRequest.Builder()
-					.addTestDevice("164BB929448C71E850DFB3DC28B7F5BA").build();
+		AdRequest adRequest = new AdRequest.Builder().build();
 		minInterstitialAd.loadAd(adRequest);	
 					
 	}    
@@ -237,15 +236,18 @@ public class ResultActivity extends Activity {
 		TextView txtNoAnswer = (TextView) dialog.findViewById(R.id.txt_result_no_answer);
 		txtNoAnswer.setText(noAnswer + "");
 		TextView txtScore = (TextView) dialog.findViewById(R.id.txt_result_score);
-		txtScore.setText(score + "");
+		txtScore.setText(score + "/" + maxScore);
 		TextView txtGrade = (TextView) dialog.findViewById(R.id.txt_result_grade);
-		if(correct >= listResult.size()/2){
-			txtGrade.setText("PASS");
-			txtGrade.setTextColor(getResources().getColor(R.color.GREEN));
-		} else {
-			txtGrade.setText("FAILED");
+		if(score < (6 * maxScore/10)){
+			txtGrade.setText(mContext.getResources().getString(R.string.result_more_practice));
 			txtGrade.setTextColor(getResources().getColor(R.color.RED));
-		}		
+		} else if(score < (9 * maxScore/10)){
+			txtGrade.setText(mContext.getResources().getString(R.string.result_well_done));
+			txtGrade.setTextColor(getResources().getColor(R.color.BLUE));
+		} else {
+			txtGrade.setText(mContext.getResources().getString(R.string.result_awesome));
+			txtGrade.setTextColor(getResources().getColor(R.color.GREEN));			
+		}
 		dialog.findViewById(R.id.btn_dialog_ok).setOnClickListener(new OnClickListener() {
 			
 			@Override

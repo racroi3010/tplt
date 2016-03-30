@@ -12,14 +12,22 @@
         android:layout_alignParentTop="true"
         android:orientation="vertical" >
 
-        <com.google.android.gms.ads.AdView
-            android:id="@+id/adView"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/layout_adView"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            ads:adSize="SMART_BANNER"
-            ads:adUnitId="@string/banner_ad_id"
-            android:visibility="gone" >
-        </com.google.android.gms.ads.AdView>
+            android:orientation="vertical" >
+
+            <com.google.android.gms.ads.AdView
+                android:id="@+id/adView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                ads:adSize="SMART_BANNER"
+                ads:adUnitId="@string/banner_ad_id"
+                android:visibility="visible" >
+            </com.google.android.gms.ads.AdView>
+        </LinearLayout>
+
         <TextView
             android:id="@+id/txt_question_practice_title"
             android:layout_width="match_parent"
@@ -28,12 +36,13 @@
             android:text="@string/question_practice"
             android:textColor="@color/BLACK"
             android:textSize="18sp"
-            android:textStyle="bold" />		
+            android:textStyle="bold" />
+
         <RelativeLayout
             android:id="@+id/layout_home_setting"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="visible" >
+            android:visibility="gone" >
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -58,14 +67,16 @@
                     android:text="@string/title_home"
                     android:textColor="@color/CYAN" />
             </LinearLayout>
-	        <TextView
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_centerInParent="true"
-	            android:text="@string/question_practice"
-	            android:textColor="@color/BLACK"
-	            android:textSize="18sp"
-	            android:textStyle="bold" />			
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/question_practice"
+                android:textColor="@color/BLACK"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

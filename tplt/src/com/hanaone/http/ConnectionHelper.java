@@ -25,6 +25,7 @@ import com.hanaone.tplt.db.FileDataSet;
 public class ConnectionHelper {
 	public static final int HOST_GOOGLE = 0;
 	public static final int HOST_DROPBOX = 1;
+	public static final int HOST_AMAZON = 2;
 	
 	private Context mContext;
 	
@@ -37,11 +38,14 @@ public class ConnectionHelper {
 	public InputStream connect(String remoteFile, int host) throws IOException, SAXException, ParserConfigurationException{
 		InputStream is = null;
 		switch (host) {
-		case 0:
+		case HOST_GOOGLE:
 			is = gConnect(remoteFile);
 			break;
-		case 1:
+		case HOST_DROPBOX:
 			
+			break;
+		case HOST_AMAZON:
+			is = aConnect(remoteFile);
 			break;
 		default:
 			break;
@@ -51,11 +55,14 @@ public class ConnectionHelper {
 	public long getSize(String remoteFile, int host) throws IOException{
 		long size = 0;
 		switch (host) {
-		case 0:
+		case HOST_GOOGLE:
 			size = gGetSize(remoteFile);
 			break;
-		case 1:
+		case HOST_DROPBOX:
 			
+			break;
+		case HOST_AMAZON:
+			size = aGetSize(remoteFile);
 			break;
 		default:
 			break;
@@ -164,12 +171,7 @@ public class ConnectionHelper {
 					}
 					
 				}
-				values = map.get("content-Length");
-				if(values != null && !values.isEmpty()){
-					String sLength = values.get(0);
-					
-					return Long.parseLong(sLength);
-				}	
+	
 			}
 		}
 		return 0;		
@@ -201,16 +203,23 @@ public class ConnectionHelper {
         }
         return result;
     }	
-	private InputStream parseUrl(String remoteFile) throws IOException{
+	private InputStream aConnect(String remoteFile) throws IOException{
+		String cookie = GetCookieFromURL("http://52.27.144.7:8080/webfilesys/servlet?command=login&userid=readuser&password=readuser&logonbutton=Logon");
 		URL  url = new URL(remoteFile);
 		URLConnection connection = url.openConnection();
 		if(connection instanceof HttpURLConnection){
 			HttpURLConnection httpConnection = (HttpURLConnection) connection;
 			httpConnection.setAllowUserInteraction(false);
 			httpConnection.setInstanceFollowRedirects(true);
+			httpConnection.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows 2000)");
+			httpConnection.setDoOutput(true);
+			httpConnection.setDoInput(true);
+			httpConnection.setUseCaches(false);
+			httpConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+			httpConnection.setRequestProperty("Content-Language", "en-US");
+			httpConnection.setRequestProperty("Cookie", cookie);	
 			
 			httpConnection.setRequestMethod("GET");
-					
 			
 			httpConnection.connect();
 			
@@ -221,7 +230,61 @@ public class ConnectionHelper {
 			}
 		}		
 		return null;
-	}	    
+	}	
+	
+	private InputStream parseUrl(String remoteFile) throws IOException{
+		URL  url = new URL(remoteFile);
+		URLConnection connection = url.openConnection();
+		if(connection instanceof HttpURLConnection){
+			HttpURLConnection httpConnection = (HttpURLConnection) connection;
+			httpConnection.setAllowUserInteraction(false);
+			httpConnection.setInstanceFollowRedirects(true);
+			
+			httpConnection.setRequestMethod("GET");
+			
+			httpConnection.connect();
+			
+			int resCode = httpConnection.getResponseCode();
+			if(resCode == HttpURLConnection.HTTP_OK){				
+				InputStream is = httpConnection.getInputStream();
+				return is;			
+			}
+		}		
+		return null;
+	}		
+	private long aGetSize(String remoteFile) throws IOException{
+		String cookie = GetCookieFromURL("http://52.27.144.7:8080/webfilesys/servlet?command=login&userid=readuser&password=readuser&logonbutton=Logon");
+		URL  url = new URL(remoteFile);
+		URLConnection connection = url.openConnection();
+		if(connection instanceof HttpURLConnection){
+			HttpURLConnection httpConnection = (HttpURLConnection) connection;
+			httpConnection.setAllowUserInteraction(false);
+			httpConnection.setInstanceFollowRedirects(true);
+			httpConnection.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows 2000)");
+			httpConnection.setDoOutput(true);
+			httpConnection.setDoInput(true);
+			httpConnection.setUseCaches(false);
+			httpConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+			httpConnection.setRequestProperty("Content-Language", "en-US");
+			httpConnection.setRequestProperty("Cookie", cookie);	
+			
+			httpConnection.setRequestMethod("GET");
+			
+			httpConnection.connect();
+			
+			int resCode = httpConnection.getResponseCode();
+			if(resCode == HttpURLConnection.HTTP_OK){				
+				Map<String, List<String>> map = httpConnection.getHeaderFields();
+				List<String> values = map.get("Content-Length");
+				if(values != null && !values.isEmpty()){
+					String sLength = values.get(0);
+					
+					return Long.parseLong(sLength);
+				}				
+			}
+		}	
+		return 0;
+	}
 	private InputStream parseUrl(String remoteFile, String cookie) throws IOException{
 		URL  url = new URL(remoteFile);
 		URLConnection connection = url.openConnection();

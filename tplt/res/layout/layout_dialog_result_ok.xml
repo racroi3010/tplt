@@ -146,7 +146,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
-                android:text="@string/result_pass"
+                android:text="@string/result_awesome"
                 android:textColor="@color/GREEN"
                 android:textSize="30sp"
                 android:textStyle="bold" />

@@ -26,13 +26,13 @@ public class DownloadHelper {
 	public DownloadHelper(Context mContext) {
 		super();
 		this.mContext = mContext;
-		this.mConnection = new ConnectionHelper(mContext);
+		this.mConnection = new ConnectionHelper(this.mContext);
 	}
 
 
 	public boolean downloadFile(String remoteFile, String localFile) throws IOException, SAXException, ParserConfigurationException{	
 		
-		InputStream is = this.mConnection.connect(remoteFile, ConnectionHelper.HOST_GOOGLE);
+		InputStream is = this.mConnection.connect(remoteFile, getType(remoteFile));
 		
 		if(is != null){
 			//File folder = mContext.getDir("tplt", Context.MODE_PRIVATE);
@@ -53,10 +53,21 @@ public class DownloadHelper {
 		return false;
 		
 	}
+	private int getType(String remoteFile){
+		if(remoteFile == null) return -1;
+		if(remoteFile.contains("google.com")){
+			return ConnectionHelper.HOST_GOOGLE;
+		} else if(remoteFile.contains("dropbox.com")){
+			return ConnectionHelper.HOST_DROPBOX;
+		} else if(remoteFile.contains("52.27.144.7")){
+			return ConnectionHelper.HOST_AMAZON;
+		}
+		return -1;
+	}
 	public InputStream parseUrl(String remoteFile) throws IOException, SAXException, ParserConfigurationException{
-		return this.mConnection.connect(remoteFile, ConnectionHelper.HOST_GOOGLE);
+		return this.mConnection.connect(remoteFile, getType(remoteFile));
 	}
 	public long getSize(String remoteFile) throws IOException{
-		return this.mConnection.getSize(remoteFile, ConnectionHelper.HOST_GOOGLE);
+		return this.mConnection.getSize(remoteFile, getType(remoteFile));
 	}
 }

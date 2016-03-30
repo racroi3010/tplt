@@ -89,12 +89,6 @@
                 android:layout_height="30dp"
                 android:background="@drawable/ic_sync_black_24dp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:text="@string/loading_exam"
-                android:textColor="@color/BLACK" />
         </LinearLayout>
     </LinearLayout>
 
