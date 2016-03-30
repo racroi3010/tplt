@@ -317,6 +317,8 @@ public class MainActivity extends Activity {
 				
 				@Override
 				public void onClick(View v) {
+					// set queue
+					info.setStatus(DownloadInfo.QUEUED);
 					dlAdapter.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 					dialog.dismiss();
 				}

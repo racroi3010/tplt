@@ -17,13 +17,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             ads:adSize="SMART_BANNER"
-            ads:adUnitId="@string/banner_ad_id" >
+            ads:adUnitId="@string/banner_ad_id"
+            android:visibility="gone" >
         </com.google.android.gms.ads.AdView>
-
+        <TextView
+            android:id="@+id/txt_question_practice_title"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:gravity="center"
+            android:text="@string/question_practice"
+            android:textColor="@color/BLACK"
+            android:textSize="18sp"
+            android:textStyle="bold" />		
         <RelativeLayout
             android:id="@+id/layout_home_setting"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:visibility="visible" >
 
             <LinearLayout
                 android:layout_width="wrap_content"

@@ -3,10 +3,16 @@ package com.hanaone.tplt;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.Window;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
@@ -23,6 +29,7 @@ import com.hanaone.tplt.db.LevelDataSet;
 import com.hanaone.tplt.db.QuestionDataSet;
 import com.hanaone.tplt.db.ResultDataSet;
 import com.hanaone.tplt.db.SectionDataSet;
+import com.hanaone.tplt.util.Config;
 import com.hanaone.tplt.util.PreferenceHandler;
 
 public class ResultActivity extends Activity {
@@ -31,6 +38,10 @@ public class ResultActivity extends Activity {
 	private ArrayList<ResultDataSet> listResult;
 	private int score;
 	private String mode;
+	private int maxScore;
+	private int correct;
+	private int wrong;
+	private int noAnswer;
 	private InterstitialAd minInterstitialAd;
 	private ListAdapterListener mListener = new ListAdapterListener() {
 		
@@ -79,8 +90,10 @@ public class ResultActivity extends Activity {
 		
 		level = getIntent().getParcelableExtra(Constants.LEVEL);
 		score = 0;
-		int maxScore = 0;
-		int right = 0;
+		maxScore = 0;
+		correct = 0;
+		wrong = 0;
+		noAnswer = 0;
 		if(level != null){
 			listResult = new ArrayList<ResultDataSet>();
 			if(level.getSections() != null){
@@ -96,7 +109,11 @@ public class ResultActivity extends Activity {
 						
 						if(data.getChoice() == data.getAnswer()){
 							score += data.getScore();
-							right ++;
+							correct ++;
+						} else if(data.getChoice() > 0){
+							wrong ++;
+						} else {
+							noAnswer ++;
 						}
 						maxScore += question.getMark();
 					}
@@ -129,15 +146,9 @@ public class ResultActivity extends Activity {
 		
 		
 		txtTotal.setText(listResult.size() + "");
-		txtRight.setText(right + "");
+		txtRight.setText(correct + "");
 		txtScore.setText(score + "");
-//		if(right >= listResult.size()/2){
-//			txtGrade.setText("PASS");
-//			txtGrade.setTextColor(getResources().getColor(R.color.GREEN));
-//		} else {
-//			txtGrade.setText("FAILED");
-//			txtGrade.setTextColor(getResources().getColor(R.color.RED));
-//		}
+
 	
 		mode = PreferenceHandler.getQuestionModePreference(mContext);
 		if(Constants.QUESTION_MODE_EXAM.equals(mode)){
@@ -145,25 +156,35 @@ public class ResultActivity extends Activity {
 		}	
 		
 		// ads
-		minInterstitialAd = new InterstitialAd(this);
-		minInterstitialAd.setAdUnitId(getResources().getString(R.string.interstitialAd_id));
-		
-		minInterstitialAd.setAdListener(new AdListener() {
-
-			@Override
-			public void onAdClosed() {
-				requestNewInterstitial();
-				goHome();
-				super.onAdClosed();
-			}
+		if(Config.adsSupport){
+			minInterstitialAd = new InterstitialAd(this);
+			minInterstitialAd.setAdUnitId(getResources().getString(R.string.interstitialAd_id));
 			
+			minInterstitialAd.setAdListener(new AdListener() {
+
+				@Override
+				public void onAdClosed() {
+					requestNewInterstitial();
+					goHome();
+					super.onAdClosed();
+				}
+				
+			});
+			requestNewInterstitial();			
+		}
+		
+		new Handler().post(new Runnable() {
+			@Override
+			public void run() {
+				showDialog();
+			}
 		});
-		requestNewInterstitial();
+
 	}
     public void onClick(View v){
     	switch (v.getId()) {
 		case R.id.btn_home:
-			if(minInterstitialAd.isLoaded()){
+			if(Config.adsSupport && minInterstitialAd.isLoaded()){
 				minInterstitialAd.show();
 			} else {
 				goHome();
@@ -200,4 +221,39 @@ public class ResultActivity extends Activity {
 		finish();
 		startActivity(intent);		
 	}
+	private void showDialog(){
+		final Dialog dialog = new Dialog(mContext);
+		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		dialog.setContentView(R.layout.layout_dialog_result_ok);
+		dialog.getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+		dialog.show();
+		
+		TextView txtTotal = (TextView) dialog.findViewById(R.id.txt_result_total);
+		txtTotal.setText(listResult.size() + "");
+		TextView txtCorrect = (TextView) dialog.findViewById(R.id.txt_result_correct);
+		txtCorrect.setText(correct + "");
+		TextView txtWrong = (TextView) dialog.findViewById(R.id.txt_result_wrong);
+		txtWrong.setText(wrong + "");
+		TextView txtNoAnswer = (TextView) dialog.findViewById(R.id.txt_result_no_answer);
+		txtNoAnswer.setText(noAnswer + "");
+		TextView txtScore = (TextView) dialog.findViewById(R.id.txt_result_score);
+		txtScore.setText(score + "");
+		TextView txtGrade = (TextView) dialog.findViewById(R.id.txt_result_grade);
+		if(correct >= listResult.size()/2){
+			txtGrade.setText("PASS");
+			txtGrade.setTextColor(getResources().getColor(R.color.GREEN));
+		} else {
+			txtGrade.setText("FAILED");
+			txtGrade.setTextColor(getResources().getColor(R.color.RED));
+		}		
+		dialog.findViewById(R.id.btn_dialog_ok).setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				dialog.dismiss();
+			}
+		});
+	
+	}
+
 }

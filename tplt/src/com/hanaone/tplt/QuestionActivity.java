@@ -35,6 +35,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -266,16 +267,27 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 		mPager = (ViewPager) findViewById(R.id.viewpager_question_vp);
 		mList = (ListView) findViewById(R.id.list_sections);
 		// ads
-	    AdView mAdView = (AdView) findViewById(R.id.adView);
-	    AdRequest adRequest = new AdRequest.Builder().build();
-	    mAdView.loadAd(adRequest);		
+		AdView mAdView = (AdView) findViewById(R.id.adView);
+		TextView title = (TextView) findViewById(R.id.txt_question_practice_title);
+		if(Config.adsSupport){		    
+		    AdRequest adRequest = new AdRequest.Builder().build();
+		    mAdView.loadAd(adRequest);	
+		    title.setVisibility(TextView.GONE);
+		} else {
+			mAdView.setVisibility(AdView.GONE);
+			
+		}
+	
+	    
+	    
 		if(Constants.QUESTION_MODE_PRACTICE.equals(mMode)){
 			findViewById(R.id.layout_previous).setVisibility(LinearLayout.VISIBLE);
 			findViewById(R.id.layout_next).setVisibility(LinearLayout.VISIBLE);
 			findViewById(R.id.layout_home_setting).setVisibility(RelativeLayout.VISIBLE);
 			findViewById(R.id.btn_submit).setVisibility(Button.GONE);	
 			findViewById(R.id.layout_list_sections).setVisibility(RelativeLayout.GONE);	
-			mAdView.setVisibility(AdView.GONE);
+			if(mAdView != null) mAdView.setVisibility(AdView.GONE);
+			title.setVisibility(TextView.GONE);
 			mPager.setVisibility(ViewPager.VISIBLE);
 			//mList.setVisibility(ListView.GONE);
 			
@@ -323,7 +335,9 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 			findViewById(R.id.layout_home_setting).setVisibility(RelativeLayout.GONE);
 			findViewById(R.id.btn_result).setVisibility(Button.VISIBLE);	
 			findViewById(R.id.layout_list_sections).setVisibility(RelativeLayout.VISIBLE);
-			mAdView.setVisibility(AdView.VISIBLE);
+			if(mAdView != null) mAdView.setVisibility(AdView.VISIBLE);
+			title.setVisibility(TextView.VISIBLE);
+			title.setText(getResources().getString(R.string.question_review));
 			mPager.setVisibility(ViewPager.GONE);
 			//mList.setVisibility(ListView.VISIBLE);
 
@@ -358,7 +372,9 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 			findViewById(R.id.layout_home_setting).setVisibility(RelativeLayout.GONE);
 			findViewById(R.id.btn_submit).setVisibility(Button.VISIBLE);	
 			findViewById(R.id.layout_list_sections).setVisibility(RelativeLayout.VISIBLE);	
-			mAdView.setVisibility(AdView.VISIBLE);
+			if(mAdView != null) mAdView.setVisibility(AdView.VISIBLE);
+			title.setVisibility(TextView.VISIBLE);
+			title.setText(getResources().getString(R.string.question_test));						
 			mPager.setVisibility(ViewPager.GONE);
 			//mList.setVisibility(ListView.VISIBLE);
 			

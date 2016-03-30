@@ -208,8 +208,8 @@ public class DownloadAdapter extends AsyncTask<Void, Integer, Boolean> {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
-							String choicePath = externalRootPath + "/img_" + level.getId() + "_" + section.getId() 
-									+ "_" + question.getId() + "_" +  choice.getLabel() + ".jpg";
+							String choicePath = externalRootPath + "/img_" + level.getId() + "_" + section.getNumber() 
+									+ "_" + question.getNumber() + "_" +  choice.getLabel() + ".jpg";
 							try {
 								InputStream is = dlHelper.parseUrl(urlChoice);
 								if(is != null){
