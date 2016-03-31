@@ -194,6 +194,9 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 		super.onCreate(savedInstanceState);
 	
 		setContentView(R.layout.activity_question_practice);
+		
+		overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+		
 		mContext = this;
 		dbAdapter = new DatabaseAdapter(mContext);
 		

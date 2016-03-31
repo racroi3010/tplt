@@ -357,6 +357,12 @@ public class DatabaseAdapter{
 		
 		return levelData;
 	}
-	
+	public boolean checkLevel(int level){
+		List<QuestionSample> questionModels = this.dbHelper.selectionQuestionByExamLevelAndQuestionNumber(35, level, 1);	
+		if(questionModels.size() == 0){
+			return false;
+		}
+		return true;
+	}
 	
 }

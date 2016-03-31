@@ -78,6 +78,7 @@ public class HelpActivity extends Activity {
 		}
 	}
 
+
 	private void onInit() {
 		int position = PreferenceHandler.getLanguagePositionPreference(mContext);
 		LocaleUtils.setLocale(mContext, position);	

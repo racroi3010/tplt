@@ -92,6 +92,10 @@ public class ListExamHeaderAdapter extends BaseAdapter {
 			this.exam = exam;
 		}
 		
+		public ExamDataSet getExam() {
+			return exam;
+		}
+
 		@Override
 		public int getViewType() {
 			return RowType.HEADER_ITEM.ordinal();

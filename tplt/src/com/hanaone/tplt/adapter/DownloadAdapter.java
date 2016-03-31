@@ -345,7 +345,7 @@ public class DownloadAdapter extends AsyncTask<Void, Integer, Boolean> {
 					//layout.setAlpha(1f);
 					int updatedActive = dbAdapter.updateLevelActive(level.getId(), true);
 					
-					showMsg("download finish! " + updatedActive);			
+					showMsg("finish download exam level" + level.getLabel());			
 				} else {
 					if(prgBar != null) prgBar.setProgress(0);
 					if(txtPer != null) txtPer.setText("0/100");

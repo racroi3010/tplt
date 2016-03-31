@@ -38,6 +38,7 @@ import com.hanaone.tplt.adapter.DatabaseAdapter;
 import com.hanaone.tplt.adapter.DownloadAdapter;
 import com.hanaone.tplt.adapter.DownloadInfo;
 import com.hanaone.tplt.adapter.ListExamHeaderAdapter;
+import com.hanaone.tplt.adapter.ListExamHeaderAdapter.ExamHeader;
 import com.hanaone.tplt.adapter.ListLevelListener;
 import com.hanaone.tplt.db.ExamDataSet;
 import com.hanaone.tplt.db.LevelDataSet;
@@ -215,9 +216,20 @@ public class MainActivity extends Activity {
 								
 								list.add(exam);	
 								//infos.add(new DownloadInfo());
-								listItem.add(new ListExamHeaderAdapter.ExamHeader(exam));
+								int index = 0;
+								for(int i = 0; i < listItem.size(); i ++){
+									if(listItem.get(i) instanceof ListExamHeaderAdapter.ExamHeader){
+										ListExamHeaderAdapter.ExamHeader headerItem = (ExamHeader) listItem.get(i);
+										if(exam.getNumber() > headerItem.getExam().getNumber()){
+											index = i;
+											break;
+										}
+									}
+									index ++;
+								}
+								listItem.add(index ++, new ListExamHeaderAdapter.ExamHeader(exam));
 								for(LevelDataSet level: exam.getLevels()){
-									listItem.add(new ListExamHeaderAdapter.ExamLevelItem(level, new DownloadInfo(), mListener));
+									listItem.add(index ++,new ListExamHeaderAdapter.ExamLevelItem(level, new DownloadInfo(), mListener));
 								}
 								publishProgress();
 							}

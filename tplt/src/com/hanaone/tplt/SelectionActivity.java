@@ -6,10 +6,14 @@ import com.hanaone.tplt.adapter.DatabaseAdapter;
 import com.hanaone.tplt.db.LevelDataSet;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -66,15 +70,26 @@ public class SelectionActivity extends Activity {
 			startActivity(intent);
 			break;
 		case R.id.btn_selection_sample_beginner:
+			if(dbAdapter.checkLevel(1)){
+				intent = new Intent(mContext, QuestionActivity.class);
+				intent.putExtra(Constants.QUESTION_MODE, Constants.QUESTION_MODE_SAMPLE_BEGINNER);
+				startActivity(intent);				
+			} else {
+				String msg = mContext.getResources().getString(R.string.dialog_data_not_exists);
+				showDialog(msg);
+			}
 
-			intent = new Intent(mContext, QuestionActivity.class);
-			intent.putExtra(Constants.QUESTION_MODE, Constants.QUESTION_MODE_SAMPLE_BEGINNER);
-			startActivity(intent);
 			break;
 		case R.id.btn_selection_sample_intermediate:
-			intent = new Intent(mContext, QuestionActivity.class);
-			intent.putExtra(Constants.QUESTION_MODE, Constants.QUESTION_MODE_SAMPLE_INTERMEDIATE);
-			startActivity(intent);			
+			if(dbAdapter.checkLevel(2)){
+				intent = new Intent(mContext, QuestionActivity.class);
+				intent.putExtra(Constants.QUESTION_MODE, Constants.QUESTION_MODE_SAMPLE_INTERMEDIATE);
+				startActivity(intent);					
+			} else {
+				String msg = mContext.getResources().getString(R.string.dialog_data_not_exists);
+				showDialog(msg);				
+			}
+		
 			break;
 		case R.id.btn_home:
 			finish();
@@ -83,6 +98,24 @@ public class SelectionActivity extends Activity {
 		default:
 			break;
 		}
+	}
+	
+	public void showDialog(String msg){
+		final Dialog dialog = new Dialog(mContext);
+		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		dialog.setContentView(R.layout.layout_dialog_ok);
+		dialog.getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+		dialog.show();
+		
+		((TextView)dialog.findViewById(R.id.txt_dialog_content)).setText(msg);	
+		
+		dialog.findViewById(R.id.btn_dialog_ok).setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				dialog.dismiss();
+			}
+		});			
 	}
 		
 }

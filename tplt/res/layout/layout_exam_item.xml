@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/layout_item"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="horizontal" >
+    android:layout_height="wrap_content" >
 	
     <RelativeLayout
         android:id="@+id/layout_icon"
         android:layout_width="100dp"
         android:layout_height="100dp"
+        android:layout_alignParentLeft="true"
         android:background="#4f9cfa" >
 
         <ImageView
@@ -31,12 +31,33 @@
             android:textStyle="bold" />
     </RelativeLayout>
 
+
+
     <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="4"
-        android:gravity="center"
-        android:orientation="vertical"
+        android:id="@+id/layout_score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:orientation="vertical" 
+        android:layout_margin="10dp">
+
+        <TextView
+            android:id="@+id/txt_score"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/exam_level_point"
+            android:textColor="@color/GRAY_ICON" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/layout_score"
+        android:layout_toRightOf="@id/layout_icon"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:orientation="horizontal"
         android:padding="10dp" >
 
         <ProgressBar
@@ -49,21 +70,4 @@
             android:progress="50"
             android:progressDrawable="@drawable/progressbar" />
     </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_weight="1"
-        android:orientation="vertical" >
-
-        <TextView
-            android:id="@+id/txt_score"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/exam_level_point"
-            android:textColor="@color/GRAY_ICON" />
-    </LinearLayout>
-
-</LinearLayout>
+</RelativeLayout>
