@@ -57,6 +57,7 @@ public class Constants {
 	public static final String UPDATE_SCORE_LEVEL_ID = "UPDATE_SCORE_LEVEL_ID";
 	public static final String UPDATE_SCORE = "UPDATE_SCORE";
 	
+	public static final int REQ_UPDATE_LOCALE = 1;
 	
 	
 	public static final String LANGUAGE_POSITION = "LANGUAGE_POSITION";

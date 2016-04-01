@@ -1,5 +1,6 @@
 package com.hanaone.tplt;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -9,12 +10,15 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnPreparedListener;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -26,6 +30,8 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewGroup.MarginLayoutParams;
@@ -34,6 +40,7 @@ import android.widget.DigitalClock;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -42,6 +49,10 @@ import com.google.android.gms.ads.AdView;
 import com.hanaone.media.AudioControllerView;
 import com.hanaone.media.AudioControllerView.MediaPlayerControl;
 import com.hanaone.tplt.adapter.DatabaseAdapter;
+import com.hanaone.tplt.adapter.DownloadFileAdapter;
+import com.hanaone.tplt.adapter.DownloadInfo;
+import com.hanaone.tplt.adapter.DownloadLevelAdapter;
+import com.hanaone.tplt.adapter.DownloadListener;
 import com.hanaone.tplt.adapter.ListAdapterListener;
 import com.hanaone.tplt.adapter.ListSectionAdapter;
 import com.hanaone.tplt.adapter.QuestionSlideAdapter;
@@ -54,7 +65,7 @@ import com.hanaone.tplt.util.Config;
 import com.hanaone.tplt.util.PreferenceHandler;
 import com.hanaone.tplt.view.DigitalClockView;
 
-public class QuestionActivity extends FragmentActivity implements OnPreparedListener, MediaPlayerControl{
+public class QuestionActivity extends FragmentActivity implements OnPreparedListener, MediaPlayerControl, DownloadListener{
 	private AudioControllerView mControllerView;
 	private Context mContext;
 	private static MediaPlayer mPlayer;
@@ -108,30 +119,10 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 					audio = level.getAudio().get(0);
 				}
 				mPlayer = getMediaPlayer();	
-				String path = audio.getPath();
-				try {
-					
-					mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);					
-					FileInputStream is = new FileInputStream(path);				
-					mPlayer.setDataSource(is.getFD());
-					is.close();
-					mPlayer.prepareAsync();
-					mPlayer.setOnPreparedListener(QuestionActivity.this);
-					
-					//mControllerView.show(0);
-				} catch (IllegalArgumentException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (SecurityException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IllegalStateException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}					
+				String path = audio.getPathLocal();
+				setAudioResouce(path, true);
+
+				
 			}
 		}
 
@@ -161,32 +152,13 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 					audio = level.getAudio().get(0);
 				}
 				mPlayer = getMediaPlayer();	
-				String path = audio.getPath();
-				try {
-					
-					mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);					
-					FileInputStream is = new FileInputStream(path);				
-					mPlayer.setDataSource(is.getFD());
-					is.close();
-					mPlayer.prepareAsync();
-					mPlayer.setOnPreparedListener(QuestionActivity.this);
-					
-					//mControllerView.show(0);
-				} catch (IllegalArgumentException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (SecurityException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IllegalStateException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}					
+				String path = audio.getPathLocal();
+				setAudioResouce(path, true);			
+
+				
 			}			
 		}
+
 
 	};
 	@Override
@@ -214,41 +186,15 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 		PreferenceHandler.setQuestionModePreference(mContext, mMode);
 		mControllerView = new AudioControllerView(this);		
 		mPlayer = getMediaPlayer();		
+		
 		if(Constants.QUESTION_MODE_EXAM.equals(mMode) || Constants.QUESTION_MODE_PRACTICE.equals(mMode)){
 			int levelId = getIntent().getIntExtra(Constants.LEVEL_ID, -1);
 			level = dbAdapter.getLevel(levelId);			
 
-			String path = level.getAudio().get(0).getPath();
-		
-			try {
-			
-				mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-				if(Config.LOGGING){
-					Log.w("mystring", "before " + level.getAudio().get(0).toString());
-				}						
-				FileInputStream is = new FileInputStream(path);
-				if(Config.LOGGING){
-					Log.w("mystring", "after");
-				}					
-				mPlayer.setDataSource(is.getFD());
-				is.close();
-				mPlayer.prepareAsync();
-				mPlayer.setOnPreparedListener(this);
-				
-				//mControllerView.show(0);
-			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (SecurityException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalStateException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}			
+
+			String path = level.getAudio().get(0).getPathLocal();
+			setAudioResouce(path, true);
+
 		} else if(Constants.QUESTION_MODE_SAMPLE_BEGINNER.equals(mMode)){
 			level = dbAdapter.generateSampleTest(1);
 			currentItem = 0;
@@ -259,7 +205,9 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 			currentItem = 0;
 			mHander.obtainMessage(HANDLE_PLAY_LIST).sendToTarget();
 		} else if(Constants.QUESTION_MODE_REVIEW.equals(mMode)){
+			
 			level = getIntent().getParcelableExtra(Constants.LEVEL);
+			// keep reference object			
 			//listResult = getIntent().getParcelableArrayListExtra(Constants.LIST_RESULT);
 			questionNumber = getIntent().getIntExtra(Constants.QUESTION_NUMBER, 0);
 		}
@@ -341,6 +289,7 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 			findViewById(R.id.layout_home_setting).setVisibility(RelativeLayout.GONE);
 			findViewById(R.id.btn_result).setVisibility(Button.VISIBLE);	
 			findViewById(R.id.layout_list_sections).setVisibility(RelativeLayout.VISIBLE);
+			findViewById(R.id.btn_audio_download).setVisibility(Button.GONE);
 			
 
 			title.setText(getResources().getString(R.string.question_review));
@@ -396,10 +345,11 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 		}
 	}
 	public void onClick(View v){
-		currentItem = mPager.getCurrentItem();
-		int sectionSize = level.getSections().size();
+		int sectionSize = level.getSections().size();	
 		switch (v.getId()) {
 		case R.id.btn_previous:	
+			currentItem = mPager.getCurrentItem();
+					
 			if(currentItem > 0){
 				currentItem --;
 				mPager.setCurrentItem(currentItem);
@@ -414,6 +364,8 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 
 			break;
 		case R.id.btn_next:
+			currentItem = mPager.getCurrentItem();
+		
 			if(currentItem < sectionSize - 1){
 				currentItem ++;
 				mPager.setCurrentItem(currentItem);
@@ -447,8 +399,17 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 			break;
 		case R.id.btn_setting:
 			Intent intent = new Intent(mContext, HelpActivity.class);
-			startActivity(intent);			
+			startActivityForResult(intent, Constants.REQ_UPDATE_LOCALE);			
 			break;
+		case R.id.btn_audio_download:
+			if(level.getAudio().size() > currentItem){
+				confirmDownload(level.getAudio().get(currentItem));
+			} else {
+				confirmDownload(level.getAudio().get(0));
+			}
+			
+			break;
+			
 		default:
 			break;
 		}
@@ -629,34 +590,13 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 			case HANDLE_PLAY_AUDIO:
 				String path = (String) msg.obj;
 				mPlayer.reset();
-				mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-				FileInputStream is;
-				try {
-					is = new FileInputStream(path);
-					mPlayer.setDataSource(is.getFD());
-					is.close();
-					mPlayer.prepareAsync();
-					mPlayer.setOnPreparedListener(QuestionActivity.this);
-					
-				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IllegalArgumentException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IllegalStateException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-	
+				setAudioResouce(path, true);
+				
 				break;
 			case HANDLE_PLAY_LIST:
 				List<FileDataSet> audios = level.getAudio();	
 				if(audios.size() > currentItem){
-					path = audios.get(currentItem).getPath();
+					path = audios.get(currentItem).getPathLocal();
 					obtainMessage(HANDLE_PLAY_AUDIO, path).sendToTarget();					
 				}
 
@@ -685,6 +625,60 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 //		}
 //		
 //	}
+	public void confirmDownload(final FileDataSet file){
+		Resources resouces = mContext.getResources();
+		
+
+		final Dialog dialog = new Dialog(mContext);
+		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		dialog.setContentView(R.layout.layout_dialog_yes_no);
+		dialog.getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+		dialog.show();
+		((TextView)dialog.findViewById(R.id.txt_dialog_content)).setText(resouces.getString(R.string.dialog_ask_download));
+		
+		
+		dialog.findViewById(R.id.btn_dialog_ok).setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				showDownloadDialog(file);
+				dialog.dismiss();
+			}
+		});	
+		dialog.findViewById(R.id.btn_dialog_no).setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				dialog.dismiss();
+			}
+		});	
+		
+		
+	}		
+	public void showDownloadDialog(final FileDataSet file){
+		final Dialog dialog = new Dialog(mContext);
+		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		dialog.setContentView(R.layout.layout_dialog_download_cancel);
+		dialog.getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+		dialog.show();
+		dialog.setCancelable(false);
+		
+		dialog.findViewById(R.id.btn_dialog_ok).setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				dialog.dismiss();
+			}
+		});	
+		
+		DownloadInfo info = new DownloadInfo();
+		info.setPrgBar((ProgressBar)dialog.findViewById(R.id.prg_dialog_download));
+		info.setTxtPer((TextView)dialog.findViewById(R.id.txt_dialog_file_progress));
+		info.setTxtSize((TextView)dialog.findViewById(R.id.txt_dialog_file_size));
+		
+		new DownloadFileAdapter(file, info, mContext, new DatabaseAdapter(mContext), dialog, this).execute();
+		
+	}
 	@Override
 	public void onBackPressed() {
 		if(clock != null){
@@ -707,5 +701,77 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 		}
 		
 		return mPlayer;		
+	}
+
+	@Override
+	public void onFinishNotify(boolean flag) {
+		if(flag){
+			findViewById(R.id.btn_audio_download).setVisibility(Button.GONE);
+			onInit();
+			onInitLayout();
+			
+			// update
+			if(Constants.QUESTION_MODE_REVIEW.equals(mMode)){
+				FileDataSet currentFile = level.getAudio().get(currentItem);
+				for(FileDataSet fileData: level.getAudio()){
+					if(fileData.getId() == currentFile.getId() && !fileData.equals(currentFile)){
+						fileData.setPathLocal(currentFile.getPathLocal());
+					}
+				}
+			}
+		}
+	}
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if(RESULT_OK == resultCode && Constants.REQ_UPDATE_LOCALE == requestCode){
+			// check update locale
+			boolean updateLocale = data.getBooleanExtra(Constants.UPDATE_LOCALE, false);
+			if(updateLocale){
+				setContentView(R.layout.activity_question_practice);
+				onInit();
+				onInitLayout();
+			}			
+		}
+	}	
+	private void setAudioResouce(String path, boolean resetView){
+		boolean flag = false;
+		if(path != null && !path.isEmpty()){
+			try {
+				
+				mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);					
+				FileInputStream is = new FileInputStream(path);				
+				mPlayer.setDataSource(is.getFD());
+				is.close();
+				mPlayer.prepareAsync();
+				mPlayer.setOnPreparedListener(QuestionActivity.this);
+				
+				flag = true;
+				//mControllerView.show(0);
+			} catch (IllegalArgumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SecurityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalStateException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}				
+		}
+		if(resetView){
+			if(flag){
+				findViewById(R.id.btn_audio_download).setVisibility(Button.GONE);
+				findViewById(R.id.layout_audio).setVisibility(FrameLayout.VISIBLE);
+			} else {
+				findViewById(R.id.btn_audio_download).setVisibility(Button.VISIBLE);
+				findViewById(R.id.layout_audio).setVisibility(FrameLayout.GONE);
+			}				
+		}
+	
+
+		
 	}
 }

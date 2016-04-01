@@ -2,15 +2,14 @@ package com.hanaone.http;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
 import android.util.JsonReader;
 
+import com.hanaone.tplt.Constants;
 import com.hanaone.tplt.db.ChoiceDataSet;
 import com.hanaone.tplt.db.ExamDataSet;
 import com.hanaone.tplt.db.FileDataSet;
@@ -50,7 +49,7 @@ public class JsonReaderHelper {
 		while(reader.hasNext()){
 			String name = reader.nextName();
 			if(name.equals("downloadUrl")){
-				rs.setPath(reader.nextString());
+				rs.setPathRemote(reader.nextString());
 			} else if(name.equals("fileName")){
 				rs.setName(reader.nextString());
 			} else if(name.equals("sizeBytes")){
@@ -129,8 +128,6 @@ public class JsonReaderHelper {
 				data.setHint(reader.nextString());
 			} else if(name.equals("question_answer")){
 				data.setAnswer(reader.nextInt());
-			} else if(name.equals("question_choice_type")){
-				data.setChoiceType(reader.nextString());
 			} else if(name.equals("question_choices")){
 				data.setChoices(readChoices(reader));
 			} else if(name.equals("question_start_audio")){
@@ -154,6 +151,13 @@ public class JsonReaderHelper {
 			choice = readChoice(reader);
 			if(choice != null){
 				choice.setNumber(i++);
+				
+				if(Constants.FILE_TYPE_IMG.equals(choice.getType())){
+					FileDataSet img = new FileDataSet();
+					img.setPathRemote(choice.getContent());
+					choice.setImg(img);
+					choice.setContent(null);
+				}
 				choices.add(choice);
 			}
 		}
@@ -169,8 +173,10 @@ public class JsonReaderHelper {
 			String name = reader.nextName();
 			if(name.equals("label")){
 				choice.setLabel(reader.nextString());
+			} else if(name.equals("type")) {
+				choice.setType(reader.nextString());
 			} else if(name.equals("txt")){
-				choice.setText(reader.nextString());
+				choice.setContent(reader.nextString());
 			} else {
 				reader.skipValue();
 			}
@@ -233,17 +239,17 @@ public class JsonReaderHelper {
 			} else if(name.equals("txt")){
 				FileDataSet txt = new FileDataSet();
 				txt.setName("txt");
-				txt.setPath(reader.nextString());
+				txt.setPathRemote(reader.nextString());
 				data.setTxt(txt);
 			} else if(name.equals("pdf")){
 				FileDataSet pdf = new FileDataSet();
 				pdf.setName("pdf");
-				pdf.setPath(reader.nextString());
+				pdf.setPathRemote(reader.nextString());
 				data.setPdf(pdf);				
 			} else if(name.equals("mp3")){
 				FileDataSet audio = new FileDataSet();
 				audio.setName("pdf");
-				audio.setPath(reader.nextString());
+				audio.setPathRemote(reader.nextString());
 				List<FileDataSet> audios = new ArrayList<FileDataSet>();
 				audios.add(audio);
 				data.setAudio(audios);		

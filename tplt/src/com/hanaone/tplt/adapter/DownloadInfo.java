@@ -2,6 +2,7 @@ package com.hanaone.tplt.adapter;
 
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class DownloadInfo {
@@ -12,9 +13,10 @@ public class DownloadInfo {
 
 	private volatile ProgressBar prgBar;
 
-	private volatile LinearLayout layout;
+	private volatile RelativeLayout layout;
 
 	private volatile TextView txtPer;
+	private volatile TextView txtSize;
 
 	private volatile int status;
 	
@@ -39,11 +41,11 @@ public class DownloadInfo {
 		this.prgBar = prgBar;
 	}
 
-	public LinearLayout getLayout() {
+	public RelativeLayout getLayout() {
 		return layout;
 	}
 
-	public void setLayout(LinearLayout layout) {
+	public void setLayout(RelativeLayout layout) {
 		this.layout = layout;
 	}
 
@@ -61,6 +63,14 @@ public class DownloadInfo {
 
 	public void setProgress(int progress) {
 		this.progress = progress;
+	}
+
+	public TextView getTxtSize() {
+		return txtSize;
+	}
+
+	public void setTxtSize(TextView txtSize) {
+		this.txtSize = txtSize;
 	}
 
 	// old

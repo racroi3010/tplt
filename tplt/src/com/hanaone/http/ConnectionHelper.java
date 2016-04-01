@@ -112,8 +112,8 @@ public class ConnectionHelper {
 						String temp = Constants.getInternalPath(mContext, Constants.PATH_TEMP) + "/temp.txt";
 						if(saveGJsonFile(is, temp)){
 							FileDataSet data = JsonReaderHelper.readFileDataset(new File(temp));
-							if(data.getPath() != null){
-								return parseUrl(data.getPath());
+							if(data.getPathRemote() != null){
+								return parseUrl(data.getPathRemote());
 							}
 						}
 					}

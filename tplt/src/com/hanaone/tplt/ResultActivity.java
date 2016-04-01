@@ -80,6 +80,7 @@ public class ResultActivity extends Activity {
 			// TODO Auto-generated method stub
 			
 		}
+
 	};
 
 	@Override

@@ -17,6 +17,7 @@ import android.os.Message;
 import android.util.Log;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,12 +30,12 @@ import com.hanaone.tplt.db.QuestionDataSet;
 import com.hanaone.tplt.db.SectionDataSet;
 import com.hanaone.tplt.util.Config;
 
-public class DownloadAdapter extends AsyncTask<Void, Integer, Boolean> {
+public class DownloadLevelAdapter extends AsyncTask<Void, Integer, Boolean> {
 	private LevelDataSet level;
 	private DownloadInfo info;
 	private Context mContext;
 	private DatabaseAdapter dbAdapter;
-	public DownloadAdapter(Context mContext, LevelDataSet level
+	public DownloadLevelAdapter(Context mContext, LevelDataSet level
 			, DownloadInfo info, DatabaseAdapter dbAdapter){
 		this.mContext = mContext;
 		this.level = level;
@@ -47,7 +48,7 @@ public class DownloadAdapter extends AsyncTask<Void, Integer, Boolean> {
 	protected void onPreExecute() {
 		ProgressBar prgBar = this.info.getPrgBar();
 		TextView txtPer = this.info.getTxtPer();
-		LinearLayout layout = this.info.getLayout();
+		RelativeLayout layout = this.info.getLayout();
 		
 		if(prgBar != null) prgBar.setProgress(0);
 		if(txtPer != null) txtPer.setText("0%");
@@ -84,16 +85,16 @@ public class DownloadAdapter extends AsyncTask<Void, Integer, Boolean> {
 		boolean txtFlag = false;
 		String internalRootPath = Constants.getInternalRootPath(mContext);
 		String externalRootPath = Constants.getExternalRootPath(mContext);
-		String urlTxt = level.getTxt().getPath();
-		String urlAudio = level.getAudio().get(0).getPath();
+		String urlTxt = level.getTxt().getPathRemote();
+		String urlAudio = level.getAudio().get(0).getPathRemote();
 		
 		// calculate size
 		long size = 0;
 		try {
 			size += dlHelper.getSize(urlTxt);
-			long audioSize= dlHelper.getSize(urlAudio);
-			audioSize = audioSize == 0 ? 50000000 : audioSize;
-			size += audioSize;
+//			long audioSize= dlHelper.getSize(urlAudio);
+//			audioSize = audioSize == 0 ? 50000000 : audioSize;
+//			size += audioSize;
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -105,79 +106,77 @@ public class DownloadAdapter extends AsyncTask<Void, Integer, Boolean> {
 		
 		String txtPath = internalRootPath + "/" + Constants.FILE_TYPE_TXT + "_" + level.getId() + ".txt";
 		File file = new File(txtPath);
-		if(urlTxt.contains("http")){
-			try {
-				InputStream is = dlHelper.parseUrl(urlTxt);
-				if(is != null){
-					file = new File(txtPath);
-					FileOutputStream os = new FileOutputStream(file);
-					
-					byte[] buf = new byte[1024];
-					int read = 0;
-
-					while((read = is.read(buf)) > 0){
-						os.write(buf, 0, read);	
-						sum += read;		
-						if(size > 0) publishProgress((int)((sum * 100l)/size));							
-					}
-					os.close();
-					is.close();		
-
-				}		
-			} catch (IOException e) {
-//				showMsg(e.getMessage());
-				e.printStackTrace();
-			} catch (SAXException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ParserConfigurationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}					
-		}
-		
-
-		
-		String audioPath = externalRootPath + "/" + Constants.FILE_TYPE_MP3 + "_" + level.getId() + ".mp3";
-		
-		if(urlAudio.contains("http")){
-			try {
-				// multi link
-				String[] links = urlAudio.split(";");
-				//
-				for(String link: links){
-					InputStream is = dlHelper.parseUrl(link);
-					if(is != null){
-						file = new File(audioPath);
-						FileOutputStream os = new FileOutputStream(file);
-						
-						byte[] buf = new byte[1024];
-						int read = 0;
-												
-						while((read = is.read(buf)) > 0){
-							os.write(buf, 0, read);	
-							
-							sum += read;		
-							if(size > 0) publishProgress((int)((sum * 100l)/size));
-						}
-						os.close();
-						is.close();	
-						break;
-					}							
-				}
+		try {
+			InputStream is = dlHelper.parseUrl(urlTxt);
+			if(is != null){
+				file = new File(txtPath);
+				FileOutputStream os = new FileOutputStream(file);
 				
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				//showMsg(e.getMessage());
-			} catch (SAXException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ParserConfigurationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}				
-		}			
+				byte[] buf = new byte[1024];
+				int read = 0;
+
+				while((read = is.read(buf)) > 0){
+					os.write(buf, 0, read);	
+					sum += read;		
+					//if(size > 0) publishProgress((int)((sum * 100l)/size));							
+				}
+				os.close();
+				is.close();		
+
+			}		
+		} catch (IOException e) {
+//			showMsg(e.getMessage());
+			e.printStackTrace();
+		} catch (SAXException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+		
+
+		
+//		String audioPath = externalRootPath + "/" + Constants.FILE_TYPE_MP3 + "_" + level.getId() + ".mp3";
+//		
+//		if(urlAudio.contains("http")){
+//			try {
+//				// multi link
+//				String[] links = urlAudio.split(";");
+//				//
+//				for(String link: links){
+//					InputStream is = dlHelper.parseUrl(link);
+//					if(is != null){
+//						file = new File(audioPath);
+//						FileOutputStream os = new FileOutputStream(file);
+//						
+//						byte[] buf = new byte[1024];
+//						int read = 0;
+//												
+//						while((read = is.read(buf)) > 0){
+//							os.write(buf, 0, read);	
+//							
+//							sum += read;		
+//							if(size > 0) publishProgress((int)((sum * 100l)/size));
+//						}
+//						os.close();
+//						is.close();	
+//						break;
+//					}							
+//				}
+//				
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//				//showMsg(e.getMessage());
+//			} catch (SAXException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			} catch (ParserConfigurationException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}				
+//		}			
 		
 		
 		file = new File(txtPath);
@@ -195,19 +194,39 @@ public class DownloadAdapter extends AsyncTask<Void, Integer, Boolean> {
 				//showMsg(e.getMessage());	
 			}							
 		}			
-		// download image file
+		int k = 2;
+		if(size > 0) publishProgress(k);
+//		// download image file
+		// calculate size
+		boolean flagTemp = false;		
 		if(sections != null){
 			for(SectionDataSet section: sections)
-				for(QuestionDataSet question: section.getQuestions())
-					if(Constants.FILE_TYPE_IMG.equals(question.getChoiceType())){
-						for(ChoiceDataSet choice: question.getChoices()){
-							String urlChoice = choice.getText();
+				for(QuestionDataSet question: section.getQuestions()){
+
+					for(ChoiceDataSet choice: question.getChoices()){
+						if(Constants.FILE_TYPE_IMG.equals(choice.getType())){
+							String urlChoice = choice.getImg().getPathRemote();
 							try {
 								size += dlHelper.getSize(urlChoice);
+								k ++;
+								if(size > 0) publishProgress(k);
 							} catch (IOException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
-							}
+							}		
+							flagTemp = true;
+						} 
+
+					}
+				}
+		}
+		if(sections != null && flagTemp){
+			for(SectionDataSet section: sections)
+				for(QuestionDataSet question: section.getQuestions()){
+					// download
+					for(ChoiceDataSet choice: question.getChoices()){
+						if(Constants.FILE_TYPE_IMG.equals(choice.getType())){
+							String urlChoice = choice.getImg().getPathRemote();
 							String choicePath = externalRootPath + "/img_" + level.getId() + "_" + section.getNumber() 
 									+ "_" + question.getNumber() + "_" +  choice.getLabel() + ".jpg";
 							try {
@@ -228,9 +247,9 @@ public class DownloadAdapter extends AsyncTask<Void, Integer, Boolean> {
 									is.close();		
 
 								}		
-								choice.setText(choicePath);
+								choice.getImg().setPathLocal(choicePath);
 							} catch (IOException e) {
-//								showMsg(e.getMessage());
+//									showMsg(e.getMessage());
 								e.printStackTrace();
 							} catch (SAXException e) {
 								// TODO Auto-generated catch block
@@ -238,11 +257,11 @@ public class DownloadAdapter extends AsyncTask<Void, Integer, Boolean> {
 							} catch (ParserConfigurationException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
-							}	
-							
-						}							
-					}
-
+							}								
+						} 						
+					}							
+				
+				}
 		}			
 		// update
 		
@@ -251,8 +270,8 @@ public class DownloadAdapter extends AsyncTask<Void, Integer, Boolean> {
 				
 				dbAdapter.addSection(data, level.getId());						
 			}	
-			if(dbAdapter.updateLevelTxt(level.getId(), txtPath) > 0){
-				level.getTxt().setPath(txtPath);
+			if(dbAdapter.updateLevelTxt(level.getId(), txtPath, urlTxt) > 0){
+				level.getTxt().setPathLocal(txtPath);
 				txtFlag = true;						
 			}					
 		}
@@ -261,14 +280,16 @@ public class DownloadAdapter extends AsyncTask<Void, Integer, Boolean> {
 		
 
 		// update level
-		file = new File(audioPath);
-		if(file.exists()){
-			
-			if(dbAdapter.updateLevelAudio(level.getId(), audioPath) > 0){
-				audioFlag = true;
-				level.getAudio().get(0).setPath(audioPath);
-			}
-		}
+		audioFlag = true;
+		
+//		file = new File(audioPath);
+//		if(file.exists()){
+//			
+//			if(dbAdapter.updateLevelAudio(level.getId(), audioPath) > 0){
+//				audioFlag = true;
+//				level.getAudio().get(0).setPath(audioPath);
+//			}
+//		}
 		
 
 		info.setStatus(DownloadInfo.COMPLETED);
@@ -330,7 +351,7 @@ public class DownloadAdapter extends AsyncTask<Void, Integer, Boolean> {
 				boolean result = (Boolean) msg.obj;
 				ProgressBar prgBar = info.getPrgBar();
 				TextView txtPer = info.getTxtPer();
-				LinearLayout layout = info.getLayout();	
+				RelativeLayout layout = info.getLayout();	
 				info.setProgress(100);				
 				if(result){
 									

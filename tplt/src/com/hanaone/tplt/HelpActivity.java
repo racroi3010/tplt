@@ -79,6 +79,14 @@ public class HelpActivity extends Activity {
 	}
 
 
+	@Override
+	public void onBackPressed() {
+		Intent intent = new Intent();
+		intent.putExtra(Constants.UPDATE_LOCALE, updateLocale);
+		setResult(RESULT_OK, intent);
+		super.onBackPressed();
+	}
+
 	private void onInit() {
 		int position = PreferenceHandler.getLanguagePositionPreference(mContext);
 		LocaleUtils.setLocale(mContext, position);	

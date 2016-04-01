@@ -1,33 +1,47 @@
 package com.hanaone.tplt;
 
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.hanaone.tplt.adapter.DatabaseAdapter;
+import com.hanaone.tplt.adapter.DownloadFileAdapter;
+import com.hanaone.tplt.adapter.DownloadInfo;
+import com.hanaone.tplt.adapter.DownloadListener;
+import com.hanaone.tplt.adapter.ListAdapterListener;
 import com.hanaone.tplt.db.ChoiceDataSet;
+import com.hanaone.tplt.db.FileDataSet;
 import com.hanaone.tplt.db.QuestionDataSet;
 import com.hanaone.tplt.db.ResultDataSet;
 import com.hanaone.tplt.db.SectionDataSet;
 import com.hanaone.tplt.util.ImageUtils;
 import com.hanaone.tplt.util.PreferenceHandler;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class QuestionSlideFragment extends Fragment {
+public class QuestionSlideFragment extends Fragment implements DownloadListener {
 	private static final String ARG_PAGE = "page";
+	private static final String ARG_Listener = "listener";
 	private ArrayList<SectionDataSet> mSections;
 	private boolean isShowHint;
 	public QuestionSlideFragment() {
@@ -121,23 +135,30 @@ public class QuestionSlideFragment extends Fragment {
 					
 					TextView txtNumber = (TextView) questionView.findViewById(R.id.txt_question_number);
 					TextView txtQuestionHint = (TextView) questionView.findViewById(R.id.txt_question_hint);
-					final Button btn1 = (Button) questionView.findViewById(R.id.btn_question_choice_1);
-					final Button btn2 = (Button) questionView.findViewById(R.id.btn_question_choice_2);
-					final Button btn3 = (Button) questionView.findViewById(R.id.btn_question_choice_3);
-					final Button btn4 = (Button) questionView.findViewById(R.id.btn_question_choice_4);
 					
-					final TextView txt1 = (TextView) questionView.findViewById(R.id.txt_question_choice_1);
-					final TextView txt2 = (TextView) questionView.findViewById(R.id.txt_question_choice_2);
-					final TextView txt3 = (TextView) questionView.findViewById(R.id.txt_question_choice_3);
-					final TextView txt4 = (TextView) questionView.findViewById(R.id.txt_question_choice_4);					
+					final List<Button> btnChoices = new ArrayList<Button>(4);
+					final List<TextView> txtChoices = new ArrayList<TextView>(4);
+					final List<ImageView> imgChoices = new ArrayList<ImageView>(4);
+					
+					btnChoices.add((Button) questionView.findViewById(R.id.btn_question_choice_1));
+					btnChoices.add((Button) questionView.findViewById(R.id.btn_question_choice_2));
+					btnChoices.add((Button) questionView.findViewById(R.id.btn_question_choice_3));
+					btnChoices.add((Button) questionView.findViewById(R.id.btn_question_choice_4));
+					
+					
+					txtChoices.add((TextView) questionView.findViewById(R.id.txt_question_choice_1));
+					txtChoices.add((TextView) questionView.findViewById(R.id.txt_question_choice_2));
+					txtChoices.add((TextView) questionView.findViewById(R.id.txt_question_choice_3));
+					txtChoices.add((TextView) questionView.findViewById(R.id.txt_question_choice_4));	
+	
+					imgChoices.add((ImageView) questionView.findViewById(R.id.img_question_choice_1));
+					imgChoices.add((ImageView) questionView.findViewById(R.id.img_question_choice_2));
+					imgChoices.add((ImageView) questionView.findViewById(R.id.img_question_choice_3));
+					imgChoices.add((ImageView) questionView.findViewById(R.id.img_question_choice_4));
+					
 					
 					TextView txtQuestionTxt = (TextView) questionView.findViewById(R.id.txt_question_txt);
-					ImageView imgQuestion = (ImageView) questionView.findViewById(R.id.img_question);
-					
-					ImageView img1 = (ImageView) questionView.findViewById(R.id.img_question_choice_1);
-					ImageView img2 = (ImageView) questionView.findViewById(R.id.img_question_choice_2);
-					ImageView img3 = (ImageView) questionView.findViewById(R.id.img_question_choice_3);
-					ImageView img4 = (ImageView) questionView.findViewById(R.id.img_question_choice_4);
+					ImageView imgQuestion = (ImageView) questionView.findViewById(R.id.img_question);					
 					
 					final Button btnQuestionHint = (Button) questionView.findViewById(R.id.btn_question_hint);
 					final LinearLayout layoutQuestionHint = (LinearLayout) questionView.findViewById(R.id.layout_question_hint);
@@ -185,68 +206,44 @@ public class QuestionSlideFragment extends Fragment {
 					
 					List<ChoiceDataSet> choices = question.getChoices();
 					if(choices != null){
-						if(Constants.FILE_TYPE_IMG.equals(question.getChoiceType())){
-							txt1.setVisibility(TextView.GONE);
-							txt2.setVisibility(TextView.GONE);
-							txt3.setVisibility(TextView.GONE);
-							txt4.setVisibility(TextView.GONE);
-
-							
-							img1.setImageBitmap(ImageUtils.decodeSampledBitmapFromFile(choices.get(0).getText(), 200, 200));
-							img2.setImageBitmap(ImageUtils.decodeSampledBitmapFromFile(choices.get(1).getText(), 200, 200));
-							img3.setImageBitmap(ImageUtils.decodeSampledBitmapFromFile(choices.get(2).getText(), 200, 200));
-							img4.setImageBitmap(ImageUtils.decodeSampledBitmapFromFile(choices.get(3).getText(), 200, 200));
-							
-							img1.setVisibility(ImageView.VISIBLE);
-							img2.setVisibility(ImageView.VISIBLE);
-							img3.setVisibility(ImageView.VISIBLE);
-							img4.setVisibility(ImageView.VISIBLE);
-						} else {
-							txt1.setVisibility(TextView.VISIBLE);
-							txt2.setVisibility(TextView.VISIBLE);
-							txt3.setVisibility(TextView.VISIBLE);
-							txt4.setVisibility(TextView.VISIBLE);	
-							
-							txt1.setText(choices.get(0).getText());
-							txt2.setText(choices.get(1).getText());
-							txt3.setText(choices.get(2).getText());
-							txt4.setText(choices.get(3).getText());
-							
-							img1.setVisibility(ImageView.GONE);
-							img2.setVisibility(ImageView.GONE);
-							img3.setVisibility(ImageView.GONE);
-							img4.setVisibility(ImageView.GONE);							
-						}
+						for(int i = 0; i < 4; i ++){
+							final ChoiceDataSet choice = choices.get(i);
+							if(Constants.FILE_TYPE_IMG.equals(choice.getType())){
+								txtChoices.get(i).setVisibility(TextView.GONE);
+								imgChoices.get(i).setVisibility(ImageView.VISIBLE);	
+								if(choice.getImg() !=  null && choice.getImg().getPathLocal() != null && new File(choice.getImg().getPathLocal()).exists()){
+									imgChoices.get(i).setImageBitmap(ImageUtils.decodeSampledBitmapFromFile(choice.getImg().getPathLocal(), 200, 200));		
+								} else {
+									// set default image;
+									imgChoices.get(i).setImageBitmap(ImageUtils.decodeSampledBitmapFromResource(getActivity().getResources(), R.drawable.image_unknown, 100, 100));
+									imgChoices.get(i).setOnClickListener(new OnClickListener() {
+										
+										@Override
+										public void onClick(View v) {
+											showDownloadDialog(choice.getImg());
+										}
+									});
+								}
+													
+							}else {
+								txtChoices.get(i).setVisibility(TextView.VISIBLE);
+								txtChoices.get(i).setText(choice.getContent());
+								imgChoices.get(i).setVisibility(ImageView.GONE);						
+							}
+						}		
 						
 					}
-					btn1.setOnClickListener(new OnClickListener() {
-						
-						@Override
-						public void onClick(View v) {
-							onChoose(question, 1, btn1, btn2, btn3, btn4);
-						}
-					});
-					btn2.setOnClickListener(new OnClickListener() {
-						
-						@Override
-						public void onClick(View v) {
-							onChoose(question, 2, btn1, btn2, btn3, btn4);
-						}
-					});
-					btn3.setOnClickListener(new OnClickListener() {
-						
-						@Override
-						public void onClick(View v) {
-							onChoose(question, 3, btn1, btn2, btn3, btn4);
-						}
-					});
-					btn4.setOnClickListener(new OnClickListener() {
-						
-						@Override
-						public void onClick(View v) {
-							onChoose(question, 4, btn1, btn2, btn3, btn4);
-						}
-					});				
+					for(int i = 0; i < btnChoices.size(); i ++){
+						Button btn = btnChoices.get(i);
+						final int pos = i + 1;
+						btn.setOnClickListener(new OnClickListener() {
+							
+							@Override
+							public void onClick(View v) {
+								onChoose(question, pos, btnChoices);
+							}
+						});
+					}				
 									
 					
 					layoutQuestions.addView(questionView);
@@ -263,63 +260,51 @@ public class QuestionSlideFragment extends Fragment {
 	}
 	
 	private void onChoose(QuestionDataSet question, int btn
-			, Button btn1, Button btn2
-			, Button btn3, Button btn4){
-		Context mContext = getActivity();
-		switch (btn) {
-		case 1:
-			btn1.setBackgroundResource(R.drawable.circle_number_black);						
-			btn2.setBackgroundResource(R.drawable.circle_number_trans);
-			btn3.setBackgroundResource(R.drawable.circle_number_trans);
-			btn4.setBackgroundResource(R.drawable.circle_number_trans);
-			
-			
-			btn1.setTextColor(mContext.getResources().getColor(R.color.WHITE));
-			btn2.setTextColor(mContext.getResources().getColor(R.color.BLACK));
-			btn3.setTextColor(mContext.getResources().getColor(R.color.BLACK));
-			btn4.setTextColor(mContext.getResources().getColor(R.color.BLACK));
-			question.setChoice(1);			
-			break;
-		case 2:
-			btn1.setBackgroundResource(R.drawable.circle_number_trans);
-			btn2.setBackgroundResource(R.drawable.circle_number_black);
-			btn3.setBackgroundResource(R.drawable.circle_number_trans);
-			btn4.setBackgroundResource(R.drawable.circle_number_trans);
-			
-			btn1.setTextColor(mContext.getResources().getColor(R.color.BLACK));
-			btn2.setTextColor(mContext.getResources().getColor(R.color.WHITE));
-			btn3.setTextColor(mContext.getResources().getColor(R.color.BLACK));
-			btn4.setTextColor(mContext.getResources().getColor(R.color.BLACK));			
-			question.setChoice(2);			
-			break;
-		case 3:
-			btn1.setBackgroundResource(R.drawable.circle_number_trans);
-			btn2.setBackgroundResource(R.drawable.circle_number_trans);
-			btn3.setBackgroundResource(R.drawable.circle_number_black);
-			btn4.setBackgroundResource(R.drawable.circle_number_trans);
-			
-			btn1.setTextColor(mContext.getResources().getColor(R.color.BLACK));
-			btn2.setTextColor(mContext.getResources().getColor(R.color.BLACK));
-			btn3.setTextColor(mContext.getResources().getColor(R.color.WHITE));
-			btn4.setTextColor(mContext.getResources().getColor(R.color.BLACK));	
-			question.setChoice(3);			
-			break;
-		case 4:
-			btn1.setBackgroundResource(R.drawable.circle_number_trans);
-			btn2.setBackgroundResource(R.drawable.circle_number_trans);
-			btn3.setBackgroundResource(R.drawable.circle_number_trans);		
-			btn4.setBackgroundResource(R.drawable.circle_number_black);
-			
-			btn1.setTextColor(mContext.getResources().getColor(R.color.BLACK));
-			btn2.setTextColor(mContext.getResources().getColor(R.color.BLACK));
-			btn3.setTextColor(mContext.getResources().getColor(R.color.BLACK));
-			btn4.setTextColor(mContext.getResources().getColor(R.color.WHITE));	
-			question.setChoice(4);			
-			break;			
-		default:
-			break;
-		}	
+			, List<Button> btns){
+		question.setChoice(btn);
+		for(int i = 1; i <= btns.size(); i ++){
+			if(i != btn){
+				btns.get(i).setBackgroundResource(R.drawable.circle_number_black);	
+				btns.get(i).setTextColor(getActivity().getResources().getColor(R.color.WHITE));
+			} else {
+				btns.get(i).setBackgroundResource(R.drawable.circle_number_trans);	
+				btns.get(i).setTextColor(getActivity().getResources().getColor(R.color.BLACK));				
+			}
+		}
 	}
-	
+	public void showDownloadDialog(final FileDataSet file){
+		final Dialog dialog = new Dialog(getContext());
+		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		dialog.setContentView(R.layout.layout_dialog_download_cancel);
+		dialog.getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+		dialog.show();
+		dialog.setCancelable(false);
+		
+		dialog.findViewById(R.id.btn_dialog_ok).setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				dialog.dismiss();
+			}
+		});	
+		
+		DownloadInfo info = new DownloadInfo();
+		info.setPrgBar((ProgressBar)dialog.findViewById(R.id.prg_dialog_download));
+		info.setTxtPer((TextView)dialog.findViewById(R.id.txt_dialog_file_progress));
+		info.setTxtSize((TextView)dialog.findViewById(R.id.txt_dialog_file_size));
+		
+		new DownloadFileAdapter(file, info, getContext(), new DatabaseAdapter(getContext()), dialog, this).execute();
+		
+	}
+
+	@Override
+	public void onFinishNotify(boolean flag) {
+		if(flag){
+			FragmentTransaction tr = getFragmentManager().beginTransaction();
+			tr.replace(R.id.scr_layout_sections, this);
+			tr.commit();
+			
+		}
+	}	
 	
 }

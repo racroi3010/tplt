@@ -6,8 +6,10 @@ import android.os.Parcelable;
 public class ChoiceDataSet implements Parcelable {
 	private int id;
 	private int number;
+	private String type;	
 	private String label;
-	private String text;
+	private String content;
+	private FileDataSet img;
 	public ChoiceDataSet() {
 
 	}	
@@ -23,19 +25,32 @@ public class ChoiceDataSet implements Parcelable {
 	public void setNumber(int number) {
 		this.number = number;
 	}
+	
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
 	public String getLabel() {
 		return label;
 	}
 	public void setLabel(String label) {
 		this.label = label;
 	}
-	public String getText() {
-		return text;
-	}
-	public void setText(String text) {
-		this.text = text;
-	}
 	
+	public String getContent() {
+		return content;
+	}
+	public void setContent(String content) {
+		this.content = content;
+	}
+	public FileDataSet getImg() {
+		return img;
+	}
+	public void setImg(FileDataSet img) {
+		this.img = img;
+	}
 	@Override
 	public int describeContents() {
 		// TODO Auto-generated method stub
@@ -45,8 +60,10 @@ public class ChoiceDataSet implements Parcelable {
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeInt(id);
 		dest.writeInt(number);
+		dest.writeString(type);
 		dest.writeString(label);
-		dest.writeString(text);
+		dest.writeString(content);
+		dest.writeParcelable(img, flags);
 	}
 	
 	public static final Parcelable.Creator<ChoiceDataSet> CREATOR
@@ -68,8 +85,9 @@ public class ChoiceDataSet implements Parcelable {
 	private ChoiceDataSet(Parcel in){
 		id = in.readInt();
 		number = in.readInt();
+		type = in.readString();
 		label = in.readString();
-		text = in.readString();
-		
+		content = in.readString();
+		img = in.readParcelable(FileDataSet.class.getClassLoader());
 	}
 }

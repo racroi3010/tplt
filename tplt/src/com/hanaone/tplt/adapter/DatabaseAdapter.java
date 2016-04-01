@@ -159,8 +159,20 @@ public class DatabaseAdapter{
 				List<Choice> choiceModels = dbHelper.selectChoiceByQuestionId(questionModel.getId());
 				List<ChoiceDataSet> choiceDatas = new ArrayList<ChoiceDataSet>();
 				for(Choice choiceModel: choiceModels){
-					ChoiceDataSet choiceData = DatabaseUtils.convertObject(choiceModel, ChoiceDataSet.class);
-					choiceDatas.add(choiceData);
+					ChoiceDataSet choice = DatabaseUtils.convertObject(choiceModel, ChoiceDataSet.class);
+					if(Constants.FILE_TYPE_IMG.equals(choice.getType())){
+						FileExtra imgModel = this.dbHelper.selectFileById(choiceModel.getFile_id());
+						if(imgModel != null){
+							choice.setImg(DatabaseUtils.convertObject(imgModel, FileDataSet.class));	
+						} else {
+							choice.setImg(new FileDataSet());
+						}
+											
+					}
+
+					
+					choiceDatas.add(choice);
+					
 				}
 				questionData.setChoices(choiceDatas);
 				questionDatas.add(questionData);
@@ -185,12 +197,13 @@ public class DatabaseAdapter{
 		}
 		return -1;
 	}
-	public int updateLevelAudio(int levelId, String audio){
+	public int updateLevelAudio(int levelId, String audioLocal, String audioRemote){
 		ExamLevel levelModel = this.dbHelper.selectExamLevelById(levelId);
 		if(levelModel != null){
 			FileExtra file = new FileExtra();
 			file.setName("audio_" + levelId);
-			file.setPath(audio);
+			file.setPathLocal(audioLocal);
+			file.setPathRemote(audioRemote);
 			file.setType(Constants.FILE_TYPE_MP3);
 			
 			long audioId = this.dbHelper.insert(file);
@@ -202,12 +215,13 @@ public class DatabaseAdapter{
 		
 		return -1;
 	}
-	public int updateLevelTxt(int levelId, String txt){
+	public int updateLevelTxt(int levelId, String txtLocal, String txtRemote){
 		ExamLevel levelModel = this.dbHelper.selectExamLevelById(levelId);
 		if(levelModel != null){
 			FileExtra file = new FileExtra();
 			file.setName("audio_" + levelId);
-			file.setPath(txt);
+			file.setPathLocal(txtLocal);
+			file.setPathRemote(txtRemote);
 			file.setType(Constants.FILE_TYPE_MP3);
 			
 			long audioId = this.dbHelper.insert(file);
@@ -244,6 +258,18 @@ public class DatabaseAdapter{
 			for(ChoiceDataSet choiceData: choiceDatas){
 				Choice choice = DatabaseUtils.convertObject(choiceData, Choice.class);
 				choice.setQuestion_id((int)questionId);
+				
+				
+				
+				if(Constants.FILE_TYPE_IMG.equals(choiceData.getType())){
+					FileDataSet img = choiceData.getImg();
+					FileExtra imgModel = DatabaseUtils.convertObject(img, FileExtra.class);
+					long fileId = dbHelper.insert(imgModel);
+					choice.setFile_id((int)fileId);
+				}
+
+				
+				
 				
 //				// image type
 //				if(Constants.FILE_TYPE_IMG.equals(questionData.getChoiceType())){
@@ -299,7 +325,16 @@ public class DatabaseAdapter{
 				List<Choice> choiceModels = this.dbHelper.selectChoiceByQuestionId(questionModel.getId());
 				List<ChoiceDataSet> choiceDataset = new ArrayList<ChoiceDataSet>();
 				for(Choice choiceModel: choiceModels){
-					choiceDataset.add(DatabaseUtils.convertObject(choiceModel, ChoiceDataSet.class));
+					ChoiceDataSet choice = DatabaseUtils.convertObject(choiceModel, ChoiceDataSet.class);
+					if(Constants.FILE_TYPE_IMG.equals(choice.getType())){
+						FileExtra imgModel = this.dbHelper.selectFileById(choiceModel.getFile_id());
+						choice.setImg(DatabaseUtils.convertObject(imgModel, FileDataSet.class));						
+					}
+					
+					choiceDataset.add(choice);
+					
+					
+					
 				}
 				Section sectionModel = this.dbHelper.selectSectionByQuestionId(questionModel.getId());
 				questionDataset.setChoices(choiceDataset);				
@@ -311,8 +346,22 @@ public class DatabaseAdapter{
 				section.setStartAudio(questionDataset.getStartAudio());
 				section.setEndAudio(questionDataset.getEndAudio());
 				
+
 				FileExtra audio = this.dbHelper.selectFileById(questionModel.getAudio());
-				audios.add(DatabaseUtils.convertObject(audio, FileDataSet.class));
+				boolean checkAudio = false;
+				for(FileDataSet fileTemp: audios){
+					if(fileTemp.getId() == audio.getId()){
+						audios.add(fileTemp);
+						checkAudio = true;
+						break;
+					}
+				}				
+				if(!checkAudio){
+					FileDataSet fileData = DatabaseUtils.convertObject(audio, FileDataSet.class);
+					fileData.setId(audio.getId());
+					audios.add(fileData);
+				}
+				
 
 				sections.add(section);
 			}		
@@ -336,7 +385,14 @@ public class DatabaseAdapter{
 					List<Choice> choiceModels = this.dbHelper.selectChoiceByQuestionId(questionModel.getId());
 					List<ChoiceDataSet> choiceDataset = new ArrayList<ChoiceDataSet>();
 					for(Choice choiceModel: choiceModels){
-						choiceDataset.add(DatabaseUtils.convertObject(choiceModel, ChoiceDataSet.class));
+						ChoiceDataSet choice = DatabaseUtils.convertObject(choiceModel, ChoiceDataSet.class);
+						if(Constants.FILE_TYPE_IMG.equals(choice.getType())){
+							FileExtra imgModel = this.dbHelper.selectFileById(choiceModel.getFile_id());
+							choice.setImg(DatabaseUtils.convertObject(imgModel, FileDataSet.class));						
+						}
+						
+						choiceDataset.add(choice);
+						
 					}
 					
 					questionDataset.setChoices(choiceDataset);
@@ -347,7 +403,19 @@ public class DatabaseAdapter{
 				
 				section.setQuestions(questionDatasets);
 				FileExtra audio = this.dbHelper.selectFileById(sectionModel.getAudio());
-				audios.add(DatabaseUtils.convertObject(audio, FileDataSet.class));
+				boolean checkAudio = false;
+				for(FileDataSet fileTemp: audios){
+					if(fileTemp.getId() == audio.getId()){
+						audios.add(fileTemp);
+						checkAudio = true;
+						break;
+					}
+				}				
+				if(!checkAudio){
+					FileDataSet fileData = DatabaseUtils.convertObject(audio, FileDataSet.class);
+					fileData.setId(audio.getId());
+					audios.add(fileData);
+				}
 				
 				sections.add(section);
 				
@@ -363,6 +431,14 @@ public class DatabaseAdapter{
 			return false;
 		}
 		return true;
+	}
+	public int updateFile(FileDataSet file){
+		if(file == null) return -1;
+		FileExtra fileModel = DatabaseUtils.convertObject(file, FileExtra.class);
+		if(fileModel != null){
+			return this.dbHelper.update(fileModel);
+		}
+		return -1;
 	}
 	
 }

@@ -107,7 +107,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
         </FrameLayout>
-
+		<Button 
+		    android:id="@+id/btn_audio_download"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:text="@string/question_audio_download"
+		    android:textColor="@color/RED"
+		    android:onClick="onClick"
+		    />
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="1dp"

@@ -11,6 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.hanaone.tplt.Constants;
@@ -146,7 +147,7 @@ public class ListExamHeaderAdapter extends BaseAdapter {
 			if(convertView == null || !(convertView.getTag() instanceof ViewHolderItem)){
 				convertView = inflater.inflate(R.layout.layout_exam_item, parent, false);
 				holder = new ViewHolderItem();
-				holder.layout = (LinearLayout) convertView.findViewById(R.id.layout_item);
+				holder.layout = (RelativeLayout) convertView.findViewById(R.id.layout_item);
 				holder.imgIcon = (ImageView) convertView.findViewById(R.id.img_new_lesson);
 				holder.txtLabel = (TextView) convertView.findViewById(R.id.txt_label);
 				holder.prgBar = (ProgressBar) convertView.findViewById(R.id.prg_level);
@@ -203,7 +204,7 @@ public class ListExamHeaderAdapter extends BaseAdapter {
 			return convertView;
 		}
 		private class ViewHolderItem{
-			LinearLayout layout;	
+			RelativeLayout layout;	
 			TextView txtLabel;		
 			ImageView imgIcon;
 					

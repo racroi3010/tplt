@@ -8,7 +8,6 @@ public class QuestionSample{
 	private String text;
 	private int answer;
 	private String type;
-	private String choiceType;
 	private String hint;	
 	private float startAudio;
 	private float endAudio;	
@@ -69,14 +68,6 @@ public class QuestionSample{
 
 	public void setType(String type) {
 		this.type = type;
-	}
-
-	public String getChoiceType() {
-		return choiceType;
-	}
-
-	public void setChoiceType(String choiceType) {
-		this.choiceType = choiceType;
 	}
 
 	public String getHint() {

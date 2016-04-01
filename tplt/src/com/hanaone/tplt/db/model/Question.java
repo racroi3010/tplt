@@ -9,7 +9,6 @@ public class Question {
 	protected String text;
 	protected int answer;
 	protected String type;
-	protected String choiceType;
 	protected String hint;	
 	protected float startAudio;
 	protected float endAudio;	
@@ -71,14 +70,6 @@ public class Question {
 		this.type = type;
 	}
 
-	public String getChoiceType() {
-		return choiceType;
-	}
-
-	public void setChoiceType(String choiceType) {
-		this.choiceType = choiceType;
-	}
-
 	public String getHint() {
 		return hint;
 	}
@@ -110,7 +101,6 @@ public class Question {
 		public static final String COLUMN_NAME_TEXT = "text";
 		public static final String COLUMN_NAME_ANSWER = "answer";
 		public static final String COLUMN_NAME_TYPE = "type";
-		public static final String COLUMN_NAME_CHOICE_TYPE = "choice_type";
 		public static final String COLUMN_NAME_HINT = "hint";
 		public static final String COLUMN_NAME_START_AUDIO = "start_audio";
 		public static final String COLUMN_NAME_END_AUDIO = "end_audio";

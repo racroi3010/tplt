@@ -47,6 +47,7 @@ public <init>(android.content.Context, android.util.AttributeSet);
 -keep class com.hanaone.tplt.db.*{*;}
 -keepclassmembers class com.hanaone.tplt.db.** { *; }  
 
+-keepclassmembers class com.kyleduo.switchbutton.** { *; }  
 
 -keep class com.hanaone.tplt.util.DatabaseUtils {*;}
 -keep class com.hanaone.jni.stringFromJNI {*;}

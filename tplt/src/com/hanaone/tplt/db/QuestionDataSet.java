@@ -15,7 +15,7 @@ public class QuestionDataSet implements Parcelable{
 	protected int answer;
 	protected int choice;
 	protected String type;
-	protected String choiceType;
+
 	protected String hint;
 	protected float startAudio;
 	protected float endAudio;
@@ -70,12 +70,6 @@ public class QuestionDataSet implements Parcelable{
 	public void setHint(String hint) {
 		this.hint = hint;
 	}
-	public String getChoiceType() {
-		return choiceType;
-	}
-	public void setChoiceType(String choiceType) {
-		this.choiceType = choiceType;
-	}
 	
 	public int getChoice() {
 		return choice;
@@ -114,7 +108,6 @@ public class QuestionDataSet implements Parcelable{
 		dest.writeInt(answer);
 		dest.writeInt(choice);
 		dest.writeString(type);
-		dest.writeString(choiceType);
 		dest.writeString(hint);
 		dest.writeFloat(startAudio);
 		dest.writeFloat(endAudio);
@@ -148,7 +141,6 @@ public class QuestionDataSet implements Parcelable{
 		answer = in.readInt();
 		choice = in.readInt();
 		type = in.readString();
-		choiceType = in.readString();
 		hint = in.readString();
 		startAudio = in.readFloat();
 		endAudio = in.readFloat();

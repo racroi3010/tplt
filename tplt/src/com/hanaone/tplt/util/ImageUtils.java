@@ -1,8 +1,10 @@
 package com.hanaone.tplt.util;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.DisplayMetrics;
 
 public class ImageUtils {
 	public static int calculateInSampleSize(BitmapFactory.Options options,
@@ -57,5 +59,11 @@ public class ImageUtils {
 	    // Decode bitmap with inSampleSize set
 	    options.inJustDecodeBounds = false;
 	    return BitmapFactory.decodeFile(path, options);
+	}	
+	public static float convertPixelsToDp(float px, Context context){
+	    Resources resources = context.getResources();
+	    DisplayMetrics metrics = resources.getDisplayMetrics();
+	    float dp = px / ((float)metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+	    return dp;
 	}	
 }

@@ -7,7 +7,8 @@ public class FileDataSet implements Parcelable {
 	private int id;
 	private String type;
 	private String name;
-	private String path;
+	private String pathLocal;
+	private String pathRemote;
 	private long size;
 	public FileDataSet() {
 
@@ -30,13 +31,19 @@ public class FileDataSet implements Parcelable {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getPath() {
-		return path;
-	}
-	public void setPath(String path) {
-		this.path = path;
-	}
 	
+	public String getPathLocal() {
+		return pathLocal;
+	}
+	public void setPathLocal(String pathLocal) {
+		this.pathLocal = pathLocal;
+	}
+	public String getPathRemote() {
+		return pathRemote;
+	}
+	public void setPathRemote(String pathRemote) {
+		this.pathRemote = pathRemote;
+	}
 	public long getSize() {
 		return size;
 	}
@@ -53,7 +60,8 @@ public class FileDataSet implements Parcelable {
 		dest.writeInt(id);
 		dest.writeString(type);
 		dest.writeString(name);
-		dest.writeString(path);
+		dest.writeString(pathLocal);
+		dest.writeString(pathRemote);
 		dest.writeLong(size);
 		
 	}
@@ -77,7 +85,8 @@ public class FileDataSet implements Parcelable {
 		id = in.readInt();
 		type = in.readString();
 		name = in.readString();
-		path = in.readString();
+		pathLocal = in.readString();
+		pathRemote = in.readString();
 		size = in.readLong();
 	}	
 	

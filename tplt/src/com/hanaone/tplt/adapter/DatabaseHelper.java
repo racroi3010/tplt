@@ -44,7 +44,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			+ FileExtraEntry._ID + INTEGER_TYPE + PRIMARY_KEY + AUTOINCREMENT + COMMA_STEP
 			+ FileExtraEntry.COLUMN_NAME_FILE_TYPE + TEXT_TYPE + COMMA_STEP
 			+ FileExtraEntry.COLUMN_NAME_FILE_NAME + TEXT_TYPE + COMMA_STEP
-			+ FileExtraEntry.COLUMN_NAME_FILE_PATH + TEXT_TYPE + COMMA_STEP
+			+ FileExtraEntry.COLUMN_NAME_FILE_PATH_LOCAL + TEXT_TYPE + COMMA_STEP
+			+ FileExtraEntry.COLUMN_NAME_FILE_PATH_REMOTE + TEXT_TYPE + COMMA_STEP
 			+ FileExtraEntry.COLUMN_NAME_FILE_SIZE + INTEGER_TYPE
 			+ ")";
 	
@@ -52,9 +53,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			"CREATE TABLE " + ChoiceEntry.TABLE_NAME + " ("
 			+ ChoiceEntry._ID + INTEGER_TYPE + PRIMARY_KEY + AUTOINCREMENT + COMMA_STEP
 			+ ChoiceEntry.COLUMN_NAME_NUMBER + INTEGER_TYPE + COMMA_STEP
+			+ ChoiceEntry.COLUMN_NAME_TYPE + TEXT_TYPE + COMMA_STEP
 			+ ChoiceEntry.COLUMN_NAME_LABEL + TEXT_TYPE + COMMA_STEP
-			+ ChoiceEntry.COLUMN_NAME_TEXT + TEXT_TYPE + COMMA_STEP
+			+ ChoiceEntry.COLUMN_NAME_CONTENT + TEXT_TYPE + COMMA_STEP
+			+ ChoiceEntry.COLUMN_FILE_ID + INTEGER_TYPE + COMMA_STEP
 			+ ChoiceEntry.COLUMN_QUESTION_ID + INTEGER_TYPE + COMMA_STEP
+			+ FOREIGN_KEY + " (" + ChoiceEntry.COLUMN_FILE_ID + ") REFERENCES " + FileExtraEntry.TABLE_NAME + "(" + FileExtraEntry._ID + ")" + COMMA_STEP
 			+ FOREIGN_KEY + " (" + ChoiceEntry.COLUMN_QUESTION_ID + ") REFERENCES " + QuestionEntry.TABLE_NAME + "(" + QuestionEntry._ID + ")"
 			+ ")";	
 
@@ -65,13 +69,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			+ ")";		
 	private static final String CREATE_TABLE_QUESTION = 
 			"CREATE TABLE " + QuestionEntry.TABLE_NAME + " ("
-			+ ChoiceEntry._ID + INTEGER_TYPE + PRIMARY_KEY + AUTOINCREMENT + COMMA_STEP
+			+ QuestionEntry._ID + INTEGER_TYPE + PRIMARY_KEY + AUTOINCREMENT + COMMA_STEP
 			+ QuestionEntry.COLUMN_NAME_NUMBER + INTEGER_TYPE + COMMA_STEP
 			+ QuestionEntry.COLUMN_NAME_MARK + INTEGER_TYPE + COMMA_STEP
 			+ QuestionEntry.COLUMN_NAME_TEXT + TEXT_TYPE + COMMA_STEP
 			+ QuestionEntry.COLUMN_NAME_ANSWER + INTEGER_TYPE + COMMA_STEP
 			+ QuestionEntry.COLUMN_NAME_TYPE + TEXT_TYPE + COMMA_STEP
-			+ QuestionEntry.COLUMN_NAME_CHOICE_TYPE + TEXT_TYPE + COMMA_STEP
 			+ QuestionEntry.COLUMN_NAME_HINT + TEXT_TYPE + COMMA_STEP
 			+ QuestionEntry.COLUMN_NAME_START_AUDIO + FLOAT_TYPE + COMMA_STEP
 			+ QuestionEntry.COLUMN_NAME_END_AUDIO + FLOAT_TYPE + COMMA_STEP
@@ -213,7 +216,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			values = new ContentValues();
 			values.put(FileExtraEntry.COLUMN_NAME_FILE_TYPE, file.getType());
 			values.put(FileExtraEntry.COLUMN_NAME_FILE_NAME, file.getName());
-			values.put(FileExtraEntry.COLUMN_NAME_FILE_PATH, file.getPath());
+			values.put(FileExtraEntry.COLUMN_NAME_FILE_PATH_LOCAL, file.getPathLocal());
+			values.put(FileExtraEntry.COLUMN_NAME_FILE_PATH_REMOTE, file.getPathRemote());
 			values.put(FileExtraEntry.COLUMN_NAME_FILE_SIZE, file.getSize());
 		} else if(obj instanceof Question){
 			Question question = (Question) obj;
@@ -225,7 +229,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			values.put(QuestionEntry.COLUMN_NAME_TEXT, question.getText());	
 			values.put(QuestionEntry.COLUMN_NAME_ANSWER, question.getAnswer());	
 			values.put(QuestionEntry.COLUMN_NAME_TYPE, question.getType());	
-			values.put(QuestionEntry.COLUMN_NAME_CHOICE_TYPE, question.getChoiceType());	
 			values.put(QuestionEntry.COLUMN_NAME_HINT, question.getHint());	
 			values.put(QuestionEntry.COLUMN_NAME_START_AUDIO, question.getStartAudio());	
 			values.put(QuestionEntry.COLUMN_NAME_END_AUDIO, question.getEndAudio());	
@@ -236,8 +239,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			tableName = ChoiceEntry.TABLE_NAME;
 			values = new ContentValues();
 			values.put(ChoiceEntry.COLUMN_NAME_NUMBER, choice.getNumber());
+			values.put(ChoiceEntry.COLUMN_NAME_TYPE, choice.getType());
 			values.put(ChoiceEntry.COLUMN_NAME_LABEL, choice.getLabel());
-			values.put(ChoiceEntry.COLUMN_NAME_TEXT, choice.getText());
+			values.put(ChoiceEntry.COLUMN_NAME_CONTENT, choice.getContent());
+			values.put(ChoiceEntry.COLUMN_FILE_ID, choice.getFile_id());
 			values.put(ChoiceEntry.COLUMN_QUESTION_ID, choice.getQuestion_id());
 		}
 		
@@ -309,7 +314,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			values = new ContentValues();
 			values.put(FileExtraEntry.COLUMN_NAME_FILE_TYPE, file.getType());
 			values.put(FileExtraEntry.COLUMN_NAME_FILE_NAME, file.getName());
-			values.put(FileExtraEntry.COLUMN_NAME_FILE_PATH, file.getPath());
+			values.put(FileExtraEntry.COLUMN_NAME_FILE_PATH_LOCAL, file.getPathLocal());
+			values.put(FileExtraEntry.COLUMN_NAME_FILE_PATH_REMOTE, file.getPathRemote());
 			values.put(FileExtraEntry.COLUMN_NAME_FILE_SIZE, file.getSize());
 		} else if(obj instanceof Question){
 			Question question = (Question) obj;
@@ -324,7 +330,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			values.put(QuestionEntry.COLUMN_NAME_TEXT, question.getMark());	
 			values.put(QuestionEntry.COLUMN_NAME_ANSWER, question.getAnswer());	
 			values.put(QuestionEntry.COLUMN_NAME_TYPE, question.getType());	
-			values.put(QuestionEntry.COLUMN_NAME_CHOICE_TYPE, question.getChoiceType());	
 			values.put(QuestionEntry.COLUMN_NAME_HINT, question.getHint());
 			values.put(QuestionEntry.COLUMN_NAME_START_AUDIO, question.getStartAudio());	
 			values.put(QuestionEntry.COLUMN_NAME_END_AUDIO, question.getEndAudio());
@@ -338,8 +343,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			
 			values = new ContentValues();
 			values.put(ChoiceEntry.COLUMN_NAME_NUMBER, choice.getNumber());
+			values.put(ChoiceEntry.COLUMN_NAME_TYPE, choice.getType());
 			values.put(ChoiceEntry.COLUMN_NAME_LABEL, choice.getLabel());
-			values.put(ChoiceEntry.COLUMN_NAME_TEXT, choice.getText());
+			values.put(ChoiceEntry.COLUMN_NAME_CONTENT, choice.getContent());
+			values.put(ChoiceEntry.COLUMN_FILE_ID, choice.getFile_id());
 			values.put(ChoiceEntry.COLUMN_QUESTION_ID, choice.getQuestion_id());
 		}
 		
@@ -453,8 +460,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		file.setId(c.getInt(0));
 		file.setType(c.getString(1));
 		file.setName(c.getString(2));
-		file.setPath(c.getString(3));
-		file.setSize(c.getLong(4));
+		file.setPathLocal(c.getString(3));
+		file.setPathRemote(c.getString(4));
+		file.setSize(c.getLong(5));
 		c.close();
 		closeFix();
 		
@@ -568,11 +576,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			question.setText(c.getString(3));
 			question.setAnswer(c.getInt(4));
 			question.setType(c.getString(5));
-			question.setChoiceType(c.getString(6));
-			question.setHint(c.getString(7));
-			question.setStartAudio(c.getFloat(8));
-			question.setEndAudio(c.getFloat(9));
-			question.setSection_id(c.getInt(10));			
+			question.setHint(c.getString(6));
+			question.setStartAudio(c.getFloat(7));
+			question.setEndAudio(c.getFloat(8));
+			question.setSection_id(c.getInt(9));			
 			list.add(question);
 		} while(c.moveToNext());
 			
@@ -600,11 +607,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		question.setText(c.getString(3));
 		question.setAnswer(c.getInt(4));
 		question.setType(c.getString(5));
-		question.setChoiceType(c.getString(6));
-		question.setHint(c.getString(7));
-		question.setStartAudio(c.getFloat(8));
-		question.setEndAudio(c.getFloat(9));
-		question.setSection_id(c.getInt(10));
+		question.setHint(c.getString(6));
+		question.setStartAudio(c.getFloat(7));
+		question.setEndAudio(c.getFloat(8));
+		question.setSection_id(c.getInt(9));
 		
 		return question;
 	}
@@ -625,9 +631,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			Choice choice = new Choice();
 			choice.setId(c.getInt(0));
 			choice.setNumber(c.getInt(1));
-			choice.setLabel(c.getString(2));
-			choice.setText(c.getString(3));
-			choice.setQuestion_id(c.getInt(4));
+			choice.setType(c.getString(2));
+			choice.setLabel(c.getString(3));
+			choice.setContent(c.getString(4));
+			choice.setFile_id(c.getInt(5));
+			choice.setQuestion_id(c.getInt(6));
 			
 			list.add(choice);
 		} while(c.moveToNext());
@@ -663,12 +671,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			question.setText(c.getString(3));
 			question.setAnswer(c.getInt(4));
 			question.setType(c.getString(5));
-			question.setChoiceType(c.getString(6));
-			question.setHint(c.getString(7));
-			question.setStartAudio(c.getFloat(8));
-			question.setEndAudio(c.getFloat(9));
-			question.setSection_id(c.getInt(10));	
-			question.setAudio(c.getInt(11));
+			question.setHint(c.getString(6));
+			question.setStartAudio(c.getFloat(7));
+			question.setEndAudio(c.getFloat(8));
+			question.setSection_id(c.getInt(9));	
+			question.setAudio(c.getInt(10));
 			
 			list.add(question);
 		} while(c.moveToNext());

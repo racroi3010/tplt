@@ -35,7 +35,7 @@ import com.hanaone.http.DownloadHelper;
 import com.hanaone.http.JsonReaderHelper;
 import com.hanaone.jni.JNIHanaone;
 import com.hanaone.tplt.adapter.DatabaseAdapter;
-import com.hanaone.tplt.adapter.DownloadAdapter;
+import com.hanaone.tplt.adapter.DownloadLevelAdapter;
 import com.hanaone.tplt.adapter.DownloadInfo;
 import com.hanaone.tplt.adapter.ListExamHeaderAdapter;
 import com.hanaone.tplt.adapter.ListExamHeaderAdapter.ExamHeader;
@@ -109,7 +109,7 @@ public class MainActivity extends Activity {
     	switch (v.getId()) {
 		case R.id.btn_setting:
 			Intent intent = new Intent(mContext, HelpActivity.class);
-			startActivity(intent);
+			startActivityForResult(intent, Constants.REQ_UPDATE_LOCALE);
 			break;
 		case R.id.btn_sample_test:
 			intent = new Intent(mContext, SelectionActivity.class);
@@ -122,6 +122,18 @@ public class MainActivity extends Activity {
 			break;
 		}
     }
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if(RESULT_OK == resultCode && Constants.REQ_UPDATE_LOCALE == requestCode){
+			// check update locale
+			boolean updateLocale = data.getBooleanExtra(Constants.UPDATE_LOCALE, false);
+			if(updateLocale){
+				initLayout();
+				updateData();
+			}			
+		}
+	}
 	private void initData(){
 //		adapter = new ListExamAdapter(mContext, mListener);	
 //		listExam.setAdapter(adapter);		
@@ -229,7 +241,7 @@ public class MainActivity extends Activity {
 								}
 								listItem.add(index ++, new ListExamHeaderAdapter.ExamHeader(exam));
 								for(LevelDataSet level: exam.getLevels()){
-									listItem.add(index ++,new ListExamHeaderAdapter.ExamLevelItem(level, new DownloadInfo(), mListener));
+									listItem.add(index,new ListExamHeaderAdapter.ExamLevelItem(level, new DownloadInfo(), mListener));
 								}
 								publishProgress();
 							}
@@ -289,7 +301,7 @@ public class MainActivity extends Activity {
 				String selectName = mContext.getResources().getString(R.string.selection_title);
 				String examLevelName = String.format(selectName, level.getNumber(),level.getLabel());
 				mListener.onSelect(level.getId(), examLevelName);
-			} else {
+			} else {				
 				confirmDownload(level, info);
 			}			
 		}
@@ -302,7 +314,7 @@ public class MainActivity extends Activity {
 		String msg = null;
 		
 		if(info.getStatus() == DownloadInfo.NOT_START){
-			msg = resouces.getString(R.string.dialog_ask_download);
+			msg = "";
 			download = true;
 		} else if(info.getStatus() == DownloadInfo.DOWNLOADING) {
 			msg = resouces.getString(R.string.dialog_ask_downloading);
@@ -323,7 +335,7 @@ public class MainActivity extends Activity {
 		((TextView)dialog.findViewById(R.id.txt_dialog_content)).setText(msg);
 		
 		if(download){
-			final DownloadAdapter dlAdapter = new DownloadAdapter(mContext, level, info, dbAdapter);
+			final DownloadLevelAdapter dlAdapter = new DownloadLevelAdapter(mContext, level, info, dbAdapter);
 			
 			dialog.findViewById(R.id.btn_dialog_ok).setOnClickListener(new OnClickListener() {
 				

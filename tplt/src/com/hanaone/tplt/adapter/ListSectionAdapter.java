@@ -1,30 +1,37 @@
 package com.hanaone.tplt.adapter;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.hanaone.tplt.Constants;
 import com.hanaone.tplt.R;
 import com.hanaone.tplt.db.ChoiceDataSet;
+import com.hanaone.tplt.db.FileDataSet;
 import com.hanaone.tplt.db.QuestionDataSet;
 import com.hanaone.tplt.db.ResultDataSet;
 import com.hanaone.tplt.db.SectionDataSet;
 import com.hanaone.tplt.util.ImageUtils;
 import com.hanaone.tplt.util.PreferenceHandler;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class ListSectionAdapter extends BaseAdapter {
+public class ListSectionAdapter extends BaseAdapter implements DownloadListener{
 	private Context mContext;
 	private LayoutInflater mInflater;
 	private ListAdapterListener mListener;
@@ -96,62 +103,17 @@ public class ListSectionAdapter extends BaseAdapter {
 		return convertView;
 	}
 	private void onChoose(QuestionDataSet question, int btn
-			, Button btn1, Button btn2
-			, Button btn3, Button btn4){
+			, List<Button> btns){
 		question.setChoice(btn);
-		switch (btn) {
-		case 1:
-			btn1.setBackgroundResource(R.drawable.circle_number_black);						
-			btn2.setBackgroundResource(R.drawable.circle_number_trans);
-			btn3.setBackgroundResource(R.drawable.circle_number_trans);
-			btn4.setBackgroundResource(R.drawable.circle_number_trans);
-			
-			
-			btn1.setTextColor(mContext.getResources().getColor(R.color.WHITE));
-			btn2.setTextColor(mContext.getResources().getColor(R.color.BLACK));
-			btn3.setTextColor(mContext.getResources().getColor(R.color.BLACK));
-			btn4.setTextColor(mContext.getResources().getColor(R.color.BLACK));
-			question.setChoice(1);			
-			break;
-		case 2:
-			btn1.setBackgroundResource(R.drawable.circle_number_trans);
-			btn2.setBackgroundResource(R.drawable.circle_number_black);
-			btn3.setBackgroundResource(R.drawable.circle_number_trans);
-			btn4.setBackgroundResource(R.drawable.circle_number_trans);
-			
-			btn1.setTextColor(mContext.getResources().getColor(R.color.BLACK));
-			btn2.setTextColor(mContext.getResources().getColor(R.color.WHITE));
-			btn3.setTextColor(mContext.getResources().getColor(R.color.BLACK));
-			btn4.setTextColor(mContext.getResources().getColor(R.color.BLACK));			
-			question.setChoice(2);			
-			break;
-		case 3:
-			btn1.setBackgroundResource(R.drawable.circle_number_trans);
-			btn2.setBackgroundResource(R.drawable.circle_number_trans);
-			btn3.setBackgroundResource(R.drawable.circle_number_black);
-			btn4.setBackgroundResource(R.drawable.circle_number_trans);
-			
-			btn1.setTextColor(mContext.getResources().getColor(R.color.BLACK));
-			btn2.setTextColor(mContext.getResources().getColor(R.color.BLACK));
-			btn3.setTextColor(mContext.getResources().getColor(R.color.WHITE));
-			btn4.setTextColor(mContext.getResources().getColor(R.color.BLACK));	
-			question.setChoice(3);			
-			break;
-		case 4:
-			btn1.setBackgroundResource(R.drawable.circle_number_trans);
-			btn2.setBackgroundResource(R.drawable.circle_number_trans);
-			btn3.setBackgroundResource(R.drawable.circle_number_trans);		
-			btn4.setBackgroundResource(R.drawable.circle_number_black);
-			
-			btn1.setTextColor(mContext.getResources().getColor(R.color.BLACK));
-			btn2.setTextColor(mContext.getResources().getColor(R.color.BLACK));
-			btn3.setTextColor(mContext.getResources().getColor(R.color.BLACK));
-			btn4.setTextColor(mContext.getResources().getColor(R.color.WHITE));	
-			question.setChoice(4);			
-			break;			
-		default:
-			break;
-		}	
+		for(int i = 1; i <= btns.size(); i ++){
+			if(i != btn){
+				btns.get(i).setBackgroundResource(R.drawable.circle_number_black);	
+				btns.get(i).setTextColor(mContext.getResources().getColor(R.color.WHITE));
+			} else {
+				btns.get(i).setBackgroundResource(R.drawable.circle_number_trans);	
+				btns.get(i).setTextColor(mContext.getResources().getColor(R.color.BLACK));				
+			}
+		}
 	}
 	
 	public interface Item{
@@ -286,25 +248,28 @@ public class ListSectionAdapter extends BaseAdapter {
 				holder.txtNumber = (TextView) convertView.findViewById(R.id.txt_question_number);
 				holder.txtHint = (TextView) convertView.findViewById(R.id.txt_question_hint);
 				
-				holder.btnChoice1 = (Button) convertView.findViewById(R.id.btn_question_choice_1);
-				holder.btnChoice2 = (Button) convertView.findViewById(R.id.btn_question_choice_2);
-				holder.btnChoice3 = (Button) convertView.findViewById(R.id.btn_question_choice_3);
-				holder.btnChoice4 = (Button) convertView.findViewById(R.id.btn_question_choice_4);
+				holder.btnChoices = new ArrayList<Button>(4);
 				
-					
+				holder.btnChoices.add((Button) convertView.findViewById(R.id.btn_question_choice_1));
+				holder.btnChoices.add((Button) convertView.findViewById(R.id.btn_question_choice_2));
+				holder.btnChoices.add((Button) convertView.findViewById(R.id.btn_question_choice_3));
+				holder.btnChoices.add((Button) convertView.findViewById(R.id.btn_question_choice_4));
 				
-				holder.txtChoice1 = (TextView) convertView.findViewById(R.id.txt_question_choice_1);
-				holder.txtChoice2 = (TextView) convertView.findViewById(R.id.txt_question_choice_2);
-				holder.txtChoice3 = (TextView) convertView.findViewById(R.id.txt_question_choice_3);
-				holder.txtChoice4 = (TextView) convertView.findViewById(R.id.txt_question_choice_4);	
+				holder.txtChoices = new ArrayList<TextView>(4);	
+				
+				holder.txtChoices.add((TextView) convertView.findViewById(R.id.txt_question_choice_1));
+				holder.txtChoices.add((TextView) convertView.findViewById(R.id.txt_question_choice_2));
+				holder.txtChoices.add((TextView) convertView.findViewById(R.id.txt_question_choice_3));
+				holder.txtChoices.add((TextView) convertView.findViewById(R.id.txt_question_choice_4));	
 				
 				holder.txtQuestion = (TextView) convertView.findViewById(R.id.txt_question_txt);
 				holder.imgQuestion = (ImageView) convertView.findViewById(R.id.img_question);
 				
-				holder.imgChoice1 = (ImageView) convertView.findViewById(R.id.img_question_choice_1);
-				holder.imgChoice2 = (ImageView) convertView.findViewById(R.id.img_question_choice_2);
-				holder.imgChoice3 = (ImageView) convertView.findViewById(R.id.img_question_choice_3);
-				holder.imgChoice4 = (ImageView) convertView.findViewById(R.id.img_question_choice_4);
+				holder.imgChoices = new ArrayList<ImageView>(4);
+				holder.imgChoices.add((ImageView) convertView.findViewById(R.id.img_question_choice_1));
+				holder.imgChoices.add((ImageView) convertView.findViewById(R.id.img_question_choice_2));
+				holder.imgChoices.add((ImageView) convertView.findViewById(R.id.img_question_choice_3));
+				holder.imgChoices.add((ImageView) convertView.findViewById(R.id.img_question_choice_4));
 				
 				
 				holder.btnHint = (Button) convertView.findViewById(R.id.btn_question_hint);
@@ -316,10 +281,9 @@ public class ListSectionAdapter extends BaseAdapter {
 				holder = (QuestionViewHolder) convertView.getTag();
 			}
 			
-			holder.btnChoice1.setBackgroundResource(R.drawable.circle_number_trans);
-			holder.btnChoice2.setBackgroundResource(R.drawable.circle_number_trans);
-			holder.btnChoice3.setBackgroundResource(R.drawable.circle_number_trans);
-			holder.btnChoice4.setBackgroundResource(R.drawable.circle_number_trans);	
+			for(Button btn: holder.btnChoices){
+				btn.setBackgroundResource(R.drawable.circle_number_trans);
+			}	
 			
 			if(question.getHint() == null || question.getHint().isEmpty()){
 				holder.btnHint.setVisibility(Button.GONE);
@@ -381,90 +345,51 @@ public class ListSectionAdapter extends BaseAdapter {
 			
 			List<ChoiceDataSet> choices = question.getChoices();
 			if(choices != null){
-				if(Constants.FILE_TYPE_IMG.equals(question.getChoiceType())){
-					holder.txtChoice1.setVisibility(TextView.GONE);
-					holder.txtChoice2.setVisibility(TextView.GONE);
-					holder.txtChoice3.setVisibility(TextView.GONE);
-					holder.txtChoice4.setVisibility(TextView.GONE);
+				for(int i = 0; i < 4; i ++){
+					final ChoiceDataSet choice = choices.get(i);
+					if(Constants.FILE_TYPE_IMG.equals(choice.getType())){
+						holder.txtChoices.get(i).setVisibility(TextView.GONE);
+						holder.imgChoices.get(i).setVisibility(ImageView.VISIBLE);	
+						if(choice.getImg() !=  null && choice.getImg().getPathLocal() != null && new File(choice.getImg().getPathLocal()).exists()){
+							holder.imgChoices.get(i).setImageBitmap(ImageUtils.decodeSampledBitmapFromFile(choice.getImg().getPathLocal(), 200, 200));		
+						} else {
+							// set default image;
 
-					
-					holder.imgChoice1.setImageBitmap(ImageUtils.decodeSampledBitmapFromFile(choices.get(0).getText(), 200, 200));
-					holder.imgChoice2.setImageBitmap(ImageUtils.decodeSampledBitmapFromFile(choices.get(1).getText(), 200, 200));
-					holder.imgChoice3.setImageBitmap(ImageUtils.decodeSampledBitmapFromFile(choices.get(2).getText(), 200, 200));
-					holder.imgChoice4.setImageBitmap(ImageUtils.decodeSampledBitmapFromFile(choices.get(3).getText(), 200, 200));
-					
-					holder.imgChoice1.setVisibility(ImageView.VISIBLE);
-					holder.imgChoice2.setVisibility(ImageView.VISIBLE);
-					holder.imgChoice3.setVisibility(ImageView.VISIBLE);
-					holder.imgChoice4.setVisibility(ImageView.VISIBLE);
-				} else {
-					holder.txtChoice1.setVisibility(TextView.VISIBLE);
-					holder.txtChoice2.setVisibility(TextView.VISIBLE);
-					holder.txtChoice3.setVisibility(TextView.VISIBLE);
-					holder.txtChoice4.setVisibility(TextView.VISIBLE);	
-					
-					holder.txtChoice1.setText(choices.get(0).getText());
-					holder.txtChoice2.setText(choices.get(1).getText());
-					holder.txtChoice3.setText(choices.get(2).getText());
-					holder.txtChoice4.setText(choices.get(3).getText());
-					
-					holder.imgChoice1.setVisibility(ImageView.GONE);
-					holder.imgChoice2.setVisibility(ImageView.GONE);
-					holder.imgChoice3.setVisibility(ImageView.GONE);
-					holder.imgChoice4.setVisibility(ImageView.GONE);							
-				}
+							holder.imgChoices.get(i).setImageBitmap(ImageUtils.decodeSampledBitmapFromResource(mContext.getResources(), R.drawable.image_unknown, 100, 100));
+							holder.imgChoices.get(i).setOnClickListener(new OnClickListener() {
+								
+								@Override
+								public void onClick(View v) {
+									showDownloadDialog(choice.getImg());
+								}
+							});
+						}
+											
+					}else {
+						holder.txtChoices.get(i).setVisibility(TextView.VISIBLE);
+						holder.txtChoices.get(i).setText(choice.getContent());
+						holder.imgChoices.get(i).setVisibility(ImageView.GONE);						
+					}
+				}			
 				
 			}
-			holder.btnChoice1.setOnClickListener(new OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					onChoose(question, 1, holder.btnChoice1, holder.btnChoice2, holder.btnChoice3, holder.btnChoice4);
-				}
-			});
-			holder.btnChoice2.setOnClickListener(new OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					onChoose(question, 2, holder.btnChoice1, holder.btnChoice2, holder.btnChoice3, holder.btnChoice4);
-				}
-			});
-			holder.btnChoice3.setOnClickListener(new OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					onChoose(question, 3, holder.btnChoice1, holder.btnChoice2, holder.btnChoice3, holder.btnChoice4);
-				}
-			});
-			holder.btnChoice4.setOnClickListener(new OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					onChoose(question, 4, holder.btnChoice1, holder.btnChoice2, holder.btnChoice3, holder.btnChoice4);
-				}
-			});				
+			for(int i = 0; i < holder.btnChoices.size(); i ++){
+				Button btn = holder.btnChoices.get(i);
+				final int pos = i + 1;
+				btn.setOnClickListener(new OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						onChoose(question, pos, holder.btnChoices);
+					}
+				});
+			}			
 				
 	
 			// check choice
 			Button btn = null;
-			switch (question.getChoice()) {
-			
-			case 1:
-				btn = holder.btnChoice1;
-				break;
-			case 2:
-				btn = holder.btnChoice2;
-				break;
-			case 3:
-				btn = holder.btnChoice3;
-				break;		
-			case 4:
-				btn = holder.btnChoice4;
-				break;					
-			default:
-				break;
-			}
-			if(btn != null){
+			if(question.getChoice() > 0){
+				btn = holder.btnChoices.get(question.getChoice() - 1);
 				btn.setTextColor(mContext.getResources().getColor(R.color.WHITE));
 				btn.setBackgroundResource(R.drawable.circle_number_black);
 			}
@@ -475,46 +400,14 @@ public class ListSectionAdapter extends BaseAdapter {
 
 				
 				//ResultDataSet result = mResults.get(question.getNumber() - 1);
-				
-				btn = null;
-				switch (question.getAnswer()) {
-				case 1:
-					btn = holder.btnChoice1;
-					break;
-				case 2:
-					btn = holder.btnChoice2;
-					break;
-				case 3:
-					btn = holder.btnChoice3;
-					break;		
-				case 4:
-					btn = holder.btnChoice4;
-					break;								
-				default:
-					break;
-				}
-				if(btn != null){
+
+				if(question.getAnswer() > 0){
+					btn = holder.btnChoices.get(question.getAnswer() - 1);
 					btn.setBackgroundResource(R.drawable.circle_number_green);
 				}			
 				
-				btn = null;
-				switch (question.getChoice()) {
-				case 1:
-					btn = holder.btnChoice1;
-					break;
-				case 2:
-					btn = holder.btnChoice2;
-					break;
-				case 3:
-					btn = holder.btnChoice3;
-					break;		
-				case 4:
-					btn = holder.btnChoice4;
-					break;							
-				default:
-					break;
-				}
-				if(btn != null){
+				if(question.getChoice() > 0){
+					btn = holder.btnChoices.get(question.getChoice() - 1);
 					if(question.getChoice() != question.getAnswer()){
 						btn.setBackgroundResource(R.drawable.circle_number_red);
 					}					
@@ -531,18 +424,52 @@ public class ListSectionAdapter extends BaseAdapter {
 			Button btnAudio;
 			LinearLayout layoutHint;
 			TextView txtHint;	
-			Button btnChoice1;
-			TextView txtChoice1;
-			ImageView imgChoice1;
-			Button btnChoice2;
-			TextView txtChoice2;
-			ImageView imgChoice2;
-			Button btnChoice3;
-			TextView txtChoice3;
-			ImageView imgChoice3;
-			Button btnChoice4;
-			TextView txtChoice4;
-			ImageView imgChoice4;			
+//			Button btnChoice1;
+//			TextView txtChoice1;
+//			ImageView imgChoice1;
+//			Button btnChoice2;
+//			TextView txtChoice2;
+//			ImageView imgChoice2;
+//			Button btnChoice3;
+//			TextView txtChoice3;
+//			ImageView imgChoice3;
+//			Button btnChoice4;
+//			TextView txtChoice4;
+//			ImageView imgChoice4;	
+			List<Button> btnChoices;
+			List<TextView> txtChoices;
+			List<ImageView> imgChoices;
 		}
 	}
+	public void showDownloadDialog(final FileDataSet file){
+		final Dialog dialog = new Dialog(mContext);
+		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		dialog.setContentView(R.layout.layout_dialog_download_cancel);
+		dialog.getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+		dialog.show();
+		dialog.setCancelable(false);
+		
+		dialog.findViewById(R.id.btn_dialog_ok).setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				dialog.dismiss();
+			}
+		});	
+		
+		DownloadInfo info = new DownloadInfo();
+		info.setPrgBar((ProgressBar)dialog.findViewById(R.id.prg_dialog_download));
+		info.setTxtPer((TextView)dialog.findViewById(R.id.txt_dialog_file_progress));
+		info.setTxtSize((TextView)dialog.findViewById(R.id.txt_dialog_file_size));
+		
+		new DownloadFileAdapter(file, info, mContext, new DatabaseAdapter(mContext), dialog, this).execute();
+		
+	}
+
+	@Override
+	public void onFinishNotify(boolean flag) {
+		if(flag){
+			this.notifyDataSetChanged();
+		}
+	}	
 }

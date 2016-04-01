@@ -32,6 +32,7 @@
     <string name="question_practice">Practice</string>
     <string name="question_review">Review</string>
     <string name="question_test">Test</string>
+    <string name="question_audio_download">Audio file is not valid. Click to download</string>
 
     <!-- Result -->
     <string name="result_total">Total: </string>
@@ -64,17 +65,17 @@
     <!-- Dialog -->
 	<string name="dialog_title_caution">Download data files?</string>
 	<string name="dialog_title_result">Result</string>
-	<string name="dialog_content_data">Warning: Data files are huge.\nIt may take several minutes to download.</string>
+	<string name="dialog_content_data">Warning: Audio files are huge.\nIt may take several minutes to download.</string>
     <string name="dialog_yes">YES</string>
     <string name="dialog_no">NO</string>
     <string name="dialog_ok">OK</string>
     <string name="dialog_caution">CAUTION</string>
-    <string name="dialog_ask_download">Warning: Data files are huge.\nIt may take several minutes to download.</string>
+    <string name="dialog_ask_download">Warning: Audio files are huge.\nIt may take several minutes to download.</string>
     <string name="dialog_ask_downloading">Data files are being downloaded\nPlease wait for a minute.</string>
     <string name="dialog_ask_queued">Data files are queued\nPlease wait for other download processes.</string>
     <string name="dialog_data_not_exists">Exam\'s data does not exists. \nPlease back to main screen and start to download.</string>
-		
-	
+	<string name="dialog_file_size">Size of file: </string>	
+	<string name="dialog_file_progress">Progress: </string>
     <string-array name="array_language">
         <item>English</item>
         <item>Tiếng Việt</item>

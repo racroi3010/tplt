@@ -503,9 +503,9 @@ public class ListExamAdapter extends BaseAdapter {
 			boolean txtFlag = false;
 			String internalRootPath = Constants.getInternalRootPath(mContext);
 			String externalRootPath = Constants.getExternalRootPath(mContext);
-			String urlTxt = level.getTxt().getPath();
-			String urlAudio = level.getAudio().get(0).getPath();
-			
+			String urlTxt = level.getTxt().getPathRemote();
+			String urlAudio = level.getAudio().get(0).getPathRemote();
+
 			// calculate size
 			long size = 0;
 			try {
@@ -524,7 +524,7 @@ public class ListExamAdapter extends BaseAdapter {
 			
 			String txtPath = internalRootPath + "/" + Constants.FILE_TYPE_TXT + "_" + level.getId() + ".txt";
 			File file = new File(txtPath);
-			if(urlTxt.contains("http")){
+			if(level.getTxt().getPathLocal() == null || level.getTxt().getPathLocal().isEmpty()){
 				try {
 					InputStream is = dlHelper.parseUrl(urlTxt);
 					if(is != null){
@@ -559,7 +559,7 @@ public class ListExamAdapter extends BaseAdapter {
 			
 			String audioPath = externalRootPath + "/" + Constants.FILE_TYPE_MP3 + "_" + level.getId() + ".mp3";
 			
-			if(urlAudio.contains("http")){
+			if(level.getAudio().get(0).getPathLocal() == null || level.getAudio().get(0).getPathLocal().isEmpty()){
 				try {
 					// multi link
 					String[] links = urlAudio.split(";");
@@ -618,9 +618,9 @@ public class ListExamAdapter extends BaseAdapter {
 			if(sections != null){
 				for(SectionDataSet section: sections)
 					for(QuestionDataSet question: section.getQuestions())
-						if(Constants.FILE_TYPE_IMG.equals(question.getChoiceType())){
+						if(Constants.FILE_TYPE_IMG.equals(question.getChoices().get(0).getType())){
 							for(ChoiceDataSet choice: question.getChoices()){
-								String urlChoice = choice.getText();
+								String urlChoice = choice.getContent();
 								try {
 									size += dlHelper.getSize(urlChoice);
 								} catch (IOException e) {
@@ -647,7 +647,7 @@ public class ListExamAdapter extends BaseAdapter {
 										is.close();		
 
 									}		
-									choice.setText(choicePath);
+									choice.setContent(choicePath);
 								} catch (IOException e) {
 //									showMsg(e.getMessage());
 									e.printStackTrace();
@@ -670,8 +670,8 @@ public class ListExamAdapter extends BaseAdapter {
 					
 					dbAdapter.addSection(data, level.getId());						
 				}	
-				if(dbAdapter.updateLevelTxt(level.getId(), txtPath) > 0){
-					level.getTxt().setPath(txtPath);
+				if(dbAdapter.updateLevelTxt(level.getId(), txtPath, urlTxt) > 0){
+					level.getTxt().setPathLocal(txtPath);
 					txtFlag = true;						
 				}					
 			}
@@ -683,9 +683,9 @@ public class ListExamAdapter extends BaseAdapter {
 			file = new File(audioPath);
 			if(file.exists()){
 				
-				if(dbAdapter.updateLevelAudio(level.getId(), audioPath) > 0){
+				if(dbAdapter.updateLevelAudio(level.getId(), audioPath, urlAudio) > 0){
 					audioFlag = true;
-					level.getAudio().get(0).setPath(audioPath);
+					level.getAudio().get(0).setPathLocal(audioPath);
 				}
 			}
 			
