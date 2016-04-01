@@ -262,8 +262,8 @@ public class QuestionSlideFragment extends Fragment implements DownloadListener 
 	private void onChoose(QuestionDataSet question, int btn
 			, List<Button> btns){
 		question.setChoice(btn);
-		for(int i = 1; i <= btns.size(); i ++){
-			if(i != btn){
+		for(int i = 0; i < btns.size(); i ++){
+			if((i + 1) == btn){
 				btns.get(i).setBackgroundResource(R.drawable.circle_number_black);	
 				btns.get(i).setTextColor(getActivity().getResources().getColor(R.color.WHITE));
 			} else {
