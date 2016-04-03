@@ -18,7 +18,7 @@
     <string name="setting_manual">Bằng tay</string>
     <string name="setting_rate">Thích ứng dụng này</string>
     <string name="setting_share">Chia sẻ ứng dụng</string>
-    <string name="setting_message">Korean food, Korean drama, Kpop become more and more popular. Consequently, many people get interested in learing Korean. This application isn\'t only suitable for whom persues Topik certificate, but also good for practice reading and listening Korean. Hope all you to spend useful time with it. If there is any wrong in content, please feel free to contact with me via doanhuunoi@gmail.com . Thank you.</string>
+    <string name="setting_message">\tỨng dụng này không chỉ phù hợp cho những người luyện thi Topik, mà còn rất tốt cho việc luyện nghe và nói tiếng Hàn. Hy vọng tất cả các bạn sẽ có những thời gian bổ ích trong việc học tiếng Hàn. Nếu có bất cứ sai sót nào trong nội dung, xin vui lòng liên hệ qua email doanhuunoi@gmail.com.</string>
     <string name="setting_practice">Luyện tập</string>
     <string name="setting_display_hint">Hiển thị gợi ý</string>
     <string name="setting_app">Ứng dụng</string>
@@ -32,7 +32,7 @@
     <string name="question_practice">Luyện Tập</string>
     <string name="question_review">Xem Lại</string>
     <string name="question_test">Bài Thi</string>
-
+    <string name="question_audio_download">Tệp tin âm thanh chưa có hoặc không hợp lệ. Click để tải về</string>
     <!-- Result -->
     <string name="result_total">Tổng cộng: </string>
     <string name="result_correct">Chính xác: </string>
@@ -60,21 +60,22 @@
     <string name="exam_title">TOPIK Lần - %1$d</string>
     <string name="exam_level_title">%1$s</string>
     <string name="exam_level_point">Điểm \n%1$s/%2$s</string>
-    
+
     <!-- Dialog -->
-	<string name="dialog_title_caution">Tải Dữ Liệu?</string>
-	<string name="dialog_title_result">Kết Quả</string>
-	<string name="dialog_content_data">Lưu Ý: Kích thước tệp tin audio khá lớn. Việc tải có thể mất vài phút.</string>
+    <string name="dialog_title_caution">Tải Dữ Liệu?</string>
+    <string name="dialog_title_result">Kết Quả</string>
+    <string name="dialog_ask_download_data">Lưu Ý: Các tệp tin dữ liệu sẽ được tải về.</string>
     <string name="dialog_yes">Có</string>
     <string name="dialog_no">Không</string>
     <string name="dialog_ok">Đống ý</string>
     <string name="dialog_caution">Lưu Ý</string>
-    <string name="dialog_ask_download">Lưu Ý: Kích thước tệp tin audio khá lớn. Việc tải có thể mất vài phút.</string>
+    <string name="dialog_ask_download_big_audio">Lưu Ý: Kích thước tệp tin audio khá lớn. Việc tải có thể mất vài phút.</string>
     <string name="dialog_ask_downloading">Dữ liệu đang được tải\nVui lòng đợi ít phút.</string>
     <string name="dialog_ask_queued">Dữ liệu đang đợi để tải\nVui lòng đợi các tiến trình tải khác hoàn thành.</string>
     <string name="dialog_data_not_exists">Dữ liệu bài thi không tồn tại. \nVui lòng quay lại màn hình chính để tải.</string>
-		
-	
+    <string name="dialog_file_size">Kích thước tệp tin: </string>
+    <string name="dialog_file_progress">Tiến trình: </string>
+
     <string-array name="array_language">
         <item>English</item>
         <item>Tiếng Việt</item>

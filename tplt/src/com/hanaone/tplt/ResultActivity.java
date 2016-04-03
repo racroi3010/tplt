@@ -46,25 +46,16 @@ public class ResultActivity extends Activity {
 	private ListAdapterListener mListener = new ListAdapterListener() {
 		
 		@Override
-		public void onSelect(int number) {
+		public void onSelect(int questionNumber, int sectionNumber) {
 			Intent intent = new Intent(mContext, QuestionActivity.class);
 			intent.putExtra(Constants.QUESTION_MODE, Constants.QUESTION_MODE_REVIEW);
 			
 			intent.putExtra(Constants.LEVEL, level);
-			//intent.putParcelableArrayListExtra(Constants.LIST_RESULT, listResult);
+
 			
-//			int sectionIndex = 0;
-//			List<SectionDataSet> sections = level.getSections();
-//			for(int i = 0; i < sections.size(); i ++){
-//				for(QuestionDataSet question: sections.get(i).getQuestions())
-//					if(question.getNumber() == listResult.get(number).getNumber()){
-//						sectionIndex = i;
-//						break;
-//					}
-//			}
-				
-			
-			intent.putExtra(Constants.QUESTION_NUMBER, listResult.get(number).getNumber());
+			//intent.putExtra(Constants.QUESTION_NUMBER, listResult.get(number).getNumber());
+			intent.putExtra(Constants.QUESTION_NUMBER, questionNumber);
+			intent.putExtra(Constants.SECTION_NUMBER, sectionNumber);
 			mContext.startActivity(intent);					
 		}
 
@@ -133,7 +124,17 @@ public class ResultActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
-				mListener.onSelect(arg2);
+				for(int i = 0; i < level.getSections().size(); i ++){
+					SectionDataSet section = level.getSections().get(i);
+					for(int j = 0; j < section.getQuestions().size(); j ++){
+						QuestionDataSet question = section.getQuestions().get(j);
+						if(question.getNumber() == listResult.get(arg2).getNumber()){
+							mListener.onSelect(j, i);
+							break;
+						}
+					}
+				}
+				//mListener.onSelect(arg2);
 				
 			}
 			

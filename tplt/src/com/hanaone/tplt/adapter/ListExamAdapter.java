@@ -327,7 +327,7 @@ public class ListExamAdapter extends BaseAdapter {
 		switch (level.getNumber()) {
 		case 1:
 			if(info.getStatus1() == DownloadInfo.NOT_START){
-				msg = resouces.getString(R.string.dialog_ask_download);
+				msg = resouces.getString(R.string.dialog_ask_download_data);
 				download = true;
 			} else if(info.getStatus1() == DownloadInfo.DOWNLOADING) {
 				msg = resouces.getString(R.string.dialog_ask_downloading);
@@ -337,7 +337,7 @@ public class ListExamAdapter extends BaseAdapter {
 			break;
 		case 2:
 			if(info.getStatus2() == DownloadInfo.NOT_START){
-				msg = resouces.getString(R.string.dialog_ask_download);
+				msg = resouces.getString(R.string.dialog_ask_download_data);
 				download = true;
 			} else if(info.getStatus2() == DownloadInfo.DOWNLOADING) {
 				msg = resouces.getString(R.string.dialog_ask_downloading);
@@ -347,7 +347,7 @@ public class ListExamAdapter extends BaseAdapter {
 			break;
 		case 3:
 			if(info.getStatus3() == DownloadInfo.NOT_START){
-				msg = resouces.getString(R.string.dialog_ask_download);
+				msg = resouces.getString(R.string.dialog_ask_download_data);
 				download = true;
 			} else if(info.getStatus3() == DownloadInfo.DOWNLOADING) {
 				msg = resouces.getString(R.string.dialog_ask_downloading);

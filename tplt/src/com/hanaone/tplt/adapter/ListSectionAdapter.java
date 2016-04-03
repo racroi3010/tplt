@@ -38,6 +38,7 @@ public class ListSectionAdapter extends BaseAdapter implements DownloadListener{
 	private List<SectionDataSet> mDataSet;
 	private List<Item> mItems;
 	//private ArrayList<ResultDataSet> mResults;
+	private boolean cheat;
 	private boolean isShowHint;
 	private boolean isShowAudio;
 	public ListSectionAdapter(Context mContext, ListAdapterListener mListener) {
@@ -46,10 +47,11 @@ public class ListSectionAdapter extends BaseAdapter implements DownloadListener{
 		this.mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		
 		String mode = PreferenceHandler.getQuestionModePreference(mContext);
+		cheat = false;
 		if(Constants.QUESTION_MODE_PRACTICE.equals(mode) 
 				|| Constants.QUESTION_MODE_REVIEW.equals(mode)){
 			isShowHint = PreferenceHandler.getHintDisplayPreference(mContext);
-			
+			cheat = true;
 		}
 		
 		if(Constants.QUESTION_MODE_REVIEW.equals(mode)){
@@ -160,27 +162,33 @@ public class ListSectionAdapter extends BaseAdapter implements DownloadListener{
 				holder.btnAudio.setVisibility(Button.GONE);
 			} else {
 				holder.txtHint.setText(section.getHint());
-				holder.btnHint.setVisibility(Button.VISIBLE);
-				holder.btnHint.setOnClickListener(new OnClickListener() {
-					
-					@Override
-					public void onClick(View v) {
-						if(holder.txtHint.getVisibility() == TextView.VISIBLE){
-							holder.txtHint.setVisibility(TextView.GONE);
-							holder.btnHint.setBackgroundResource(R.drawable.ic_image_wb_sunny_black);
-						} else {
-							holder.txtHint.setVisibility(TextView.VISIBLE);
-							holder.btnHint.setBackgroundResource(R.drawable.ic_image_wb_sunny_cyan);
+				if(cheat){
+					holder.btnHint.setVisibility(Button.VISIBLE);
+					holder.btnHint.setOnClickListener(new OnClickListener() {
+						
+						@Override
+						public void onClick(View v) {
+							if(holder.txtHint.getVisibility() == TextView.VISIBLE){
+								holder.txtHint.setVisibility(TextView.GONE);
+								holder.btnHint.setBackgroundResource(R.drawable.ic_image_wb_sunny_black);
+							} else {
+								holder.txtHint.setVisibility(TextView.VISIBLE);
+								holder.btnHint.setBackgroundResource(R.drawable.ic_image_wb_sunny_cyan);
+							}
 						}
-					}
-				});
-				if(isShowHint){
-					holder.txtHint.setVisibility(LinearLayout.VISIBLE);
-					holder.btnHint.setBackgroundResource(R.drawable.ic_image_wb_sunny_cyan);					
+					});
+					if(isShowHint){
+						holder.txtHint.setVisibility(LinearLayout.VISIBLE);
+						holder.btnHint.setBackgroundResource(R.drawable.ic_image_wb_sunny_cyan);					
+					} else {
+						holder.txtHint.setVisibility(LinearLayout.GONE);
+						holder.btnHint.setBackgroundResource(R.drawable.ic_image_wb_sunny_black);
+					}							
 				} else {
+					holder.btnHint.setVisibility(Button.GONE);
 					holder.txtHint.setVisibility(LinearLayout.GONE);
-					holder.btnHint.setBackgroundResource(R.drawable.ic_image_wb_sunny_black);
-				}				
+				}
+		
 				
 				
 				if(isShowAudio){
@@ -291,30 +299,36 @@ public class ListSectionAdapter extends BaseAdapter implements DownloadListener{
 				holder.layoutHint.setVisibility(LinearLayout.GONE);
 			} else {
 				holder.txtHint.setText(question.getHint());
-				holder.btnHint.setVisibility(Button.VISIBLE);
 				
-				if(isShowHint){
-					holder.layoutHint.setVisibility(LinearLayout.VISIBLE);
-					holder.btnHint.setBackgroundResource(R.drawable.ic_image_wb_sunny_cyan);	
-					
-				} else {
-					holder.layoutHint.setVisibility(LinearLayout.GONE);
-					holder.btnHint.setBackgroundResource(R.drawable.ic_image_wb_sunny_black);
-				}
-				holder.btnHint.setOnClickListener(new OnClickListener() {
-					
-					@Override
-					public void onClick(View v) {
+				if(cheat){
+					holder.btnHint.setVisibility(Button.VISIBLE);
+					if(isShowHint){
+						holder.layoutHint.setVisibility(LinearLayout.VISIBLE);
+						holder.btnHint.setBackgroundResource(R.drawable.ic_image_wb_sunny_cyan);	
 						
-						if(holder.layoutHint.getVisibility() == LinearLayout.VISIBLE){
-							holder.layoutHint.setVisibility(LinearLayout.GONE);
-							holder.btnHint.setBackgroundResource(R.drawable.ic_image_wb_sunny_black);
-						} else {
-							holder.layoutHint.setVisibility(LinearLayout.VISIBLE);
-							holder.btnHint.setBackgroundResource(R.drawable.ic_image_wb_sunny_cyan);
-						}
+					} else {
+						holder.layoutHint.setVisibility(LinearLayout.GONE);
+						holder.btnHint.setBackgroundResource(R.drawable.ic_image_wb_sunny_black);
 					}
-				});
+					holder.btnHint.setOnClickListener(new OnClickListener() {
+						
+						@Override
+						public void onClick(View v) {
+							
+							if(holder.layoutHint.getVisibility() == LinearLayout.VISIBLE){
+								holder.layoutHint.setVisibility(LinearLayout.GONE);
+								holder.btnHint.setBackgroundResource(R.drawable.ic_image_wb_sunny_black);
+							} else {
+								holder.layoutHint.setVisibility(LinearLayout.VISIBLE);
+								holder.btnHint.setBackgroundResource(R.drawable.ic_image_wb_sunny_cyan);
+							}
+						}
+					});					
+				} else {
+					holder.btnHint.setVisibility(Button.GONE);
+					holder.layoutHint.setVisibility(LinearLayout.GONE);
+				}
+
 				
 				if(isShowAudio){
 					holder.btnAudio.setVisibility(Button.VISIBLE);
@@ -345,7 +359,7 @@ public class ListSectionAdapter extends BaseAdapter implements DownloadListener{
 			
 			List<ChoiceDataSet> choices = question.getChoices();
 			if(choices != null){
-				for(int i = 0; i < 4; i ++){
+				for(int i = 0; i < choices.size(); i ++){
 					final ChoiceDataSet choice = choices.get(i);
 					if(Constants.FILE_TYPE_IMG.equals(choice.getType())){
 						holder.txtChoices.get(i).setVisibility(TextView.GONE);

@@ -366,7 +366,7 @@ public class DownloadLevelAdapter extends AsyncTask<Void, Integer, Boolean> {
 					//layout.setAlpha(1f);
 					int updatedActive = dbAdapter.updateLevelActive(level.getId(), true);
 					
-					showMsg("finish download exam level" + level.getLabel());			
+					showMsg("finish download exam level " + level.getLabel());			
 				} else {
 					if(prgBar != null) prgBar.setProgress(0);
 					if(txtPer != null) txtPer.setText("0/100");
@@ -374,7 +374,7 @@ public class DownloadLevelAdapter extends AsyncTask<Void, Integer, Boolean> {
 						layout.setClickable(true);
 						layout.setAlpha(0.5f);
 					}	
-					showMsg("download failed!");
+					showMsg("Failed to download");
 				}						
 				break;
 			default:

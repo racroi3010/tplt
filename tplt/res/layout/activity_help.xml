@@ -373,16 +373,15 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:gravity="fill_horizontal"
                 android:orientation="vertical"
                 android:padding="10dp" >
-
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:autoLink="email"
-                    android:gravity="fill_horizontal"
+                    android:gravity="fill"
                     android:text="@string/setting_message"
                     android:textColor="@color/BLACK"
                     android:textSize="16sp" />

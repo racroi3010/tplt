@@ -18,6 +18,7 @@ public class LevelDataSet implements Parcelable {
 	private int score;
 	private int maxScore;
 	private int color;
+	private int exam_id;
 
 	public LevelDataSet() {
 
@@ -93,6 +94,13 @@ public class LevelDataSet implements Parcelable {
 	public void setColor(int color) {
 		this.color = color;
 	}
+	
+	public int getExam_id() {
+		return exam_id;
+	}
+	public void setExam_id(int exam_id) {
+		this.exam_id = exam_id;
+	}
 	@Override
 	public int describeContents() {
 		// TODO Auto-generated method stub
@@ -114,6 +122,7 @@ public class LevelDataSet implements Parcelable {
 		dest.writeInt(score);
 		dest.writeInt(maxScore);
 		dest.writeInt(color);
+		dest.writeInt(exam_id);
 		
 	}
 	public static final Parcelable.Creator<LevelDataSet> CREATOR
@@ -150,6 +159,8 @@ public class LevelDataSet implements Parcelable {
 		score = in.readInt();
 		maxScore = in.readInt();
 		color = in.readInt();
+		
+		exam_id = in.readInt();
 	}	
 	
 }

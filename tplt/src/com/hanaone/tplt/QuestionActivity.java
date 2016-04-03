@@ -94,10 +94,12 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 	private long time;
 	private DigitalClockView clock;
 	
+	private boolean activityPaused;
+	
 	private ListAdapterListener mListener = new ListAdapterListener() {
-		
+		private boolean isPathSet = false;
 		@Override
-		public void onSelect(int number) {
+		public void onSelect(int questionNumber, int sectionNumber) {
 			
 		}
 		
@@ -112,15 +114,27 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 				replayButton.setBackgroundResource(R.drawable.ic_av_volume_down_cyan);
 				replayButton.setEnabled(false);
 				currentItem = sectionNumber;
-				FileDataSet audio = null;
-				if(level.getAudio().size() > sectionNumber){
-					audio = level.getAudio().get(sectionNumber);
+//				FileDataSet audio = null;
+				if(level.getAudio().size() > 1){
+					mHander.obtainMessage(HANDLE_PLAY_LIST).sendToTarget();
 				} else {
-					audio = level.getAudio().get(0);
+					if(!isPathSet){
+						mPlayer = getMediaPlayer();	
+						String path = level.getAudio().get(0).getPathLocal();
+						setAudioResouce(path, true);	
+						isPathSet = true;
+					} else {
+						seekTo(0);
+						start();
+					}
+
 				}
-				mPlayer = getMediaPlayer();	
-				String path = audio.getPathLocal();
-				setAudioResouce(path, true);
+//				else {
+//					audio = level.getAudio().get(0);
+//				}
+//				mPlayer = getMediaPlayer();	
+//				String path = audio.getPathLocal();
+//				setAudioResouce(path, true);
 
 				
 			}
@@ -145,15 +159,26 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 				section.setStartAudio(question.getStartAudio());
 				section.setEndAudio(question.getEndAudio());
 				
-				FileDataSet audio = null;
-				if(level.getAudio().size() > sectionNumber){
-					audio = level.getAudio().get(sectionNumber);
+//				FileDataSet audio = null;
+				if(level.getAudio().size() > 1){
+					mHander.obtainMessage(HANDLE_PLAY_LIST).sendToTarget();
 				} else {
-					audio = level.getAudio().get(0);
+					if(!isPathSet){
+						mPlayer = getMediaPlayer();	
+						String path = level.getAudio().get(0).getPathLocal();
+						setAudioResouce(path, true);	
+						isPathSet = true;
+					} else {
+						seekTo(0);
+						start();
+					}
 				}
-				mPlayer = getMediaPlayer();	
-				String path = audio.getPathLocal();
-				setAudioResouce(path, true);			
+//				else {
+//					audio = level.getAudio().get(0);
+//				}
+//				mPlayer = getMediaPlayer();	
+//				String path = audio.getPathLocal();
+//				setAudioResouce(path, true);			
 
 				
 			}			
@@ -189,9 +214,7 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 		
 		if(Constants.QUESTION_MODE_EXAM.equals(mMode) || Constants.QUESTION_MODE_PRACTICE.equals(mMode)){
 			int levelId = getIntent().getIntExtra(Constants.LEVEL_ID, -1);
-			level = dbAdapter.getLevel(levelId);			
-
-
+			level = dbAdapter.getLevel(levelId);	
 			String path = level.getAudio().get(0).getPathLocal();
 			setAudioResouce(path, true);
 
@@ -208,8 +231,9 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 			
 			level = getIntent().getParcelableExtra(Constants.LEVEL);
 			// keep reference object			
-			//listResult = getIntent().getParcelableArrayListExtra(Constants.LIST_RESULT);
 			questionNumber = getIntent().getIntExtra(Constants.QUESTION_NUMBER, 0);
+			currentItem = getIntent().getIntExtra(Constants.SECTION_NUMBER, 0);
+			
 		}
 		
 	}
@@ -260,7 +284,6 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 						seekTo(0);
 						mControllerView.show();	
 						if(PreferenceHandler.getAudioPlayPreference(mContext)){
-							seekTo(0);
 							start();
 						}	
 												
@@ -300,23 +323,29 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 			mList.setAdapter(mListAdapter);
 			mListAdapter.setmDataSet(level.getSections());
 			//mListAdapter.setResults(listResult);
-			int index = 0;
-			boolean flag = false;
-			for(SectionDataSet section: level.getSections()){
-				index ++;
-				for(QuestionDataSet question: section.getQuestions()){				
-					if(question.getNumber() == questionNumber){
-						flag = true;
-						break;
-					}	
-					index ++;
-				}
-				if(flag){
-					break;
-				}
-					
 
-			}
+//			boolean flag = false;
+//			for(SectionDataSet section: level.getSections()){
+//				index ++;
+//				for(QuestionDataSet question: section.getQuestions()){				
+//					if(question.getNumber() == questionNumber){
+//						flag = true;
+//						break;
+//					}	
+//					index ++;
+//				}
+//				if(flag){
+//					break;
+//				}
+//					
+//
+//			}
+			
+			int index = 0;			
+			for(int i = 0; i < currentItem; i ++){
+				index += level.getSections().get(i).getQuestions().size() + 1;				
+			}		
+			index += questionNumber + 1;
 				
 			mList.setSelection(index);
 			mList.requestFocus();
@@ -357,7 +386,7 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 				seekTo(0);
 				mControllerView.show();	
 				if(PreferenceHandler.getAudioPlayPreference(mContext)){
-					seekTo(0);
+//					seekTo(0);
 					start();
 				}				
 			}
@@ -373,7 +402,7 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 				seekTo(0);				
 				mControllerView.show();
 				if(PreferenceHandler.getAudioPlayPreference(mContext)){
-					seekTo(0);
+//					seekTo(0);
 					start();
 				}				
 			} else {
@@ -387,9 +416,7 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 			submit();
 			break;
 		case R.id.btn_home:
-			if(mPlayer != null){
-				mPlayer.pause();
-			}	
+			pause();	
 //			if(timer != null){
 //				timer.cancel();
 //				timer = null;
@@ -431,11 +458,8 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 
 	@Override
 	protected void onPause() {
-		if(mPlayer != null){
-			pause();
-			mControllerView.updatePausePlay();		
-			
-		}
+		activityPaused = true;
+		pause();
 //		if(timer != null){
 //			timer.cancel();
 //			timer = null;
@@ -448,21 +472,21 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 
 	@Override
 	protected void onResume() {
-		if(mPlayer != null){
-			if(Constants.QUESTION_MODE_PRACTICE.equals(mMode)){
-				if(PreferenceHandler.getAudioPlayPreference(mContext)){
-					start();
-					mControllerView.updateProgress();
-				}
-			} else {
+		activityPaused = false;
+		if(Constants.QUESTION_MODE_PRACTICE.equals(mMode)){
+			if(PreferenceHandler.getAudioPlayPreference(mContext)){
 				start();
-				mControllerView.updateProgress();				
+				mControllerView.updateProgress();
 			}
-
+		} else {
+			start();
+			mControllerView.updateProgress();				
 		}
+		
 		if(clock != null){
 			clock.resume();
-		}		
+		}	
+		
 		super.onResume();
 	}
 
@@ -475,15 +499,14 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 			seekTo(0);
 			mControllerView.show();
 			if(PreferenceHandler.getAudioPlayPreference(mContext)){
-				seekTo(0);
 				start();
 			}
+			
 		} else if(Constants.QUESTION_MODE_EXAM.equals(mMode)) {
-			mPlayer.start();
-			
-			
+			mPlayer.start();		
 			time = mPlayer.getDuration();
 			clock.start(time, this);
+			
 //			timer = new Timer();
 //			timer.schedule(new ClockTimer(), 0, 1000);	
 		} else if(Constants.QUESTION_MODE_REVIEW.equals(mMode)) {
@@ -492,21 +515,31 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 //				timer = null;
 //			}	
 			seekTo(0);
-			start();
 			mControllerView.show();
-		} else {
 			start();
-//			time = mPlayer.getDuration();
-//			clock.start(time);
+			
+		} else if(Constants.QUESTION_MODE_SAMPLE_BEGINNER.equals(mMode) || Constants.QUESTION_MODE_SAMPLE_INTERMEDIATE.equals(mMode)){
+			seekTo(0);
+			start();
+			
+			new PlayListThread().start();
 		}
 		
+		if(activityPaused){
+			pause();
+			if(clock != null){
+				clock.pause();
+			}				
+		}			
 	}
 	
 	public void start() {
 //		SectionDataSet section = level.getSections().get(currentItem);
 //		int start = (int)(section.getStartAudio() * 1000);
-						
-		mPlayer.start();
+		if(mPlayer != null){
+			mPlayer.start();
+		}
+		
 		mControllerView.updatePausePlay();
 		
 //		if(Constants.QUESTION_MODE_SAMPLE_BEGINNER.equals(mMode) || Constants.QUESTION_MODE_SAMPLE_INTERMEDIATE.equals(mMode)){
@@ -517,8 +550,11 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 		
 	}
 	public void pause() {
+		if(mPlayer != null && mPlayer.isPlaying()){
+			mPlayer.pause();
+		}
+		
 		mControllerView.updatePausePlay();
-		mPlayer.pause();
 	}
 	public int getDuration() {
 		// re calculate
@@ -585,7 +621,7 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case HANDLE_STOP_AUDIO:
-				if(mPlayer != null && mPlayer.isPlaying()) mPlayer.pause();
+				pause();
 				break;
 			case HANDLE_PLAY_AUDIO:
 				String path = (String) msg.obj;
@@ -612,19 +648,30 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 		
 	};
 
-//	private class Sleeper extends TimerTask{
-//
-//		@Override
-//		public void run() {
-//			mHander.obtainMessage(HANDLE_STOP_AUDIO).sendToTarget();
-//			if(Constants.QUESTION_MODE_SAMPLE_BEGINNER.equals(mMode) || Constants.QUESTION_MODE_SAMPLE_INTERMEDIATE.equals(mMode)){
-//				currentItem ++;
-//				mHander.obtainMessage(HANDLE_PLAY_LIST).sendToTarget();				
-//			} 
-//			
-//		}
-//		
-//	}
+	private class PlayListThread extends Thread{
+
+		@Override
+		public void run() {
+			int current = 0;
+			int duration = getDuration();
+			while(true){
+				if(!activityPaused){
+					current= getCurrentPosition();
+				}
+				
+				if(current >= duration){
+					mHander.obtainMessage(HANDLE_STOP_AUDIO).sendToTarget();
+					if(Constants.QUESTION_MODE_SAMPLE_BEGINNER.equals(mMode) || Constants.QUESTION_MODE_SAMPLE_INTERMEDIATE.equals(mMode)){
+						currentItem ++;
+						mHander.obtainMessage(HANDLE_PLAY_LIST).sendToTarget();				
+					} 					
+					break;
+				}	
+				
+			}
+		}
+		
+	}
 	public void confirmDownload(final FileDataSet file){
 		Resources resouces = mContext.getResources();
 		
@@ -634,7 +681,7 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 		dialog.setContentView(R.layout.layout_dialog_yes_no);
 		dialog.getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 		dialog.show();
-		((TextView)dialog.findViewById(R.id.txt_dialog_content)).setText(resouces.getString(R.string.dialog_ask_download));
+		((TextView)dialog.findViewById(R.id.txt_dialog_content)).setText(resouces.getString(R.string.dialog_ask_download_big_audio));
 		
 		
 		dialog.findViewById(R.id.btn_dialog_ok).setOnClickListener(new OnClickListener() {
@@ -707,9 +754,17 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 	public void onFinishNotify(boolean flag) {
 		if(flag){
 			findViewById(R.id.btn_audio_download).setVisibility(Button.GONE);
-			onInit();
-			onInitLayout();
-			
+			if(Constants.QUESTION_MODE_EXAM.equals(mMode) || Constants.QUESTION_MODE_PRACTICE.equals(mMode)){
+				String path = level.getAudio().get(0).getPathLocal();
+				setAudioResouce(path, true);
+
+			} else if(Constants.QUESTION_MODE_SAMPLE_BEGINNER.equals(mMode)){
+				mHander.obtainMessage(HANDLE_PLAY_LIST).sendToTarget();
+				
+			} else if(Constants.QUESTION_MODE_SAMPLE_INTERMEDIATE.equals(mMode)){
+				mHander.obtainMessage(HANDLE_PLAY_LIST).sendToTarget();
+			}
+		
 			// update
 			if(Constants.QUESTION_MODE_REVIEW.equals(mMode)){
 				FileDataSet currentFile = level.getAudio().get(currentItem);
@@ -774,4 +829,5 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 
 		
 	}
+	
 }

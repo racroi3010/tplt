@@ -18,9 +18,9 @@
     <string name="setting_manual">Manual</string>
     <string name="setting_rate">Rate this app</string>
     <string name="setting_share">Share this app</string>
-    <string name="setting_message">Korean food, Korean drama, Kpop become more and more popular. Consequently, many people get interested in learing Korean. This application isn\'t only suitable for whom persues Topik certificate, but also good for practice reading and listening Korean. Hope all you to spend useful time with it. If there is any wrong in content, please feel free to contact with me via doanhuunoi@gmail.com . Thank you.</string>
+    <string name="setting_message">\tThis application isn\'t only suitable for the people who pursues a Topik certificate, but also good for practice reading and listening Korean. Hope all of you will have a good time in Korean. If there is any wrong content, please feel free to contact me via doanhuunoi@gmail.com.</string>
     <string name="setting_practice">Practice</string>
-    <string name="setting_display_hint">Display Hint Phrase</string>
+    <string name="setting_display_hint">Display Hint Text</string>
     <string name="setting_app">App</string>
     <string name="setting_language">Language</string>
 
@@ -65,15 +65,15 @@
     <!-- Dialog -->
 	<string name="dialog_title_caution">Download data files?</string>
 	<string name="dialog_title_result">Result</string>
-	<string name="dialog_content_data">Warning: Audio files are huge.\nIt may take several minutes to download.</string>
+	<string name="dialog_ask_download_data">Warning: Data files will be downloaded.</string>
     <string name="dialog_yes">YES</string>
     <string name="dialog_no">NO</string>
     <string name="dialog_ok">OK</string>
     <string name="dialog_caution">CAUTION</string>
-    <string name="dialog_ask_download">Warning: Audio files are huge.\nIt may take several minutes to download.</string>
+    <string name="dialog_ask_download_big_audio">Warning: Audio files are huge.\nIt may take several minutes to download.</string>
     <string name="dialog_ask_downloading">Data files are being downloaded\nPlease wait for a minute.</string>
     <string name="dialog_ask_queued">Data files are queued\nPlease wait for other download processes.</string>
-    <string name="dialog_data_not_exists">Exam\'s data does not exists. \nPlease back to main screen and start to download.</string>
+    <string name="dialog_data_not_exists">Exam\'s data does not exist. \nPlease back to main screen and start to download.</string>
 	<string name="dialog_file_size">Size of file: </string>	
 	<string name="dialog_file_progress">Progress: </string>
     <string-array name="array_language">

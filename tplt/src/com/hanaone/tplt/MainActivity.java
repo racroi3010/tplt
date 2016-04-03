@@ -223,6 +223,7 @@ public class MainActivity extends Activity {
 								//exam.setColor(colorNew);
 								for(LevelDataSet level: exam.getLevels()){
 									level.setColor(colorNew);
+									level.setExam_id(exam.getNumber());
 								}
 								dbAdapter.addExam(exam);
 								
@@ -284,7 +285,7 @@ public class MainActivity extends Activity {
 		
 		@Override
 		public void onSelect(int examLevelId, String examLevelName) {
-			Toast.makeText(mContext, "" + examLevelId, Toast.LENGTH_SHORT).show();
+			//Toast.makeText(mContext, "" + examLevelId, Toast.LENGTH_SHORT).show();
 			
 			Intent intent = new Intent(mContext, SelectionActivity.class);	
 
@@ -299,7 +300,7 @@ public class MainActivity extends Activity {
 		public void onSelect(LevelDataSet level, DownloadInfo info) {
 			if(level.getActive() == Constants.STATUS_ACTIVE){
 				String selectName = mContext.getResources().getString(R.string.selection_title);
-				String examLevelName = String.format(selectName, level.getNumber(),level.getLabel());
+				String examLevelName = String.format(selectName, level.getExam_id(),level.getLabel());
 				mListener.onSelect(level.getId(), examLevelName);
 			} else {				
 				confirmDownload(level, info);
@@ -314,7 +315,7 @@ public class MainActivity extends Activity {
 		String msg = null;
 		
 		if(info.getStatus() == DownloadInfo.NOT_START){
-			msg = "";
+			msg = resouces.getString(R.string.dialog_ask_download_data);
 			download = true;
 		} else if(info.getStatus() == DownloadInfo.DOWNLOADING) {
 			msg = resouces.getString(R.string.dialog_ask_downloading);

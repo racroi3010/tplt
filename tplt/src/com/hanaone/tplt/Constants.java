@@ -30,6 +30,7 @@ public class Constants {
 	public static final String QUESTION_MODE_PRACTICE = "question_mode_practice";
 	public static final String QUESTION_MODE_EXAM = "question_mode_exam";
 	public static final String QUESTION_MODE_REVIEW = "question_mode_review";
+	public static final String QUESTION_MODE_NO_START = "question_mode_no_start";
 	public static final String QUESTION_MODE_SAMPLE_BEGINNER = "QUESTION_MODE_SAMPLE_BEGINNER";
 	public static final String QUESTION_MODE_SAMPLE_INTERMEDIATE = "QUESTION_MODE_SAMPLE_INTERMEDIATE";
 	public static final String QUESTION_MODE_SAMPLE_ADVANCED = "QUESTION_MODE_SAMPLE_ADVANCED";
@@ -43,7 +44,7 @@ public class Constants {
 	
 	public static final String SECTION_INDEX = "section_index";
 	public static final String QUESTION_NUMBER = "QUESTION_NUMBER";
-	
+	public static final String SECTION_NUMBER = "SECTION_NUMBER";
 	
 	public static final String PATH_ROOT = "tplt";
 	

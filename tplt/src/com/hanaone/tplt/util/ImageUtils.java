@@ -3,6 +3,7 @@ package com.hanaone.tplt.util;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.util.DisplayMetrics;
 
@@ -36,14 +37,37 @@ public class ImageUtils {
 	    // First decode with inJustDecodeBounds=true to check dimensions
 	    final BitmapFactory.Options options = new BitmapFactory.Options();
 	    options.inJustDecodeBounds = true;
-	    BitmapFactory.decodeResource(res, resId, options);
+	    try{
+	    	BitmapFactory.decodeResource(res, resId, options);
+	    } catch (OutOfMemoryError e1){
+	    	System.gc();
+		    try{
+		    	BitmapFactory.decodeResource(res, resId, options);
+		    } catch (OutOfMemoryError e2){
+		    	return decodeSampledBitmapFromResource(res, resId, reqWidth/2, reqHeight/2);
+		    }	    	
+	    }	    
+	    
 
 	    // Calculate inSampleSize
 	    options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
 
 	    // Decode bitmap with inSampleSize set
 	    options.inJustDecodeBounds = false;
-	    return BitmapFactory.decodeResource(res, resId, options);
+	    options.inPreferredConfig = Config.RGB_565;
+	    options.inDither = true;	    
+	    Bitmap rs = null;
+	    try{
+	    	rs = BitmapFactory.decodeResource(res, resId, options);
+	    } catch (OutOfMemoryError e1){
+	    	System.gc();
+		    try{
+		    	rs = BitmapFactory.decodeResource(res, resId, options);
+		    } catch (OutOfMemoryError e2){
+		    	return decodeSampledBitmapFromResource(res, resId, reqWidth/2, reqHeight/2);
+		    }	    	
+	    }
+	    return rs;	    
 	}
 	public static Bitmap decodeSampledBitmapFromFile(String path,
 	        int reqWidth, int reqHeight) {
@@ -51,14 +75,38 @@ public class ImageUtils {
 	    // First decode with inJustDecodeBounds=true to check dimensions
 	    final BitmapFactory.Options options = new BitmapFactory.Options();
 	    options.inJustDecodeBounds = true;
-	    BitmapFactory.decodeFile(path, options);
+	    try{
+	    	BitmapFactory.decodeFile(path, options);
+	    } catch (OutOfMemoryError e1){
+	    	System.gc();
+		    try{
+		    	BitmapFactory.decodeFile(path, options);
+		    } catch (OutOfMemoryError e2){
+		    	return decodeSampledBitmapFromFile(path, reqWidth/2, reqHeight/2);
+		    }	    	
+	    }	    
+	    	    
+	    
 
 	    // Calculate inSampleSize
 	    options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
 
 	    // Decode bitmap with inSampleSize set
 	    options.inJustDecodeBounds = false;
-	    return BitmapFactory.decodeFile(path, options);
+	    options.inPreferredConfig = Config.RGB_565;
+	    options.inDither = true;
+	    Bitmap rs = null;
+	    try{
+	    	rs = BitmapFactory.decodeFile(path, options);
+	    } catch (OutOfMemoryError e1){
+	    	System.gc();
+		    try{
+		    	rs = BitmapFactory.decodeFile(path, options);
+		    } catch (OutOfMemoryError e2){
+		    	return decodeSampledBitmapFromFile(path, reqWidth/2, reqHeight/2);
+		    }	    	
+	    }
+	    return rs;
 	}	
 	public static float convertPixelsToDp(float px, Context context){
 	    Resources resources = context.getResources();

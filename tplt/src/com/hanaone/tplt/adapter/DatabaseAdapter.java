@@ -331,10 +331,7 @@ public class DatabaseAdapter{
 						choice.setImg(DatabaseUtils.convertObject(imgModel, FileDataSet.class));						
 					}
 					
-					choiceDataset.add(choice);
-					
-					
-					
+					choiceDataset.add(choice);											
 				}
 				Section sectionModel = this.dbHelper.selectSectionByQuestionId(questionModel.getId());
 				questionDataset.setChoices(choiceDataset);				

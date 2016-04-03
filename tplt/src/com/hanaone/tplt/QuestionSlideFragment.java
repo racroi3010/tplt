@@ -44,6 +44,7 @@ public class QuestionSlideFragment extends Fragment implements DownloadListener 
 	private static final String ARG_Listener = "listener";
 	private ArrayList<SectionDataSet> mSections;
 	private boolean isShowHint;
+	private boolean cheat;
 	public QuestionSlideFragment() {
 		
 	}
@@ -67,9 +68,11 @@ public class QuestionSlideFragment extends Fragment implements DownloadListener 
 		super.onCreate(savedInstanceState);
 		mSections = getArguments().getParcelableArrayList(ARG_PAGE);
 		String mode = PreferenceHandler.getQuestionModePreference(getActivity());
+		cheat = false;
 		if(Constants.QUESTION_MODE_PRACTICE.equals(mode) 
 				|| Constants.QUESTION_MODE_REVIEW.equals(mode)){
 			isShowHint = PreferenceHandler.getHintDisplayPreference(getActivity());
+			cheat = true;
 		}		
 	}
 
@@ -94,27 +97,33 @@ public class QuestionSlideFragment extends Fragment implements DownloadListener 
 				btnSectionHint.setVisibility(Button.GONE);
 			} else {
 				txtSectionHint.setText(section.getHint());
-				btnSectionHint.setVisibility(Button.VISIBLE);
-				btnSectionHint.setOnClickListener(new OnClickListener() {
-					
-					@Override
-					public void onClick(View v) {
-						if(txtSectionHint.getVisibility() == TextView.VISIBLE){
-							txtSectionHint.setVisibility(TextView.GONE);
-							btnSectionHint.setBackgroundResource(R.drawable.ic_image_wb_sunny_black);
-						} else {
-							txtSectionHint.setVisibility(TextView.VISIBLE);
-							btnSectionHint.setBackgroundResource(R.drawable.ic_image_wb_sunny_cyan);
+				if(cheat){
+					btnSectionHint.setVisibility(Button.VISIBLE);
+					btnSectionHint.setOnClickListener(new OnClickListener() {
+						
+						@Override
+						public void onClick(View v) {
+							if(txtSectionHint.getVisibility() == TextView.VISIBLE){
+								txtSectionHint.setVisibility(TextView.GONE);
+								btnSectionHint.setBackgroundResource(R.drawable.ic_image_wb_sunny_black);
+							} else {
+								txtSectionHint.setVisibility(TextView.VISIBLE);
+								btnSectionHint.setBackgroundResource(R.drawable.ic_image_wb_sunny_cyan);
+							}
 						}
-					}
-				});
-				if(isShowHint){
-					txtSectionHint.setVisibility(LinearLayout.VISIBLE);
-					btnSectionHint.setBackgroundResource(R.drawable.ic_image_wb_sunny_cyan);					
+					});
+					if(isShowHint){
+						txtSectionHint.setVisibility(LinearLayout.VISIBLE);
+						btnSectionHint.setBackgroundResource(R.drawable.ic_image_wb_sunny_cyan);					
+					} else {
+						txtSectionHint.setVisibility(LinearLayout.GONE);
+						btnSectionHint.setBackgroundResource(R.drawable.ic_image_wb_sunny_black);
+					}					
 				} else {
+					btnSectionHint.setVisibility(Button.GONE);
 					txtSectionHint.setVisibility(LinearLayout.GONE);
-					btnSectionHint.setBackgroundResource(R.drawable.ic_image_wb_sunny_black);
-				}				
+				}
+				
 				
 			}
 			
@@ -167,28 +176,35 @@ public class QuestionSlideFragment extends Fragment implements DownloadListener 
 						layoutQuestionHint.setVisibility(LinearLayout.GONE);
 					} else {
 						txtQuestionHint.setText(question.getHint());
-						btnQuestionHint.setVisibility(Button.VISIBLE);
-						if(isShowHint){
-							layoutQuestionHint.setVisibility(LinearLayout.VISIBLE);
-							btnQuestionHint.setBackgroundResource(R.drawable.ic_image_wb_sunny_cyan);					
-						} else {
-							layoutQuestionHint.setVisibility(LinearLayout.GONE);
-							btnQuestionHint.setBackgroundResource(R.drawable.ic_image_wb_sunny_black);
-						}
-						btnQuestionHint.setOnClickListener(new OnClickListener() {
-							
-							@Override
-							public void onClick(View v) {
-								
-								if(layoutQuestionHint.getVisibility() == LinearLayout.VISIBLE){
-									layoutQuestionHint.setVisibility(LinearLayout.GONE);
-									btnQuestionHint.setBackgroundResource(R.drawable.ic_image_wb_sunny_black);
-								} else {
-									layoutQuestionHint.setVisibility(LinearLayout.VISIBLE);
-									btnQuestionHint.setBackgroundResource(R.drawable.ic_image_wb_sunny_cyan);
-								}
+						
+						if(cheat){
+							btnQuestionHint.setVisibility(Button.VISIBLE);
+							if(isShowHint){
+								layoutQuestionHint.setVisibility(LinearLayout.VISIBLE);
+								btnQuestionHint.setBackgroundResource(R.drawable.ic_image_wb_sunny_cyan);					
+							} else {
+								layoutQuestionHint.setVisibility(LinearLayout.GONE);
+								btnQuestionHint.setBackgroundResource(R.drawable.ic_image_wb_sunny_black);
 							}
-						});
+							btnQuestionHint.setOnClickListener(new OnClickListener() {
+								
+								@Override
+								public void onClick(View v) {
+									
+									if(layoutQuestionHint.getVisibility() == LinearLayout.VISIBLE){
+										layoutQuestionHint.setVisibility(LinearLayout.GONE);
+										btnQuestionHint.setBackgroundResource(R.drawable.ic_image_wb_sunny_black);
+									} else {
+										layoutQuestionHint.setVisibility(LinearLayout.VISIBLE);
+										btnQuestionHint.setBackgroundResource(R.drawable.ic_image_wb_sunny_cyan);
+									}
+								}
+							});							
+						} else {
+							btnQuestionHint.setVisibility(Button.GONE);
+							layoutQuestionHint.setVisibility(LinearLayout.GONE);
+						}
+
 												
 					}
 					

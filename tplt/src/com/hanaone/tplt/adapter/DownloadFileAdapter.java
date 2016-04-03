@@ -43,16 +43,19 @@ public class DownloadFileAdapter extends AsyncTask<Void, Integer, Boolean> {
 	}
 	@Override
 	protected void onPostExecute(Boolean result) {
-		info.setStatus(DownloadInfo.NOT_START);				
-		ProgressBar prgBar = this.info.getPrgBar();
-		TextView txtPer = this.info.getTxtPer();
-		info.setProgress(100);
-		if(prgBar != null){
-			prgBar.setProgress(100);
+		info.setStatus(DownloadInfo.NOT_START);	
+		if(result){
+			ProgressBar prgBar = this.info.getPrgBar();
+			TextView txtPer = this.info.getTxtPer();
+			info.setProgress(100);
+			if(prgBar != null){
+				prgBar.setProgress(100);
+			}
+			if(txtPer != null){
+				txtPer.setText("100%");				
+			}			
 		}
-		if(txtPer != null){
-			txtPer.setText("100%");				
-		}
+
 		
 		if(this.dialog != null && this.dialog.isShowing()){
 			try{
