@@ -168,7 +168,6 @@ public class ListSectionAdapter extends BaseAdapter implements DownloadListener{
 			}
 			
 			playInfo.setPlayButton(holder.btnAudio);
-			
 			if(playInfo.isPlaying()){
 				playInfo.getPlayButton().setBackgroundResource(R.drawable.ic_av_volume_down_cyan);
 				playInfo.getPlayButton().setEnabled(false);

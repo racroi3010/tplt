@@ -16,6 +16,8 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.media.AudioManager;
+import android.media.MediaExtractor;
+import android.media.MediaFormat;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.os.AsyncTask;
@@ -116,9 +118,13 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 			}
 			if(Constants.QUESTION_MODE_REVIEW.equals(mMode)){
 				mPlayInfo = playInfo;
-				mPlayInfo.getPlayButton().setBackgroundResource(R.drawable.ic_av_volume_down_cyan);
-				mPlayInfo.getPlayButton().setEnabled(false);
-				mPlayInfo.setPlaying(true);
+				if(mPlayInfo != null){
+					mPlayInfo.setPlaying(true);
+					if(mPlayInfo.getPlayButton() != null){
+						mPlayInfo.getPlayButton().setBackgroundResource(R.drawable.ic_av_volume_down_cyan);
+						mPlayInfo.getPlayButton().setEnabled(false);					
+					}					
+				}
 				currentItem = sectionNumber;
 //				FileDataSet audio = null;
 				if(level.getAudio().size() > 1){
@@ -158,9 +164,16 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 			}
 			if(Constants.QUESTION_MODE_REVIEW.equals(mMode)){
 				mPlayInfo = playInfo;
-				mPlayInfo.getPlayButton().setBackgroundResource(R.drawable.ic_av_volume_down_cyan);
-				mPlayInfo.getPlayButton().setEnabled(false);
-				mPlayInfo.setPlaying(true);
+				if(mPlayInfo != null){
+					mPlayInfo.setPlaying(true);
+					if(mPlayInfo.getPlayButton() != null){
+						mPlayInfo.getPlayButton().setBackgroundResource(R.drawable.ic_av_volume_down_cyan);
+						mPlayInfo.getPlayButton().setEnabled(false);					
+					}					
+				}
+
+
+				
 				currentItem = sectionNumber;
 				
 				// temporary set start end audio
@@ -752,7 +765,6 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 		} else {
 			mPlayer.reset();
 		}
-		
 		return mPlayer;		
 	}
 
@@ -779,6 +791,14 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 						fileData.setPathLocal(currentFile.getPathLocal());
 					}
 				}
+				if(level.getAudio().size() > 1){
+					mHander.obtainMessage(HANDLE_PLAY_LIST).sendToTarget();
+				} else {
+					mPlayer = getMediaPlayer();	
+					String path = level.getAudio().get(0).getPathLocal();
+					setAudioResouce(path, true);	
+
+				}				
 			}
 		}
 	}
@@ -798,8 +818,7 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 		boolean flag = false;
 		if(path != null && !path.isEmpty()){
 			try {
-				
-				mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);					
+								
 				FileInputStream is = new FileInputStream(path);				
 				mPlayer.setDataSource(is.getFD());
 				is.close();
@@ -831,7 +850,6 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 				findViewById(R.id.layout_audio).setVisibility(FrameLayout.GONE);
 			}				
 		}
-	
 		return flag;
 		
 	}
