@@ -25,6 +25,7 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.hanaone.tplt.adapter.DatabaseAdapter;
 import com.hanaone.tplt.adapter.ListAdapterListener;
 import com.hanaone.tplt.adapter.ListResultAdapter;
+import com.hanaone.tplt.adapter.PlayingInfo;
 import com.hanaone.tplt.db.LevelDataSet;
 import com.hanaone.tplt.db.QuestionDataSet;
 import com.hanaone.tplt.db.ResultDataSet;
@@ -60,13 +61,13 @@ public class ResultActivity extends Activity {
 		}
 
 		@Override
-		public void onPlayAudioSection(final Button audioButton, int sectionNumber) {
+		public void onPlayAudioSection(final PlayingInfo playInfo, int sectionNumber) {
 			// TODO Auto-generated method stub
 			
 		}
 
 		@Override
-		public void onPlayAudioQuestion(Button audioButton, int sectionNumber,
+		public void onPlayAudioQuestion(final PlayingInfo playInfo, int sectionNumber,
 				int questionNumber) {
 			// TODO Auto-generated method stub
 			

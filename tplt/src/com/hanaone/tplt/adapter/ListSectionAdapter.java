@@ -37,6 +37,7 @@ public class ListSectionAdapter extends BaseAdapter implements DownloadListener{
 	private ListAdapterListener mListener;
 	private List<SectionDataSet> mDataSet;
 	private List<Item> mItems;
+	private List<PlayingInfo> mPlayInfos;
 	//private ArrayList<ResultDataSet> mResults;
 	private boolean cheat;
 	private boolean isShowHint;
@@ -72,6 +73,10 @@ public class ListSectionAdapter extends BaseAdapter implements DownloadListener{
 		}
 		
 		this.notifyDataSetChanged();
+		mPlayInfos = new ArrayList<PlayingInfo>();
+		for(int i = 0; i < this.mItems.size(); i ++){
+			mPlayInfos.add(new PlayingInfo());
+		}
 	}
 //	public void setResults(ArrayList<ResultDataSet> results){
 //		this.mResults = results;
@@ -99,8 +104,8 @@ public class ListSectionAdapter extends BaseAdapter implements DownloadListener{
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-
-		convertView = mItems.get(position).getView(mContext, mInflater, convertView, parent);
+		
+		convertView = mItems.get(position).getView(mContext, mInflater, convertView, parent, position);
 		
 		return convertView;
 	}
@@ -120,7 +125,7 @@ public class ListSectionAdapter extends BaseAdapter implements DownloadListener{
 	
 	public interface Item{
 		public int getViewType();
-		public View getView(Context context, LayoutInflater inflater, View convertView, ViewGroup parent);		
+		public View getView(Context context, LayoutInflater inflater, View convertView, ViewGroup parent, int position);		
 	}
 	public class SectionItem implements Item{
 		private SectionDataSet section;
@@ -138,8 +143,9 @@ public class ListSectionAdapter extends BaseAdapter implements DownloadListener{
 
 		@Override
 		public View getView(Context context, LayoutInflater inflater,
-				View convertView, ViewGroup parent) {
+				View convertView, ViewGroup parent, int position) {
 			final SectionViewHolder holder;
+			final PlayingInfo playInfo = mPlayInfos.get(position);
 			if(convertView == null || !(convertView.getTag() instanceof SectionViewHolder)){
 				convertView = inflater.inflate(R.layout.layout_question_section, parent, false);
 				
@@ -150,9 +156,26 @@ public class ListSectionAdapter extends BaseAdapter implements DownloadListener{
 
 				holder.btnAudio = (Button) convertView.findViewById(R.id.btn_section_audio);
 				
+				holder.playInfo = playInfo;
+				
 				convertView.setTag(holder);
 			} else {
 				holder = (SectionViewHolder) convertView.getTag();
+
+				holder.playInfo.setPlayButton(null);
+				holder.playInfo = null;
+				holder.playInfo = playInfo;
+			}
+			
+			playInfo.setPlayButton(holder.btnAudio);
+			
+			if(playInfo.isPlaying()){
+				playInfo.getPlayButton().setBackgroundResource(R.drawable.ic_av_volume_down_cyan);
+				playInfo.getPlayButton().setEnabled(false);
+			}
+			else {
+				playInfo.getPlayButton().setEnabled(true);
+				playInfo.getPlayButton().setBackgroundResource(R.drawable.ic_av_volume_down_black);				
 			}
 			
 			// fill data
@@ -197,8 +220,8 @@ public class ListSectionAdapter extends BaseAdapter implements DownloadListener{
 					holder.btnAudio.setOnClickListener(new OnClickListener() {
 						
 						@Override
-						public void onClick(View arg0) {
-							mListener.onPlayAudioSection(holder.btnAudio, sectionNumber);
+						public void onClick(View arg0) {						
+							mListener.onPlayAudioSection(playInfo, sectionNumber);
 						}
 					});						
 				}			
@@ -222,7 +245,8 @@ public class ListSectionAdapter extends BaseAdapter implements DownloadListener{
 			TextView txtQuestion;
 			Button btnHint;
 			Button btnAudio;
-			TextView txtHint;			
+			TextView txtHint;	
+			PlayingInfo playInfo;
 		}
 	}
 	public class QuestionItem implements Item{
@@ -245,8 +269,9 @@ public class ListSectionAdapter extends BaseAdapter implements DownloadListener{
 
 		@Override
 		public View getView(Context context, LayoutInflater inflater,
-				View convertView, ViewGroup parent) {
+				View convertView, ViewGroup parent, int position) {
 			final QuestionViewHolder holder;
+			final PlayingInfo playInfo = mPlayInfos.get(position);
 			if(convertView == null || !(convertView.getTag() instanceof QuestionViewHolder)){
 				convertView = inflater.inflate(R.layout.layout_question_question, parent, false);
 				
@@ -284,10 +309,29 @@ public class ListSectionAdapter extends BaseAdapter implements DownloadListener{
 				holder.layoutHint = (LinearLayout) convertView.findViewById(R.id.layout_question_hint);
 				
 				holder.btnAudio = (Button) convertView.findViewById(R.id.btn_question_audio);
+				
+				holder.playInfo = playInfo;
+				
+				convertView.setTag(holder);
 								
 			} else {
 				holder = (QuestionViewHolder) convertView.getTag();
+				
+				holder.playInfo.setPlayButton(null);
+				holder.playInfo = null;
+				holder.playInfo = playInfo;				
 			}
+			
+			playInfo.setPlayButton(holder.btnAudio);
+			
+			if(playInfo.isPlaying()){
+				playInfo.getPlayButton().setBackgroundResource(R.drawable.ic_av_volume_down_cyan);
+				playInfo.getPlayButton().setEnabled(false);
+			} 
+			else {
+				playInfo.getPlayButton().setEnabled(true);
+				playInfo.getPlayButton().setBackgroundResource(R.drawable.ic_av_volume_down_black);				
+			}			
 			
 			for(Button btn: holder.btnChoices){
 				btn.setBackgroundResource(R.drawable.circle_number_trans);
@@ -338,7 +382,7 @@ public class ListSectionAdapter extends BaseAdapter implements DownloadListener{
 						
 						@Override
 						public void onClick(View arg0) {
-							mListener.onPlayAudioQuestion(holder.btnAudio, sectionNumber, questionNumber);
+							mListener.onPlayAudioQuestion(playInfo, sectionNumber, questionNumber);
 						}
 					});						
 				}
@@ -453,6 +497,8 @@ public class ListSectionAdapter extends BaseAdapter implements DownloadListener{
 			List<Button> btnChoices;
 			List<TextView> txtChoices;
 			List<ImageView> imgChoices;
+			
+			PlayingInfo playInfo;
 		}
 	}
 	public void showDownloadDialog(final FileDataSet file){

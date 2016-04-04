@@ -451,10 +451,8 @@ public class AudioControllerView extends FrameLayout {
         if (mRoot == null || mProgress == null || mPlayer == null) {
             return;
         } 
-        if(mPlayer.isPlaying()){
-        	setProgress();
-        	mHandler.sendEmptyMessage(SHOW_PROGRESS);
-        } 
+    	setProgress();
+    	mHandler.sendEmptyMessage(SHOW_PROGRESS);
     }
 
     public void updateFullScreen() {

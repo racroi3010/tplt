@@ -55,6 +55,7 @@ import com.hanaone.tplt.adapter.DownloadLevelAdapter;
 import com.hanaone.tplt.adapter.DownloadListener;
 import com.hanaone.tplt.adapter.ListAdapterListener;
 import com.hanaone.tplt.adapter.ListSectionAdapter;
+import com.hanaone.tplt.adapter.PlayingInfo;
 import com.hanaone.tplt.adapter.QuestionSlideAdapter;
 import com.hanaone.tplt.db.FileDataSet;
 import com.hanaone.tplt.db.LevelDataSet;
@@ -85,7 +86,7 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 	private ListSectionAdapter mListAdapter;
 	
 	// audio
-	private Button replayButton;
+	private PlayingInfo mPlayInfo;
 	
 	// list result
 	//private ArrayList<ResultDataSet> listResult;
@@ -104,15 +105,20 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 		}
 		
 		@Override
-		public void onPlayAudioSection(final Button audioButton, int sectionNumber) {
-			if(replayButton != null){
-				replayButton.setEnabled(true);
-				replayButton.setBackgroundResource(R.drawable.ic_av_volume_down_black);
+		public void onPlayAudioSection(final PlayingInfo playInfo, int sectionNumber) {
+			if(mPlayInfo != null){
+				mPlayInfo.setPlaying(false);
+				if(mPlayInfo.getPlayButton() != null){
+					mPlayInfo.getPlayButton().setBackgroundResource(R.drawable.ic_av_volume_down_black);
+					mPlayInfo.getPlayButton().setEnabled(true);
+					
+				}					
 			}
 			if(Constants.QUESTION_MODE_REVIEW.equals(mMode)){
-				replayButton = audioButton;
-				replayButton.setBackgroundResource(R.drawable.ic_av_volume_down_cyan);
-				replayButton.setEnabled(false);
+				mPlayInfo = playInfo;
+				mPlayInfo.getPlayButton().setBackgroundResource(R.drawable.ic_av_volume_down_cyan);
+				mPlayInfo.getPlayButton().setEnabled(false);
+				mPlayInfo.setPlaying(true);
 				currentItem = sectionNumber;
 //				FileDataSet audio = null;
 				if(level.getAudio().size() > 1){
@@ -121,8 +127,7 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 					if(!isPathSet){
 						mPlayer = getMediaPlayer();	
 						String path = level.getAudio().get(0).getPathLocal();
-						setAudioResouce(path, true);	
-						isPathSet = true;
+						isPathSet = setAudioResouce(path, true);	
 					} else {
 						seekTo(0);
 						start();
@@ -141,16 +146,21 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 		}
 
 		@Override
-		public void onPlayAudioQuestion(final Button audioButton, int sectionNumber,
+		public void onPlayAudioQuestion(final PlayingInfo playInfo, int sectionNumber,
 				int questionNumber) {
-			if(replayButton != null){
-				replayButton.setEnabled(true);
-				replayButton.setBackgroundResource(R.drawable.ic_av_volume_down_black);
+			if(mPlayInfo != null){
+				mPlayInfo.setPlaying(false);
+				if(mPlayInfo.getPlayButton() != null){
+					mPlayInfo.getPlayButton().setBackgroundResource(R.drawable.ic_av_volume_down_black);
+					mPlayInfo.getPlayButton().setEnabled(true);
+					
+				}					
 			}
 			if(Constants.QUESTION_MODE_REVIEW.equals(mMode)){
-				replayButton = audioButton;
-				replayButton.setBackgroundResource(R.drawable.ic_av_volume_down_cyan);
-				replayButton.setEnabled(false);
+				mPlayInfo = playInfo;
+				mPlayInfo.getPlayButton().setBackgroundResource(R.drawable.ic_av_volume_down_cyan);
+				mPlayInfo.getPlayButton().setEnabled(false);
+				mPlayInfo.setPlaying(true);
 				currentItem = sectionNumber;
 				
 				// temporary set start end audio
@@ -166,20 +176,12 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 					if(!isPathSet){
 						mPlayer = getMediaPlayer();	
 						String path = level.getAudio().get(0).getPathLocal();
-						setAudioResouce(path, true);	
-						isPathSet = true;
+						isPathSet = setAudioResouce(path, true);	
 					} else {
 						seekTo(0);
 						start();
 					}
 				}
-//				else {
-//					audio = level.getAudio().get(0);
-//				}
-//				mPlayer = getMediaPlayer();	
-//				String path = audio.getPathLocal();
-//				setAudioResouce(path, true);			
-
 				
 			}			
 		}
@@ -572,11 +574,15 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 		int duration = current - start;
 		if(duration >= getDuration()){
 			pause();
-			if(replayButton != null){
-				replayButton.setBackgroundResource(R.drawable.ic_av_volume_down_black);
-				replayButton.setEnabled(true);
-				replayButton = null;
+			if(mPlayInfo != null){
+				mPlayInfo.setPlaying(false);
+				if(mPlayInfo.getPlayButton() != null){
+					mPlayInfo.getPlayButton().setBackgroundResource(R.drawable.ic_av_volume_down_black);
+					mPlayInfo.getPlayButton().setEnabled(true);
+					
+				}					
 			}
+
 		}
 		return duration;
 //		return mPlayer.getCurrentPosition();
@@ -587,7 +593,7 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 		if(pos >= 0 && pos <= getDuration()){
 			mPlayer.seekTo(pos + start);
 		}
-		
+		mControllerView.updateProgress();
 	}
 	public boolean isPlaying() {
 		return mPlayer.isPlaying();
@@ -788,7 +794,7 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 			}			
 		}
 	}	
-	private void setAudioResouce(String path, boolean resetView){
+	private boolean setAudioResouce(String path, boolean resetView){
 		boolean flag = false;
 		if(path != null && !path.isEmpty()){
 			try {
@@ -826,7 +832,7 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 			}				
 		}
 	
-
+		return flag;
 		
 	}
 	
