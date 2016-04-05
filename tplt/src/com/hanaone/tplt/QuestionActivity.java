@@ -464,6 +464,7 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 		intent.putExtra(Constants.LEVEL, level);
 		startActivity(intent);			
 	}
+	
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		
@@ -770,7 +771,14 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 //			timer.cancel();
 //			timer = null;
 //		}
-		super.onBackPressed();
+		if(Constants.QUESTION_MODE_REVIEW.equals(mMode)){
+			Intent intent = new Intent(mContext, ResultActivity.class);
+			intent.putExtra(Constants.LEVEL, level);
+			startActivity(intent);			
+		} else {
+			super.onBackPressed();
+		}
+		
 	}
 	private static MediaPlayer getMediaPlayer(){
 		if(mPlayer == null){
@@ -798,13 +806,14 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 		
 			// update
 			if(Constants.QUESTION_MODE_REVIEW.equals(mMode)){
-				FileDataSet currentFile = level.getAudio().get(currentItem);
-				for(FileDataSet fileData: level.getAudio()){
-					if(fileData.getId() == currentFile.getId() && !fileData.equals(currentFile)){
-						fileData.setPathLocal(currentFile.getPathLocal());
-					}
-				}
-				if(level.getAudio().size() > 1){
+
+				if(level.getAudio().size() > currentItem){
+					FileDataSet currentFile = level.getAudio().get(currentItem);
+					for(FileDataSet fileData: level.getAudio()){
+						if(fileData.getId() == currentFile.getId() && !fileData.equals(currentFile)){
+							fileData.setPathLocal(currentFile.getPathLocal());
+						}
+					}					
 					mHander.obtainMessage(HANDLE_PLAY_LIST).sendToTarget();
 				} else {
 					mPlayer = getMediaPlayer();	
