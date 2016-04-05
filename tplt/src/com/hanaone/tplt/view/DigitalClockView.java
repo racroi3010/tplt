@@ -91,7 +91,7 @@ public class DigitalClockView extends TextView {
 			case HANDLE_UPDATE_CLOCK:
 				time = time - 1000;
 				setText(convertTime(time) +"");
-				if(time == 0){
+				if(time <= 0){
 					timer.cancel();
 					questionActivity.submit();
 				}

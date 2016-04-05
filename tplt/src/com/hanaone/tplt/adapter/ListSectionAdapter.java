@@ -332,8 +332,11 @@ public class ListSectionAdapter extends BaseAdapter implements DownloadListener{
 				playInfo.getPlayButton().setBackgroundResource(R.drawable.ic_av_volume_down_black);				
 			}			
 			
-			for(Button btn: holder.btnChoices){
+			for(int i = 0; i < holder.btnChoices.size(); i ++){
+				Button btn = holder.btnChoices.get(i);
 				btn.setBackgroundResource(R.drawable.circle_number_trans);
+				btn.setText((i + 1) + "");
+				btn.setTextColor(mContext.getResources().getColor(R.color.BLACK));
 			}	
 			
 			if(question.getHint() == null || question.getHint().isEmpty()){

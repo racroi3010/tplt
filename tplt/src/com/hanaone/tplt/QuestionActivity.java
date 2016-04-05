@@ -495,7 +495,10 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 			}
 		} else {
 			start();
-			mControllerView.updateProgress();				
+			if(Constants.QUESTION_MODE_REVIEW.equals(mMode)){
+				mControllerView.updateProgress();
+			}
+							
 		}
 		
 		if(clock != null){
@@ -548,6 +551,16 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 		}			
 	}
 	
+	
+
+	@Override
+	protected void onDestroy() {
+		if(clock != null){
+			clock.cancel();
+		}	
+		super.onDestroy();
+	}
+
 	public void start() {
 //		SectionDataSet section = level.getSections().get(currentItem);
 //		int start = (int)(section.getStartAudio() * 1000);
