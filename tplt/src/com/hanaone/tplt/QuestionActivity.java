@@ -463,6 +463,7 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 		Intent intent = new Intent(mContext, ResultActivity.class);
 		intent.putExtra(Constants.LEVEL, level);
 		startActivity(intent);			
+		finish();
 	}
 	
 	@Override
@@ -774,7 +775,9 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 		if(Constants.QUESTION_MODE_REVIEW.equals(mMode)){
 			Intent intent = new Intent(mContext, ResultActivity.class);
 			intent.putExtra(Constants.LEVEL, level);
-			startActivity(intent);			
+			finish();
+			startActivity(intent);	
+			
 		} else {
 			super.onBackPressed();
 		}
