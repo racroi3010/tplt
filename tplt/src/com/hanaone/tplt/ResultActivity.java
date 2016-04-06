@@ -215,12 +215,13 @@ public class ResultActivity extends Activity {
 					
 	}    
 	private void goHome(){
-		Intent intent = new Intent(mContext, MainActivity.class);			
+		Intent intent = new Intent(mContext, MainActivity.class);		
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
 		if(Constants.QUESTION_MODE_EXAM.equals(mode)){
 			intent.putExtra(Constants.UPDATE_SCORE_LEVEL_ID, level.getId());
 			intent.putExtra(Constants.UPDATE_SCORE, score);
+			
 		}			
-		finish();
 		startActivity(intent);		
 	}
 	private void showDialog(){

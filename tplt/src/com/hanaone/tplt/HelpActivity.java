@@ -63,6 +63,7 @@ public class HelpActivity extends Activity {
 		case R.id.btn_home:
 			// finish();
 			Intent intent = new Intent(mContext, MainActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
 			intent.putExtra(Constants.UPDATE_LOCALE, updateLocale);
 			startActivity(intent);
 			break;
