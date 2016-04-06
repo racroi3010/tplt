@@ -836,6 +836,7 @@ public class QuestionActivity extends FragmentActivity implements OnPreparedList
 				setContentView(R.layout.activity_question_practice);
 				onInit();
 				onInitLayout();
+				mPager.setCurrentItem(currentItem);
 			}			
 		}
 	}	
